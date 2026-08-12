@@ -1,4 +1,4 @@
-package util;
+package DAO;
 
 import java.sql.Connection;
 import io.github.cdimascio.dotenv.Dotenv;
