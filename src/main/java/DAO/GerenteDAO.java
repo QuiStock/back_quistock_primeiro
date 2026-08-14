@@ -22,7 +22,7 @@ public class GerenteDAO {
 
 
         //try pra listar tudo de todos os produtos
-        try (Connection conn = connectionFactory.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql);
              ResultSet result = sttmt.executeQuery()) {
 

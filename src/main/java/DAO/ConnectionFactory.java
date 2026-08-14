@@ -12,7 +12,7 @@ public class ConnectionFactory {
     private final String user = dotenv.get("user");
     private final String password = dotenv.get("password");
 
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, user, password);
     }
 }
