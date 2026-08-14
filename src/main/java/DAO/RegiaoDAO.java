@@ -13,7 +13,7 @@ public class RegiaoDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    //Metodo pra imprimir todos os gerentes
+    //Metodo pra imprimir todas as regioes
     public List<Regiao> read() throws SQLException {
 
         List<Regiao> regioes = new ArrayList<>();
@@ -21,12 +21,12 @@ public class RegiaoDAO {
         String sql = "SELECT * FROM regiao";
 
 
-        //try pra listar tudo de todos os produtos
+        //try pra listar tudo de todas as regioes
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql);
              ResultSet result = sttmt.executeQuery()) {
 
-            //laço pra repetir sempre q tiver produto na fila
+            //laço pra repetir sempre q tiver regiao na fila
             while (result.next()) {
                 Regiao regiao = new Regiao();
                 regiao.setId(result.getInt("id"));
@@ -43,7 +43,7 @@ public class RegiaoDAO {
 
         String sql = "INSERT INTO regiao (id, nome, gerente_regional_id) VALUES (?, ?, ?)";
 
-        //try pra adicionar informaçoes no novo gerente
+        //try pra adicionar informaçoes na nova regiao
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
@@ -55,7 +55,7 @@ public class RegiaoDAO {
     }
 
 
-    //metodo pra encontrar regiao que deseja ser alterado
+    //metodo pra encontrar regiao que deseja ser alterad
     public Regiao foundRegiao(int id) throws SQLException {
 
         String sql = "SELECT * FROM regiao WHERE id = ?";
