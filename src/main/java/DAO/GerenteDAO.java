@@ -13,7 +13,7 @@ public class GerenteDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    //Metodo pra imprimir todos os gerentes (Sem mostrar o id e senha)
+    //Metodo pra imprimir todos os gerentes
     public List<Gerente> read() throws SQLException {
 
         List<Gerente> gerentes = new ArrayList<>();
@@ -85,6 +85,7 @@ public class GerenteDAO {
 
     //metodo pra atualizar o gerente que encontrou no metodo passado
     public void update(Gerente gerente) throws SQLException{
+
         String sql = "UPDATE gerente_regional SET nome = ?, email = ?, senha = ? WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
