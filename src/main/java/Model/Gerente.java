@@ -4,9 +4,19 @@ import lombok.*;
 @Setter
 
 public class Gerente {
-    private int email;
+    private int id;
+    private String email;
     private String nome;
     private String senha;
-    private String emailLoja;
 
+    public Gerente(){
+
+    }
+
+    public Gerente(int id, String email, String nome, String senha) {
+        this.id = id;
+        this.email = email;
+        this.nome = nome;
+        this.senha = senha;
+    }
 }
