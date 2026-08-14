@@ -28,8 +28,10 @@ public class GerenteDAO {
             //laço pra repetir sempre q tiver produto na fila
             while(result.next()){
                 Gerente gerente = new Gerente();
+                gerente.setId(result.getInt("id"));
                 gerente.setNome(result.getString("nome"));
                 gerente.setEmail(result.getString("email"));
+                gerente.setSenha(result.getString("senha"));
                 gerentes.add(gerente);
             }
         }
