@@ -81,7 +81,7 @@ public class RegiaoDAO {
     }
 
     //metodo pra atualizar a regiao que encontrou no metodo passado
-    public void update(Regiao regiao) throws SQLException{
+    public void update(Regiao regiao, int id) throws SQLException{
 
         String sql = "UPDATE regiao SET nome = ?, gerente_regional_id = ? WHERE id = ?";
 
@@ -90,7 +90,7 @@ public class RegiaoDAO {
 
             sttmt.setString(1, regiao.getNome());
             sttmt.setInt(2, regiao.getGerente_regional_id());
-            sttmt.setInt(3, regiao.getId());
+            sttmt.setInt(3, id);
             sttmt.executeUpdate();
         }
     }
