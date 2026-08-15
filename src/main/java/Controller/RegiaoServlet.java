@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 //encaminha pra pagina regiao
-@WebServlet("/regiao")
+@WebServlet("/regioes")
 public class RegiaoServlet extends HttpServlet{
 
     private RegiaoDAO regiaoDAO = new RegiaoDAO();
