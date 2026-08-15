@@ -42,16 +42,15 @@ public class GerenteDAO {
     //metodo pra criar um gerente novo
     public void create(Gerente gerente) throws SQLException {
 
-        String sql = "INSERT INTO gerente_regional (id, nome, email, senha) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO gerente_regional (nome, email, senha) VALUES ( ?, ?, ?)";
 
         //try pra adicionar informaçoes no novo gerente
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
-            sttmt.setInt(1, gerente.getId());
-            sttmt.setString(2, gerente.getNome());
-            sttmt.setString(3, gerente.getEmail());
-            sttmt.setString(4, gerente.getSenha());
+            sttmt.setString(1, gerente.getNome());
+            sttmt.setString(2, gerente.getEmail());
+            sttmt.setString(3, gerente.getSenha());
             sttmt.executeUpdate();
         }
     }
