@@ -87,17 +87,18 @@ public class LojaDAO {
     }
 
     //metodo pra atualizar a loja que encontrou no metodo passado
-    public void update(Loja loja) throws SQLException{
+    public void update(Loja loja, int id) throws SQLException{
 
         String sql = "UPDATE loja SET email = ?, senha = ?, endereco_id = ?, regiao_id = ? WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
+            
             sttmt.setString(1, loja.getEmail());
             sttmt.setString(2, loja.getSenha());
             sttmt.setString(3, loja.getEndereco_id());
             sttmt.setString(4, loja.getRegiao_id());
-            sttmt.setInt(5, loja.getId());
+            sttmt.setInt(5, id);
             sttmt.executeUpdate();
         }
     }
