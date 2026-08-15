@@ -93,7 +93,7 @@ public class LojaDAO {
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
-            
+
             sttmt.setString(1, loja.getEmail());
             sttmt.setString(2, loja.getSenha());
             sttmt.setString(3, loja.getEndereco_id());
