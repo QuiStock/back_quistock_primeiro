@@ -22,7 +22,7 @@ public class GerenteDAO {
 
 
         //try pra listar tudo de todos os produtos
-        try (Connection conn = ConnectionFactory.getConnection();
+        try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql);
              ResultSet result = sttmt.executeQuery()) {
 
@@ -83,7 +83,7 @@ public class GerenteDAO {
     }
 
     //metodo pra atualizar o gerente que encontrou no metodo passado
-    public void update(Gerente gerente) throws SQLException{
+    public void update(Gerente gerente, int id) throws SQLException{
 
         String sql = "UPDATE gerente_regional SET nome = ?, email = ?, senha = ? WHERE id = ?";
 
@@ -93,7 +93,7 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
-            sttmt.setInt(4, gerente.getId());
+            sttmt.setInt(4, id);
             sttmt.executeUpdate();
         }
     }

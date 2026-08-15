@@ -50,7 +50,7 @@ public class EditarGerenteServlet extends HttpServlet {
 
         //try pra atualizar o gerente do banco com o novo objeto q acabou de criar
         try {
-            gerenteDAO.update(gerente);
+            gerenteDAO.update(gerente, id);
             response.sendRedirect("gerentes");//direciona de lá para a tabela de produtos para nao atualizar denovo
 
         } catch (SQLException e) {
