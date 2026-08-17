@@ -4,13 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
 import Model.Admin;
-import Model.Endereco;
 
 public class AdminDAO {
     ConnectionFactory factory = new ConnectionFactory();
 
+    //método de inserção de novo admin
     public void insert (Admin admin) throws SQLException {
         String query = "insert into admin (email, senha, nome) values(?, ?, ?); ";
 
@@ -24,6 +23,7 @@ public class AdminDAO {
         }
     }
 
+    //método auxiliar para encontrar id de admin
     private int searchAdmin(Admin admin) throws SQLException {
         String query = "select id from admin where email = ?;";
 
@@ -44,6 +44,7 @@ public class AdminDAO {
         }
     }
 
+    //Método de update com uso de método auxiliar
     public void update (Admin admin) throws SQLException {
         String query = "update admin set email = ?, senha = ?, nome = ? where id = ?;";
 

@@ -6,9 +6,8 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Admin {
-    int id;
-    String email;
-    String senha;
-    String nome;
+public class Pedido {
+    String dtPedido;
+    String idItem;
+    double total;
 }

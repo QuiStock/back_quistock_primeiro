@@ -5,6 +5,7 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Endereco {
     private int id;
     private String cep;
