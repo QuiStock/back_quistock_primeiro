@@ -13,7 +13,6 @@ public class ConnectionFactory {
     private final String url =  dotenv.get("url");
     private final String user = dotenv.get("user");
     private final String password = dotenv.get("password");
-
     //retornar Connection, lança exceção para ser tratada por outra classe
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, user, password);
