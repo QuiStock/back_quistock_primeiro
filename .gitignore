@@ -13,6 +13,8 @@ target/
 *.iws
 *.iml
 *.ipr
+
+# Secrets
 .env
 
 ### Eclipse ###
@@ -39,3 +41,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+.idea/
