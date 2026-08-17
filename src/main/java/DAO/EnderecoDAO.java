@@ -10,6 +10,7 @@ public class EnderecoDAO {
 
     ConnectionFactory factory = new ConnectionFactory();
 
+    //Método para inserção de endereços
     public void insert(Endereco endereco) throws SQLException {
         String query = "insert into endereco(cep, pais, rua, numero, cidade, estado) values(?,?,?,?,?,?);";
 
@@ -27,6 +28,7 @@ public class EnderecoDAO {
         }
     }
 
+    //Classe auxiliar para encontrar id d
     private int searchEndereco(Endereco endereco) throws SQLException {
         String query = "select id from endereco where rua = ? and numero = ?;";
 
@@ -48,9 +50,11 @@ public class EnderecoDAO {
         }
     }
 
+    //Metódo para update de endereço com método auxiliar
     public void update(Endereco end) throws SQLException {
         String query = "UPDATE endereco set cep = ?, pais = ?, rua = ?, numero = ?, estado = ?, cidade = ?  WHERE id = ?;";
 
+        //Chama método auxiliar
         int id =  searchEndereco(end);
 
         try (Connection conn = factory.getConnection();
@@ -67,9 +71,11 @@ public class EnderecoDAO {
         }
     }
 
+    //Método de deletar endereço, com uso de método auxiliar
     public void delete(Endereco endereco) throws SQLException {
         String query = "delete from endereco where id = ?;";
 
+        //Chama método auxiliar
         int  id =  searchEndereco(endereco);
 
         try (Connection conn = factory.getConnection();
