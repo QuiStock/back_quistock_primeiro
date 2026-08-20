@@ -28,59 +28,33 @@ public class EnderecoDAO {
         }
     }
 
-    //Classe auxiliar para encontrar id d
-    private int searchEndereco(Endereco endereco) throws SQLException {
-        String query = "select id from endereco where rua = ? and numero = ?;";
-
-        try (Connection conn = factory.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query)){
-            ;
-
-            stmt.setString(1, endereco.getRua());
-            stmt.setInt(2, endereco.getNumero());
-
-            try (ResultSet rs = stmt.executeQuery()){
-                if (rs.next()) {
-                    return  rs.getInt("id");
-                }
-                else {
-                    return 0;
-                }
-            }
-        }
-    }
-
-    //Metódo para update de endereço com método auxiliar
+    //Metódo para update de endereço
     public void update(Endereco end) throws SQLException {
-        String query = "UPDATE endereco set cep = ?, pais = ?, rua = ?, numero = ?, estado = ?, cidade = ?  WHERE id = ?;";
-
-        //Chama método auxiliar
-        int id =  searchEndereco(end);
+        String query = "UPDATE endereco set cep = ?, pais = ?, rua = ?, numero = ?, estado = ?, cidade = ?  WHERE rua = ? and  numero = ?;";
 
         try (Connection conn = factory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(7, end.getRua());
+            stmt.setInt(8, end.getNumero());
             stmt.setString(1, end.getCep());
             stmt.setString(2, end.getPais());
             stmt.setString(3, end.getRua());
             stmt.setInt(4, end.getNumero());
             stmt.setString(5, end.getEstado());
             stmt.setString(6, end.getCidade());
-            stmt.setInt(7, id);
 
             stmt.executeUpdate();
         }
     }
 
     //Método de deletar endereço, com uso de método auxiliar
-    public void delete(Endereco endereco) throws SQLException {
-        String query = "delete from endereco where id = ?;";
-
-        //Chama método auxiliar
-        int  id =  searchEndereco(endereco);
+    public void delete(Endereco end) throws SQLException {
+        String query = "delete from endereco where rua = ? and numero = ?;";
 
         try (Connection conn = factory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setInt(1, id);
+            stmt.setString(1, end.getRua());
+            stmt.setInt(2, end.getNumero());
 
             stmt.executeUpdate();
         }
