@@ -2,11 +2,12 @@ package Controller;
 
 import java.io.*;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
-public class Main extends HttpServlet {
+@WebServlet
+public class Controller extends HttpServlet {
     private String message;
 
     public void init() {
@@ -14,13 +15,10 @@ public class Main extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/index.html");
 
-        // Hello
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>" + message + "</h1>");
-        out.println("</body></html>");
+        dispatcher.forward(request, response);
+
     }
 
     public void destroy() {
