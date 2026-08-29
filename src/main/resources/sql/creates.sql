@@ -48,6 +48,13 @@ create table if not exists regiao(
     on delete cascade
     );
 
+create table if not exists promocao(
+    codigo INT generated always as identity primary key Check (codigo >= 0),
+    percentual NUMERIC NOT NULL Check (percentual >= 0 and percentual < 100),
+    dt_fim DATE NOT NULL,
+    dt_promo DATE NOT NULL
+);    
+
 create table if not exists gerente_regional(
     codigo int generated always as identity primary key CHECK (codigo >= 0),
     nome varchar(60) not null,
@@ -57,17 +64,10 @@ create table if not exists gerente_regional(
     constraint fk_regiao
     foreign key (regiao_id) references regiao(codigo)
     on delete cascade
-    ); --parei aqui pq tava dando erro de connect timeout
-
-create table if not exists promocao(
-    codigo INT generated always as identity primary key Check (codigo >= 0),
-    percentual NUMERIC NOT NULL Check (percentual >= 0 and percentual < 100),
-    dt_fim DATE NOT NULL,
-    dt_promo DATE NOT NULL
-);
+    );
 
 create table if not exists produto(
-    lote INT generated always as identity primary key check(lote >= 0),
+    lote INT primary key check(lote >= 0),
     nome varchar(100) not null,
     preco numeric(10,2) not null check(preco >= 0),
     validade date not null,
@@ -84,8 +84,6 @@ create table if not exists aplica(
     foreign key (produto_lote) references produto(lote),
     foreign key (promocao_codigo) references promocao(codigo)
 );
-
-
 
 create table if not exists historico(
     id int generated always as identity primary key check(id >= 0),
