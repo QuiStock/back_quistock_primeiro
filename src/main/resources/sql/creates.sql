@@ -13,55 +13,55 @@ drop table if exists fluxo;
 drop table if exists contem;
 
 create table if not exists super_admin(
-    codigo int generated always as identity primary key,
+    codigo int generated always as identity primary key CHECK (codigo >= 0),
     nome varchar(150) not null,
-    email varchar(320) not null,
+    email varchar(320) not null unique,
     senha varchar(50) not null
     );
 
 create table if not exists loja(
-    codigo int generated always as identity primary key,
-    email varchar(320) not null,
-    senha varchar(50)
+    codigo int generated always as identity primary key CHECK (codigo >= 0),
+    email varchar(320) not null unique,
+    senha varchar(50) not null
     );
 
 create table if not exists endereco(
-    codigo int generated always as identity primary key,
-    cep varchar(12),
-    pais varchar(50),
-    rua varchar(150),
-    numero int,
-    cidade varchar(100),
-    estado varchar(50),
-    loja_id int,
+    codigo int generated always as identity primary key CHECK (codigo >= 0),
+    cep varchar(11) not null,
+    pais varchar(50) not null,
+    rua varchar(150) not null,
+    numero int not null CHECK (numero >= 0),
+    cidade varchar(100) not null,
+    estado varchar(50) not null,
+    loja_id int not null,
     constraint fk_loja
     foreign key (loja_id) references loja(codigo)
     on delete cascade
-    );
+);
 
 create table if not exists regiao(
-    codigo int generated always as identity primary key,
-    nome varchar(100),
-    loja_id int,
+    codigo int generated always as identity primary key CHECK (codigo >= 0),
+    nome varchar(100) not null,
+    loja_id int not null CHECK (loja_id >= 0),
     constraint fk_loja_regiao
     foreign key (loja_id) references loja(codigo)
     on delete cascade
     );
 
 create table if not exists gerente_regional(
-    codigo int generated always as identity primary key,
-    nome varchar(60),
-    email varchar(320),
-    senha varchar(50),
-    regiao_id int,
+    codigo int generated always as identity primary key CHECK (codigo >= 0),
+    nome varchar(60) not null,
+    email varchar(320) not null,
+    senha varchar(50) not null,
+    regiao_id int not null Check (regiao_id >= 0),
     constraint fk_regiao
     foreign key (regiao_id) references regiao(codigo)
     on delete cascade
-    );
+    ); --parei aqui pq tava dando erro de connect timeout
 
 create table if not exists promocao(
-    codigo INT generated always as identity primary key,
-    percentual NUMERIC NOT NULL,
+    codigo INT generated always as identity primary key Check (codigo >= 0),
+    percentual NUMERIC NOT NULL Check (percental >= 0 and percentual < 100),
     dt_fim DATE NOT NULL,
     dt_promo DATE NOT NULL
 );
@@ -120,3 +120,5 @@ create table if not exists contem(
     foreign key (historico_id) references historico(id),
     foreign key (fluxo_id) references fluxo(id)
 );
+
+select * from endereco;
