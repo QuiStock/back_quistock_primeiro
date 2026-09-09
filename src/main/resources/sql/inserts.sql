@@ -24,19 +24,19 @@ insert into loja(email, senha) values(
 
 
 --endereço
-insert into endereco(cep, pais, rua, numero, cidade, estado, loja_id) values(
+insert into endereco(cep, pais, rua, numero, cidade, estado, loja_codigo) values(
     '13489-999', 'Brasil', 'Limeira', 167, 'São Paulo', 'SP', 1
 );
-insert into endereco(cep, pais, rua, numero, cidade, estado, loja_id) values(
+insert into endereco(cep, pais, rua, numero, cidade, estado, loja_codigo) values(
     '13900-400', 'Brasil', 'Avenida Bernardino de Campos', 169, 'Amparo', 'SP', 2
 );
 
 
 --região
-insert into regiao(nome, loja_id) values(
+insert into regiao(nome, loja_codigo) values(
     'Norte', 1
 );
-insert into regiao(nome, loja_id) values(
+insert into regiao(nome, loja_codigo) values(
     'Sul', 2
 );
 
@@ -57,13 +57,13 @@ insert into promocao(percentual, dt_fim, dt_promo) values(
 
 
 --gerente regional
-insert into gerente_regional(nome, email, senha, regiao_id) values(
+insert into gerente_regional(nome, email, senha, regiao_codigo) values(
     'Jéssica Morais', 'jessica1990@gmail.com', 'J10011990@', 1
 );
-insert into gerente_regional(nome, email, senha, regiao_id) values(
+insert into gerente_regional(nome, email, senha, regiao_codigo) values(
     'Victor Melo', 'victorMelo0912@gmail.com', 'meloO.', 1
 );
-insert into gerente_regional(nome, email, senha, regiao_id) values(
+insert into gerente_regional(nome, email, senha, regiao_codigo) values(
     'Fernanda Rodrigues', 'ferodrigues2020@gmail.com', '2001fe@', 2
 );
 
@@ -161,13 +161,13 @@ insert into item_pedido(quantidade, preco, produto_lote) values(
 
 
 --pedido
-insert into pedido(dt_pedido, item_pedido_id, total) values(
+insert into pedido(dt_pedido, item_pedido_codigo, total) values(
     '2026-08-29', 2, 56.70
 );
-insert into pedido(dt_pedido, item_pedido_id, total) values(
+insert into pedido(dt_pedido, item_pedido_codigo, total) values(
     '2026-08-29', 1, 49.80
 );
-insert into pedido(dt_pedido, item_pedido_id, total) values(
+insert into pedido(dt_pedido, item_pedido_codigo, total) values(
     '2026-08-29', 3, 69.90
 );
 
@@ -215,6 +215,6 @@ insert into fluxo(tipo, produto_lote) values(
 
 
 --contem
-insert into contem(historico_id, fluxo_id) values(
+insert into contem(historico_codigo, fluxo_codigo) values(
     2, 1
 );
