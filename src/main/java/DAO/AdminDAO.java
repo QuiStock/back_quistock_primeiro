@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Model.Admin;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminDAO {
     ConnectionFactory factory = new ConnectionFactory();
@@ -29,7 +31,6 @@ public class AdminDAO {
 
         try (Connection conn = factory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)){
-            ;
 
             stmt.setString(1, admin.getEmail());
 
@@ -72,5 +73,32 @@ public class AdminDAO {
 
             stmt.executeUpdate();
         }
+    }
+
+    public List<Admin> select() {
+        String query = "select * from admin;";
+        List<Admin> admins = new ArrayList<>();
+
+        try (Connection conn = factory.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery()){
+
+            while(rs.next()){
+                Admin adm = new Admin(
+                    rs.getInt("id"),
+                    rs.getString("email"),
+                    rs.getString("senha"),
+                    rs.getString("nome")
+                );
+
+                admins.add(adm);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } catch (java.lang.Exception e) {
+            e.printStackTrace();
+        }
+
+        return admins;
     }
 }
