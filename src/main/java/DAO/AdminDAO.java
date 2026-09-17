@@ -75,7 +75,7 @@ public class AdminDAO {
         }
     }
 
-    public List<Admin> select() {
+    public List<Admin> select() throws SQLException{
         String query = "select * from admin;";
         List<Admin> admins = new ArrayList<>();
 
@@ -93,10 +93,6 @@ public class AdminDAO {
 
                 admins.add(adm);
             }
-        } catch (SQLException e){
-            e.printStackTrace();
-        } catch (java.lang.Exception e) {
-            e.printStackTrace();
         }
 
         return admins;

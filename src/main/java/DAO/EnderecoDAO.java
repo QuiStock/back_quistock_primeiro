@@ -62,7 +62,7 @@ public class EnderecoDAO {
         }
     }
 
-    public List<Endereco> select() {
+    public List<Endereco> select() throws SQLException {
         String query = "select * from endereco;";
         List<Endereco> enderecos = new ArrayList<>();
 
@@ -82,10 +82,6 @@ public class EnderecoDAO {
 
                 enderecos.add(end);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return enderecos;
     }
