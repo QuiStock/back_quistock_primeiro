@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Model.Endereco;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnderecoDAO {
 
@@ -14,8 +16,8 @@ public class EnderecoDAO {
     public void insert(Endereco endereco) throws SQLException {
         String query = "insert into endereco(cep, pais, rua, numero, cidade, estado) values(?,?,?,?,?,?);";
 
-        try (Connection conn = factory.getConnection()){
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = factory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)){
 
             stmt.setString(1, endereco.getCep());
             stmt.setString(2, endereco.getPais());
@@ -58,5 +60,33 @@ public class EnderecoDAO {
 
             stmt.executeUpdate();
         }
+    }
+
+    public List<Endereco> select() {
+        String query = "select * from endereco;";
+        List<Endereco> enderecos = new ArrayList<>();
+
+        try (Connection conn = factory.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery()){
+            while (rs.next()){
+                Endereco end = new Endereco(
+                    rs.getInt("id"),
+                    rs.getString("cep"),
+                    rs.getString("pais"),
+                    rs.getString("rua"),
+                    rs.getInt("numero"),
+                    rs.getString("estado"),
+                    rs.getString("cidade")
+                );
+
+                enderecos.add(end);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return enderecos;
     }
 }
