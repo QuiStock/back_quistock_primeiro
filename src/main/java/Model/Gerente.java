@@ -1,5 +1,4 @@
 package Model;
-
 import lombok.*;
 
 @Getter
@@ -7,8 +6,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Gerente {
-    private int id;
+    private int codigo;
     private String email;
     private String nome;
     private String senha;
+    private int regiao_codigo;
 }

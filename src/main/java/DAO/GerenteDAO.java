@@ -29,10 +29,11 @@ public class GerenteDAO {
             //laço pra repetir sempre q tiver produto na fila
             while (result.next()) {
                 Gerente gerente = new Gerente();
-                gerente.setId(result.getInt("id"));
+                gerente.setCodigo(result.getInt("codigo"));
                 gerente.setNome(result.getString("nome"));
                 gerente.setEmail(result.getString("email"));
                 gerente.setSenha(result.getString("senha"));
+                gerente.setRegiao_codigo(result.getInt("regiao_codigo"));
                 gerentes.add(gerente);
             }
         }
@@ -42,7 +43,7 @@ public class GerenteDAO {
     //metodo pra criar um gerente novo
     public void create(Gerente gerente) throws SQLException {
 
-        String sql = "INSERT INTO gerente_regional (nome, email, senha) VALUES ( ?, ?, ?)";
+        String sql = "INSERT INTO gerente_regional (nome, email, senha, regao_codigo) VALUES ( ?, ?, ?, ?)";
 
         //try pra adicionar informaçoes no novo gerente
         try (Connection conn = connectionFactory.getConnection();
@@ -51,30 +52,32 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
+            sttmt.setString(4, String.valueOf(gerente.getRegiao_codigo()));
             sttmt.executeUpdate();
         }
     }
 
 
     //metodo pra encontrar gerente que deseja ser alterado
-    public Gerente foundGerente(int id) throws SQLException {
+    public Gerente foundGerente(int codigo) throws SQLException {
 
-        String sql = "SELECT * FROM gerente_regional WHERE id = ?";
+        String sql = "SELECT * FROM gerente_regional WHERE codigo = ?";
 
         //try pra conectar com o banco e executar a query
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)) {
 
-            sttmt.setInt(1, id);
+            sttmt.setInt(1, codigo);
 
             //try pra retornar o gerente do id especificadox
             try (ResultSet result = sttmt.executeQuery()) {
                 if (result.next()) {
                     Gerente gerente = new Gerente();
-                    gerente.setId(result.getInt("id"));
+                    gerente.setCodigo(result.getInt("codigo"));
                     gerente.setNome(result.getString("nome"));
                     gerente.setEmail(result.getString("email"));
                     gerente.setSenha(result.getString("senha"));
+                    gerente.setRegiao_codigo(result.getInt("regiao_codigo"));
                     return gerente;
                 }
             }
@@ -83,9 +86,9 @@ public class GerenteDAO {
     }
 
     //metodo pra atualizar o gerente que encontrou no metodo passado
-    public void update(Gerente gerente, int id) throws SQLException{
+    public void update(Gerente gerente, int codigo) throws SQLException{
 
-        String sql = "UPDATE gerente_regional SET nome = ?, email = ?, senha = ? WHERE id = ?";
+        String sql = "UPDATE gerente_regional SET nome = ?, email = ?, senha = ?, regiao_codigo = ? WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
@@ -93,19 +96,20 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
-            sttmt.setInt(4, id);
+            sttmt.setInt(4, gerente.getRegiao_codigo());
+            sttmt.setInt(5, codigo);
             sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir gerente do banco de acordo com o id
-    public void delete(int id) throws SQLException {
+    public void delete(int codigo) throws SQLException {
 
-        String sql = "DELETE FROM gerente_regional WHERE id = ?";
+        String sql = "DELETE FROM gerente_regional WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
             PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, id);
+            sttmt.setInt(1, codigo);
             sttmt.executeUpdate();
         }
     }
