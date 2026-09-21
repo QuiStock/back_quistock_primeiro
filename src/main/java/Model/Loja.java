@@ -7,9 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 public class Loja {
-    private int id;
+    private int codigo;
     private String email;
     private String senha;
-    private String endereco_id;
-    private String regiao_id;
 }

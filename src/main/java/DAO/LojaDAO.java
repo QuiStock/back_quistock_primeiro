@@ -29,11 +29,9 @@ public class LojaDAO {
             //laço pra repetir sempre q tiver loja na fila
             while (result.next()) {
                 Loja loja = new Loja();
-                loja.setId(result.getInt("id"));
+                loja.setCodigo(result.getInt("codigo"));
                 loja.setEmail(result.getString("email"));
                 loja.setSenha(result.getString("senha"));
-                loja.setEndereco_id(result.getString("endereco_id"));
-                loja.setRegiao_id(result.getString("regiao_id"));
                 lojas.add(loja);
             }
         }
@@ -43,42 +41,38 @@ public class LojaDAO {
     //metodo pra criar uma loja nova
     public void create(Loja loja) throws SQLException {
 
-        String sql = "INSERT INTO loja (id, email, senha, endereco_id, regiao_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO loja (codigo, email, senha) VALUES (?, ?, ?)";
 
         //try pra adicionar as informaçoes na nova loja
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
-            sttmt.setInt(1, loja.getId());
+            sttmt.setInt(1, loja.getCodigo());
             sttmt.setString(2, loja.getEmail());
             sttmt.setString(3, loja.getSenha());
-            sttmt.setString(4, loja.getEndereco_id());
-            sttmt.setString(5, loja.getRegiao_id());
             sttmt.executeUpdate();
         }
     }
 
 
     //metodo pra encontrar a loja que deseja ser alterada
-    public Loja foundLoja(int id) throws SQLException {
+    public Loja foundLoja(int codigo) throws SQLException {
 
-        String sql = "SELECT * FROM loja WHERE id = ?";
+        String sql = "SELECT * FROM loja WHERE codigo = ?";
 
         //try pra conectar com o banco e executar a query
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)) {
 
-            sttmt.setInt(1, id);
+            sttmt.setInt(1, codigo);
 
             //try pra retornar o gerente do id especificadox
             try (ResultSet result = sttmt.executeQuery()) {
                 if (result.next()) {
                     Loja loja = new Loja();
-                    loja.setId(result.getInt("id"));
+                    loja.setCodigo(result.getInt("codigo"));
                     loja.setEmail(result.getString("email"));
                     loja.setSenha(result.getString("senha"));
-                    loja.setEndereco_id(result.getString("endereco_id"));
-                    loja.setRegiao_id(result.getString("regiao_id"));
                     return loja;
                 }
             }
@@ -87,30 +81,28 @@ public class LojaDAO {
     }
 
     //metodo pra atualizar a loja que encontrou no metodo passado
-    public void update(Loja loja, int id) throws SQLException{
+    public void update(Loja loja, int codigo) throws SQLException{
 
-        String sql = "UPDATE loja SET email = ?, senha = ?, endereco_id = ?, regiao_id = ? WHERE id = ?";
+        String sql = "UPDATE loja SET email = ?, senha = ? WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
             sttmt.setString(1, loja.getEmail());
             sttmt.setString(2, loja.getSenha());
-            sttmt.setString(3, loja.getEndereco_id());
-            sttmt.setString(4, loja.getRegiao_id());
-            sttmt.setInt(5, id);
+            sttmt.setInt(3, codigo);
             sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir a loja do banco de acordo com o id
-    public void delete(int id) throws SQLException {
+    public void delete(int codigo) throws SQLException {
 
-        String sql = "DELETE FROM loja WHERE id = ?";
+        String sql = "DELETE FROM loja WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, id);
+            sttmt.setInt(1, codigo);
             sttmt.executeUpdate();
         }
     }
