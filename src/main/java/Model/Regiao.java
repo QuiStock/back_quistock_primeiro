@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Regiao {
-    private int id;
+    private int codigo;
     private String nome;
-    private int gerente_regional_id;
+    private int loja_codigo;
 }

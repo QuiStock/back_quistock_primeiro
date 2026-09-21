@@ -41,15 +41,14 @@ public class LojaDAO {
     //metodo pra criar uma loja nova
     public void create(Loja loja) throws SQLException {
 
-        String sql = "INSERT INTO loja (codigo, email, senha) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO loja ( email, senha) VALUES ( ?, ?)";
 
         //try pra adicionar as informaçoes na nova loja
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
-            sttmt.setInt(1, loja.getCodigo());
-            sttmt.setString(2, loja.getEmail());
-            sttmt.setString(3, loja.getSenha());
+            sttmt.setString(1, loja.getEmail());
+            sttmt.setString(2, loja.getSenha());
             sttmt.executeUpdate();
         }
     }

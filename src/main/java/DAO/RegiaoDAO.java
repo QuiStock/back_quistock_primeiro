@@ -29,9 +29,9 @@ public class RegiaoDAO {
             //laço pra repetir sempre q tiver regiao na fila
             while (result.next()) {
                 Regiao regiao = new Regiao();
-                regiao.setId(result.getInt("id"));
+                regiao.setCodigo(result.getInt("codigo"));
                 regiao.setNome(result.getString("nome"));
-                regiao.setGerente_regional_id(result.getInt("gerente_regional_id"));
+                regiao.setLoja_codigo(result.getInt("loja_codigo"));
                 regioes.add(regiao);
             }
         }
@@ -41,68 +41,67 @@ public class RegiaoDAO {
     //metodo pra criar uma regiao nova
     public void create(Regiao regiao) throws SQLException {
 
-        String sql = "INSERT INTO regiao (id, nome, gerente_regional_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO regiao (nome, loja_codigo) VALUES (?, ?)";
 
         //try pra adicionar informaçoes na nova regiao
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
-            sttmt.setInt(1, regiao.getId());
-            sttmt.setString(2, regiao.getNome());
-            sttmt.setInt(3, regiao.getGerente_regional_id());
+            sttmt.setString(1, regiao.getNome());
+            sttmt.setInt(2, regiao.getLoja_codigo());
             sttmt.executeUpdate();
         }
     }
 
 
-    //metodo pra encontrar regiao que deseja ser alterad
-    public Regiao foundRegiao(int id) throws SQLException {
+    //metodo pra encontrar regiao que deseja ser alterada
+    public Regiao foundRegiao(int codigo) throws SQLException {
 
-        String sql = "SELECT * FROM regiao WHERE id = ?";
+        String sql = "SELECT * FROM regiao WHERE codigo = ?";
 
         //try pra conectar com o banco e executar a query
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)) {
 
-            sttmt.setInt(1, id);
+            sttmt.setInt(1, codigo);
 
             //try pra retornar a regiao do id especificadox
             try (ResultSet result = sttmt.executeQuery()) {
                 if (result.next()) {
                     Regiao regiao = new Regiao();
-                    regiao.setId(result.getInt("id"));
+                    regiao.setCodigo(result.getInt("codigo"));
                     regiao.setNome(result.getString("nome"));
-                    regiao.setGerente_regional_id(result.getInt("gerente_regional_id"));
+                    regiao.setLoja_codigo(result.getInt("loja_codigo"));
                     return regiao;
                 }
             }
-            return null; //se nao encontrar nenhuma regiao com esse id retorna null
+            return null; //se nao encontrar nenhuma regiao com esse codigo retorna null
         }
     }
 
     //metodo pra atualizar a regiao que encontrou no metodo passado
-    public void update(Regiao regiao, int id) throws SQLException{
+    public void update(Regiao regiao, int codigo) throws SQLException{
 
-        String sql = "UPDATE regiao SET nome = ?, gerente_regional_id = ? WHERE id = ?";
+        String sql = "UPDATE regiao SET nome = ?, loja_codigo = ? WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
             sttmt.setString(1, regiao.getNome());
-            sttmt.setInt(2, regiao.getGerente_regional_id());
-            sttmt.setInt(3, id);
+            sttmt.setInt(2, regiao.getLoja_codigo());
+            sttmt.setInt(3, codigo);
             sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir regiao do banco de acordo com o id
-    public void delete(int id) throws SQLException {
+    public void delete(int codigo) throws SQLException {
 
-        String sql = "DELETE FROM regiao WHERE id = ?";
+        String sql = "DELETE FROM regiao WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, id);
+            sttmt.setInt(1, codigo);
             sttmt.executeUpdate();
         }
     }
