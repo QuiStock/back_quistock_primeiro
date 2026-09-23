@@ -1,5 +1,7 @@
 package Model;
+
 import lombok.*;
+import Enum.TipoLogin;
 
 @Getter
 @Setter
@@ -11,4 +13,5 @@ public class Gerente {
     private String nome;
     private String senha;
     private int regiao_codigo;
+    private TipoLogin tipoLogin;
 }
