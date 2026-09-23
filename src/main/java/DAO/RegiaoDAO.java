@@ -22,20 +22,28 @@ public class RegiaoDAO {
 
 
         //try pra listar tudo de todas as regioes
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement sttmt = conn.prepareStatement(sql);
-             ResultSet result = sttmt.executeQuery()) {
+        try (
+                Connection conn = connectionFactory.getConnection();
+                PreparedStatement sttmt = conn.prepareStatement(sql);
+                ResultSet result = sttmt.executeQuery()
+        ) {
 
             //laço pra repetir sempre q tiver regiao na fila
             while (result.next()) {
+
                 Regiao regiao = new Regiao();
+
                 regiao.setCodigo(result.getInt("codigo"));
                 regiao.setNome(result.getString("nome"));
                 regiao.setLoja_codigo(result.getInt("loja_codigo"));
+
                 regioes.add(regiao);
+
             }
         }
+
         return regioes;
+
     }
 
     //metodo pra criar uma regiao nova
@@ -50,12 +58,13 @@ public class RegiaoDAO {
             sttmt.setString(1, regiao.getNome());
             sttmt.setInt(2, regiao.getLoja_codigo());
             sttmt.executeUpdate();
+
         }
     }
 
 
     //metodo pra encontrar regiao que deseja ser alterada
-    public Regiao foundRegiao(int codigo) throws SQLException {
+    /*public Regiao foundRegiao(int codigo) throws SQLException {
 
         String sql = "SELECT * FROM regiao WHERE codigo = ?";
 
@@ -77,10 +86,10 @@ public class RegiaoDAO {
             }
             return null; //se nao encontrar nenhuma regiao com esse codigo retorna null
         }
-    }
+    }*/
 
-    //metodo pra atualizar a regiao que encontrou no metodo passado
-    public void update(Regiao regiao, int codigo) throws SQLException{
+    //método de update com referência em id
+    public void update(Regiao regiao) throws SQLException{
 
         String sql = "UPDATE regiao SET nome = ?, loja_codigo = ? WHERE codigo = ?";
 
@@ -89,19 +98,19 @@ public class RegiaoDAO {
 
             sttmt.setString(1, regiao.getNome());
             sttmt.setInt(2, regiao.getLoja_codigo());
-            sttmt.setInt(3, codigo);
+            sttmt.setInt(3, regiao.getCodigo());
             sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir regiao do banco de acordo com o id
-    public void delete(int codigo) throws SQLException {
+    public void delete(Regiao regiao) throws SQLException {
 
         String sql = "DELETE FROM regiao WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, codigo);
+            sttmt.setInt(1, regiao.getCodigo());
             sttmt.executeUpdate();
         }
     }
