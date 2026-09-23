@@ -66,9 +66,11 @@ public class EnderecoDAO {
         String query = "select * from endereco;";
         List<Endereco> enderecos = new ArrayList<>();
 
-        try (Connection conn = factory.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        ResultSet rs = stmt.executeQuery()){
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()
+        ){
             while (rs.next()){
                 Endereco end = new Endereco(
                     rs.getInt("id"),

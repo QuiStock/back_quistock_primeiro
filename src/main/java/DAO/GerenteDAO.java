@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import Enum.TipoLogin;
 
 public class GerenteDAO {
 
@@ -24,16 +25,18 @@ public class GerenteDAO {
         //try pra listar tudo de todos os produtos
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql);
-             ResultSet result = sttmt.executeQuery()) {
+             ResultSet rs = sttmt.executeQuery()) {
 
-            //laço pra repetir sempre q tiver produto na fila
-            while (result.next()) {
-                Gerente gerente = new Gerente();
-                gerente.setCodigo(result.getInt("codigo"));
-                gerente.setNome(result.getString("nome"));
-                gerente.setEmail(result.getString("email"));
-                gerente.setSenha(result.getString("senha"));
-                gerente.setRegiao_codigo(result.getInt("regiao_codigo"));
+            //laço pra repetir sempre que tiver produto na fila
+            while (rs.next()) {
+                Gerente gerente = new Gerente(
+                        rs.getInt("codigo"),
+                        rs.getString("email"),
+                        rs.getString("nome"),
+                        rs.getString("senha"),
+                        TipoLogin.valueOf(rs.getString("tipo"))
+                );
+
                 gerentes.add(gerente);
             }
         }
@@ -43,7 +46,7 @@ public class GerenteDAO {
     //metodo pra criar um gerente novo
     public void create(Gerente gerente) throws SQLException {
 
-        String sql = "INSERT INTO gerente_regional (nome, email, senha, regao_codigo) VALUES ( ?, ?, ?, ?)";
+        String sql = "INSERT INTO gerente_regional (nome, email, senha, tipo) VALUES ( ?, ?, ?, ?)";
 
         //try pra adicionar informaçoes no novo gerente
         try (Connection conn = connectionFactory.getConnection();
@@ -52,7 +55,7 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
-            sttmt.setString(4, String.valueOf(gerente.getRegiao_codigo()));
+            sttmt.setString(4, String.valueOf(gerente.getTipoLogin()));
             sttmt.executeUpdate();
         }
     }
@@ -88,7 +91,7 @@ public class GerenteDAO {
     //metodo pra atualizar o gerente que encontrou no metodo passado
     public void update(Gerente gerente) throws SQLException{
 
-        String sql = "UPDATE gerente_regional SET nome = ?, email = ?, senha = ?, regiao_codigo = ? WHERE codigo = ?";
+        String sql = "UPDATE gerente_regional SET nome = ?, email = ?, senha = ?, tipo = ? WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
@@ -96,8 +99,9 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
-            sttmt.setInt(4, gerente.getRegiao_codigo());
+            sttmt.setInt(4, String.valueOf(gerente.getTipoLogin());
             sttmt.setInt(5, gerente.getCodigo());
+
             sttmt.executeUpdate();
         }
     }
