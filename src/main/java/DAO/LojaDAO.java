@@ -55,7 +55,7 @@ public class LojaDAO {
 
 
     //metodo pra encontrar a loja que deseja ser alterada
-    public Loja foundLoja(int codigo) throws SQLException {
+    /*public Loja foundLoja(int codigo) throws SQLException {
 
         String sql = "SELECT * FROM loja WHERE codigo = ?";
 
@@ -77,10 +77,10 @@ public class LojaDAO {
             }
             return null; //se nao encontrar nenhuma loja com esse id retorna null
         }
-    }
+    }*/
 
     //metodo pra atualizar a loja que encontrou no metodo passado
-    public void update(Loja loja, int codigo) throws SQLException{
+    public void update(Loja loja) throws SQLException{
 
         String sql = "UPDATE loja SET email = ?, senha = ? WHERE codigo = ?";
 
@@ -89,19 +89,19 @@ public class LojaDAO {
 
             sttmt.setString(1, loja.getEmail());
             sttmt.setString(2, loja.getSenha());
-            sttmt.setInt(3, codigo);
+            sttmt.setInt(3, loja.getCodigo());
             sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir a loja do banco de acordo com o id
-    public void delete(int codigo) throws SQLException {
+    public void delete(Loja loja) throws SQLException {
 
         String sql = "DELETE FROM loja WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, codigo);
+            sttmt.setInt(1, loja.getCodigo());
             sttmt.executeUpdate();
         }
     }
