@@ -29,7 +29,7 @@ public class GerenteServlet extends HttpServlet{
                 showUpdateForm(request, response); //aparecer a interface pra editar
                 break;
             case "deletar":
-                deletGerente(request, response);
+                deleteGerente(request, response);
                 break;
             default:
                 readGerentes(request, response);
