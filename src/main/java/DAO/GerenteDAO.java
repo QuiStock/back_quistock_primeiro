@@ -99,7 +99,7 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
-            sttmt.setInt(4, String.valueOf(gerente.getTipoLogin());
+            sttmt.setString(4, String.valueOf(gerente.getTipoLogin()));
             sttmt.setInt(5, gerente.getCodigo());
 
             sttmt.executeUpdate();
