@@ -46,30 +46,26 @@ public class AdminDAO {
     }
 
     //Método de update com uso de método auxiliar
-    public void update (Admin admin) throws SQLException {
+    /*public void update (Admin admin) throws SQLException {
         String query = "update admin set email = ?, senha = ?, nome = ? where id = ?;";
-
-        int id = searchAdmin(admin);
 
         try (Connection conn = factory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setString(1, admin.getEmail());
             stmt.setString(2, admin.getSenha());
             stmt.setString(3, admin.getNome());
-            stmt.setInt(4, id);
+            stmt.setInt(4, admin.getId());
 
             stmt.executeUpdate();
         }
-    }
+    }*/
 
     public void delete(Admin admin) throws SQLException{
         String query = "delete from admin where id = ?;";
 
-        int id = searchAdmin(admin);
-
         try (Connection conn = factory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setInt(1, id);
+            stmt.setInt(1, admin.getId());
 
             stmt.executeUpdate();
         }
