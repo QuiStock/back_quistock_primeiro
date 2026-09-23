@@ -69,38 +69,73 @@ public class GerenteServlet extends HttpServlet{
         String nome =  request.getParameter("gerenteName");
         String email = request.getParameter("gerenteEmail");
         String senha = request.getParameter("gerentePassword");
+        int regiao_codigo = Integer.parseInt(request.getParameter("gerenteRegiaoCodigo"));
 
         //adicionadno as info num objeto do gerente
         Gerente gerente = new Gerente();
         gerente.setNome(nome);
         gerente.setEmail(email);
         gerente.setSenha(senha);
+        gerente.setRegiao_codigo(regiao_codigo);
 
         //criando o gerente novo no db
         try {
                 gerenteDAO.create(gerente);
-                response.sendRedirect("gerentes.jsp"); //redireciona pra gerentes.jsp dnv
+                response.sendRedirect("gerentes"); //redireciona pra gerentes.jsp dnv
         }catch (Exception e){
             throw new RuntimeException(e);
         }
     }
 
-
+    //mostra o formulario pro usuario editar o gerente
     private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        //vendo se o id bate com o gerente
         int codigo = Integer.parseInt(request.getParameter("gerenteCode"));
-        GerenteDAO gerenteDAO = new  GerenteDAO();
+
+        request.setAttribute("gerenteCode", codigo); //manda o codigo pro JSP
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("editarGerente.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    //
+
+    private void updateGerente(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        Gerente gerente = new Gerente();
+
+        //definindo os valores novos do gerente
+        int codigo = Integer.parseInt(request.getParameter("gerenteCode"));
+        String nome = request.getParameter("gerenteName");
+        String email = request.getParameter("gerenteEmail");
+        String senha = request.getParameter("gerentePassword");
+        int regiao_codigo = Integer.parseInt(request.getParameter("gerenteRegiaoCodigo"));
+
+        gerente.setCodigo(codigo);
+        gerente.setNome(nome);
+        gerente.setEmail(email);
+        gerente.setSenha(senha);
+        gerente.setRegiao_codigo(regiao_codigo);
+
+        //editando o gerente
+        try {
+            gerenteDAO.update(gerente);
+            response.sendRedirect("gerentes");
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void deleteGerente(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        int codigo = Integer.parseInt(request.getParameter("gerenteCode"));
+
+        Gerente gerente = new Gerente();
+        gerente.setCodigo(codigo);
 
         try {
-
-            Gerente gerente = new gerenteDAO.foundGerente(codigo);
-
-
-
-        }catch (Exception e){
+            gerenteDAO.delete(gerente);
+            response.sendRedirect("gerentes");
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
 
 }

@@ -52,7 +52,7 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
-            sttmt.setString(4, String.valueOf(gerente.getRegiao_codigo()));
+            sttmt.setInt(4, gerente.getRegiao_codigo());
             sttmt.executeUpdate();
         }
     }
