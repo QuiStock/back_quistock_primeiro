@@ -59,7 +59,7 @@ public class GerenteServlet extends HttpServlet{
             RequestDispatcher dispatcher = request.getRequestDispatcher("gerentes.jsp"); //onde vai redirecionar
             dispatcher.forward(request, response);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new ServletException("Erro ao buscar gerentes", e);
         }
     }
 
@@ -80,24 +80,26 @@ public class GerenteServlet extends HttpServlet{
 
         //criando o gerente novo no db
         try {
-                gerenteDAO.create(gerente);
-                response.sendRedirect("gerentes"); //redireciona pra gerentes.jsp dnv
-        }catch (Exception e){
-            throw new RuntimeException(e);
+            gerenteDAO.create(gerente);
+            response.sendRedirect("gerentes"); //redireciona pra gerentes.jsp dnv
+        }catch (SQLException e){
+            throw new ServletException("Erro ao criar gerente", e);
         }
     }
 
     //mostra o formulario pro usuario editar o gerente
-    private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int codigo = Integer.parseInt(request.getParameter("gerenteCode"));
 
-        request.setAttribute("gerenteCode", codigo); //manda o codigo pro JSP
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("editarGerente.jsp");
-        dispatcher.forward(request, response);
+        try {
+            Gerente gerente = gerenteDAO.foundGerente(codigo);
+            request.setAttribute("gerente", gerente); // agora manda o objeto inteiro
+            RequestDispatcher dispatcher = request.getRequestDispatcher("editarGerente.jsp");
+            dispatcher.forward(request, response);
+        } catch (SQLException e) {
+            throw new ServletException("Erro ao buscar gerente", e);
+        }
     }
-
-    //
 
     private void updateGerente(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         Gerente gerente = new Gerente();
@@ -119,22 +121,19 @@ public class GerenteServlet extends HttpServlet{
         try {
             gerenteDAO.update(gerente);
             response.sendRedirect("gerentes");
-        }catch (Exception e){
-            throw new RuntimeException(e);
+        }catch (SQLException e){
+            throw new ServletException("Erro ao atualizar gerente", e);
         }
     }
 
     private void deleteGerente(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         int codigo = Integer.parseInt(request.getParameter("gerenteCode"));
 
-        Gerente gerente = new Gerente();
-        gerente.setCodigo(codigo);
-
         try {
-            gerenteDAO.delete(gerente);
+            gerenteDAO.delete(codigo);
             response.sendRedirect("gerentes");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new ServletException("Erro ao deletar gerente", e);
         }
     }
 

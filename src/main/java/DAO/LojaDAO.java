@@ -14,7 +14,7 @@ public class LojaDAO {
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
     //Metodo pra imprimir todas as lojas
-    public List<Loja> read() throws SQLException {
+    public List<Loja> readLojas() throws SQLException {
 
         List<Loja> lojas = new ArrayList<>();
 
@@ -39,11 +39,11 @@ public class LojaDAO {
     }
 
     //metodo pra criar uma loja nova
-    public void create(Loja loja) throws SQLException {
+    public void createLoja(Loja loja) throws SQLException {
 
-        String sql = "INSERT INTO loja ( email, senha) VALUES ( ?, ?)";
+        String sql = "INSERT INTO loja (email, senha) VALUES ( ?, ?)";
 
-        //try pra adicionar as informaçoes na nova loja
+        //try pra adicionar informaçoes na nova loja
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
@@ -54,8 +54,8 @@ public class LojaDAO {
     }
 
 
-    //metodo pra encontrar a loja que deseja ser alterada
-    /*public Loja foundLoja(int codigo) throws SQLException {
+    //metodo pra encontrar a loja que deseja alterar
+    public Loja foundLoja(int codigo) throws SQLException {
 
         String sql = "SELECT * FROM loja WHERE codigo = ?";
 
@@ -65,7 +65,7 @@ public class LojaDAO {
 
             sttmt.setInt(1, codigo);
 
-            //try pra retornar o gerente do id especificadox
+            //try pra retornar a loja do id especificadox
             try (ResultSet result = sttmt.executeQuery()) {
                 if (result.next()) {
                     Loja loja = new Loja();
@@ -77,10 +77,10 @@ public class LojaDAO {
             }
             return null; //se nao encontrar nenhuma loja com esse id retorna null
         }
-    }*/
+    }
 
     //metodo pra atualizar a loja que encontrou no metodo passado
-    public void update(Loja loja) throws SQLException{
+    public void updateLoja(Loja loja) throws SQLException{
 
         String sql = "UPDATE loja SET email = ?, senha = ? WHERE codigo = ?";
 
@@ -94,14 +94,14 @@ public class LojaDAO {
         }
     }
 
-    //metodo pra excluir a loja do banco de acordo com o id
-    public void delete(Loja loja) throws SQLException {
+    //metodo pra excluir loja do banco de acordo com o id
+    public void deleteLoja(int codigo) throws SQLException {
 
         String sql = "DELETE FROM loja WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, loja.getCodigo());
+            sttmt.setInt(1, codigo);
             sttmt.executeUpdate();
         }
     }

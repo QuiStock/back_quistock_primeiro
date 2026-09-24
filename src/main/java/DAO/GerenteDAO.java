@@ -21,12 +21,12 @@ public class GerenteDAO {
         String sql = "SELECT * FROM gerente_regional";
 
 
-        //try pra listar tudo de todos os produtos
+        //try pra listar tudo de todos os gerentes
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql);
              ResultSet result = sttmt.executeQuery()) {
 
-            //laço pra repetir sempre q tiver produto na fila
+            //laço pra repetir sempre q tiver gerente na fila
             while (result.next()) {
                 Gerente gerente = new Gerente();
                 gerente.setCodigo(result.getInt("codigo"));
@@ -59,7 +59,7 @@ public class GerenteDAO {
 
 
     //metodo pra encontrar gerente que deseja ser alterado
-    /*public Gerente foundGerente(int codigo) throws SQLException {
+    public Gerente foundGerente(int codigo) throws SQLException {
 
         String sql = "SELECT * FROM gerente_regional WHERE codigo = ?";
 
@@ -83,7 +83,7 @@ public class GerenteDAO {
             }
             return null; //se nao encontrar nenhum gerente com esse id retorna null
         }
-    }*/
+    }
 
     //metodo pra atualizar o gerente que encontrou no metodo passado
     public void update(Gerente gerente) throws SQLException{
@@ -103,13 +103,13 @@ public class GerenteDAO {
     }
 
     //metodo pra excluir gerente do banco de acordo com o id
-    public void delete(Gerente gerente) throws SQLException {
+    public void delete(int codigo) throws SQLException {
 
         String sql = "DELETE FROM gerente_regional WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
             PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, gerente.getCodigo());
+            sttmt.setInt(1, codigo);
             sttmt.executeUpdate();
         }
     }
