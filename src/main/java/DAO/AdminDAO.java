@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Model.Admin;
+import Enum.TipoLogin;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -16,20 +17,23 @@ public class AdminDAO {
 
     //método de inserção de novo admin
     public void insert (Admin admin) throws SQLException {
-        String query = "insert into admin (email, senha, nome) values(?, ?, ?); ";
+
+        String query = "insert into admin (email, senha, nome, tipo) values(?, ?, ?, ?); ";
 
         try (Connection conn = factory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)){
+
             stmt.setString(1, admin.getEmail());
             stmt.setString(2, admin.getSenha());
             stmt.setString(3, admin.getNome());
+            stmt.setString(4, String.valueOf(admin.getTipoLogin()));
 
             stmt.executeUpdate();
         }
     }
 
     //método auxiliar para encontrar id de admin
-    private int searchAdmin(Admin admin) throws SQLException {
+    /*private int searchAdmin(Admin admin) throws SQLException {
         String query = "select id from admin where email = ?;";
 
         try (Connection conn = factory.getConnection();
@@ -46,51 +50,68 @@ public class AdminDAO {
                 }
             }
         }
-    }
+    }*/
 
     //Método de update com uso de método auxiliar
-    /*public void update (Admin admin) throws SQLException {
+    public void update (Admin admin) throws SQLException {
+
         String query = "update admin set email = ?, senha = ?, nome = ? where id = ?;";
 
-        try (Connection conn = factory.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query)){
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)
+        ){
+
             stmt.setString(1, admin.getEmail());
             stmt.setString(2, admin.getSenha());
             stmt.setString(3, admin.getNome());
             stmt.setInt(4, admin.getId());
 
             stmt.executeUpdate();
+
         }
-    }*/
+    }
 
     public void delete(Admin admin) throws SQLException{
+
         String query = "delete from admin where id = ?;";
 
-        try (Connection conn = factory.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query)){
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)
+        ){
+
             stmt.setInt(1, admin.getId());
 
             stmt.executeUpdate();
+
         }
     }
 
     public List<Admin> select() throws SQLException{
+
         String query = "select * from admin;";
+
         List<Admin> admins = new ArrayList<>();
 
-        try (Connection conn = factory.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        ResultSet rs = stmt.executeQuery()){
+        try (
+                Connection conn = factory.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()
+        ){
 
             while(rs.next()){
+
                 Admin adm = new Admin(
                     rs.getInt("id"),
                     rs.getString("email"),
                     rs.getString("senha"),
-                    rs.getString("nome")
+                    rs.getString("nome"),
+                    TipoLogin.valueOf(rs.getString("tipo"))
                 );
 
                 admins.add(adm);
+                
             }
         }
 

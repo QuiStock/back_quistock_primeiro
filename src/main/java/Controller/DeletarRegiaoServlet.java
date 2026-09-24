@@ -28,5 +28,4 @@ public class DeletarRegiaoServlet extends HttpServlet{
         }
 
     }
-
 }

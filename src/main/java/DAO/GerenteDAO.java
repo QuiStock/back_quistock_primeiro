@@ -114,6 +114,7 @@ public class GerenteDAO {
         try (Connection conn = connectionFactory.getConnection();
             PreparedStatement sttmt = conn.prepareStatement(sql)){
             sttmt.setInt(1, gerente.getCodigo());
+
             sttmt.executeUpdate();
         }
     }
