@@ -12,5 +12,4 @@ public class Gerente {
     private String email;
     private String nome;
     private String senha;
-    private TipoLogin tipoLogin;
 }
