@@ -31,7 +31,7 @@ public class AdminDAO {
     }
 
     //método auxiliar para encontrar id de admin
-    /*private int searchAdmin(Admin admin) throws SQLException {
+    private int searchAdmin(Admin admin) throws SQLException {
         String query = "select id from admin where email = ?;";
 
         try (Connection conn = factory.getConnection();
@@ -48,7 +48,7 @@ public class AdminDAO {
                 }
             }
         }
-    }*/
+    }
 
     //Método de update com uso de método auxiliar
     public void update (Admin admin) throws SQLException {
