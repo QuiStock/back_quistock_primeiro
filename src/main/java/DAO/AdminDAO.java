@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Model.Admin;
-import Enum.TipoLogin;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class AdminDAO {
     //método de inserção de novo admin
     public void insert (Admin admin) throws SQLException {
 
-        String query = "insert into admin (email, senha, nome, tipo) values(?, ?, ?, ?); ";
+        String query = "insert into admin (email, senha, nome) values(?, ?, ?); ";
 
         try (Connection conn = factory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)){
@@ -26,7 +25,6 @@ public class AdminDAO {
             stmt.setString(1, admin.getEmail());
             stmt.setString(2, admin.getSenha());
             stmt.setString(3, admin.getNome());
-            stmt.setString(4, String.valueOf(admin.getTipoLogin()));
 
             stmt.executeUpdate();
         }
@@ -106,8 +104,7 @@ public class AdminDAO {
                     rs.getInt("id"),
                     rs.getString("email"),
                     rs.getString("senha"),
-                    rs.getString("nome"),
-                    TipoLogin.valueOf(rs.getString("tipo"))
+                    rs.getString("nome")
                 );
 
                 admins.add(adm);

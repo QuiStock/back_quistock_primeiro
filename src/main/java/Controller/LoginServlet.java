@@ -1,15 +1,14 @@
 package Controller;
 
-import DAO.AdminDAO;
-import DAO.GerenteDAO;
+import Service.LoginService;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-
-import Model.Gerente;
-import Model.Admin;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.*;
 
-import java.sql.SQLException;
-import java.util.List;
+import java.io.IOException;
 
 @Getter
 @Setter
@@ -17,35 +16,45 @@ import java.util.List;
 @NoArgsConstructor
 
 @WebServlet("/login")
-public class LoginServlet {
+public class LoginServlet extends HttpServlet {
 
-    AdminDAO daoA = new AdminDAO();
-    GerenteDAO daoG = new GerenteDAO();
+    private LoginService loginService = new LoginService();
 
-    public boolean validate(String user, String password) throws SQLException, ClassNotFoundException {
+    @Override
+    protected void doPost(
+            HttpServletRequest req,
+            HttpServletResponse resp
+    ) throws ServletException, IOException {
 
-        List<Admin> admins = daoA.select();
-        List<Gerente> gerentes = daoG.read();
+        String email = req.getParameter("email");
+        String pass = req.getParameter("senha");
 
-        for (Admin admin : admins) {
+        
 
-            if (admin.getEmail().equals(user) && admin.getSenha().equals(password)){
+        try {
 
-                return true;
+            boolean login = loginService.validaLogin(email, pass);
+
+            if (login) {
+
+                req.getRequestDispatcher("home-admin.jsp").forward(req, resp);
+
+            }
+
+            else  {
+
+                req.getRequestDispatcher("login.jsp").forward(req, resp);
 
             }
 
+        } catch(Exception e) {
+
+            throw new ServletException(e);
+
         }
-
-        for (Gerente gerente : gerentes) {
-            if (gerente.getEmail().equals(user) && gerente.getSenha().equals(password)){
-
-                return true;
-
-            }
-        }
-
-        return false;
 
     }
+
+
+
 }

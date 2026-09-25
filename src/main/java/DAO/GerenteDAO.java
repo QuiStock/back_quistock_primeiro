@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import Enum.TipoLogin;
 
 public class GerenteDAO {
 
@@ -33,8 +32,7 @@ public class GerenteDAO {
                         rs.getInt("codigo"),
                         rs.getString("email"),
                         rs.getString("nome"),
-                        rs.getString("senha"),
-                        TipoLogin.valueOf(rs.getString("tipo"))
+                        rs.getString("senha")
                 );
 
                 gerentes.add(gerente);
@@ -46,7 +44,7 @@ public class GerenteDAO {
     //metodo pra criar um gerente novo
     public void create(Gerente gerente) throws SQLException {
 
-        String sql = "INSERT INTO gerente_regional (nome, email, senha, tipo) VALUES ( ?, ?, ?, ?)";
+        String sql = "INSERT INTO gerente_regional (nome, email, senha, tipo) VALUES ( ?, ?, ?)";
 
         //try pra adicionar informaçoes no novo gerente
         try (Connection conn = connectionFactory.getConnection();
@@ -55,7 +53,7 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
-            sttmt.setString(4, String.valueOf(gerente.getTipoLogin()));
+
             sttmt.executeUpdate();
         }
     }
@@ -91,7 +89,7 @@ public class GerenteDAO {
     //metodo pra atualizar o gerente que encontrou no metodo passado
     public void update(Gerente gerente) throws SQLException{
 
-        String sql = "UPDATE gerente_regional SET nome = ?, email = ?, senha = ?, tipo = ? WHERE codigo = ?";
+        String sql = "UPDATE gerente_regional SET nome = ?, email = ?, senha = ? WHERE codigo = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
@@ -99,8 +97,7 @@ public class GerenteDAO {
             sttmt.setString(1, gerente.getNome());
             sttmt.setString(2, gerente.getEmail());
             sttmt.setString(3, gerente.getSenha());
-            sttmt.setString(4, String.valueOf(gerente.getTipoLogin()));
-            sttmt.setInt(5, gerente.getCodigo());
+            sttmt.setInt(4, gerente.getCodigo());
 
             sttmt.executeUpdate();
         }

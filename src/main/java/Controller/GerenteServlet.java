@@ -28,7 +28,9 @@ public class GerenteServlet extends HttpServlet{
             RequestDispatcher dispatcher = request.getRequestDispatcher("gerentes.jsp");//caminho pro jsp
             dispatcher.forward(request, response);
         }catch (SQLException e){
+
             throw new ServletException("Erro ao buscar os gerentes no banco", e);
+
         }
 
     }

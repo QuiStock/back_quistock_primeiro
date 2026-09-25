@@ -1,7 +1,6 @@
 package Model;
 
 import lombok.*;
-import Enum.TipoLogin;
 
 @Getter
 @Setter
