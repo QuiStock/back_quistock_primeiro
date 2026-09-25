@@ -5,9 +5,12 @@
     <title>JSP - Hello World</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
-<br/>
+
+
+    <form method="post">
+        
+        <input type="submit" action="">
+    </form>
 
 </body>
 </html>

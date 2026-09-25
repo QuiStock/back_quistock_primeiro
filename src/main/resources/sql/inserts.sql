@@ -1,3 +1,4 @@
+-- Active: 1786359503132@@quistock-quistockmelhorinter-642a.j.aivencloud.com@11475@dbquistock
 -- primeiro
 insert into super_admin(nome, email, senha) values('Bruno Siqueira Broslavschi Pagan', 'brunopagan1909@gmail.com', 'fundamento revista marinheiro gentileza');
 insert into super_admin(nome, email, senha) values('Henry de Sá Rodrigues', 'henrydsrodrigues07@gmail.com', 'fundamento revista marinheiro gentileza');
@@ -218,3 +219,5 @@ insert into fluxo(tipo, produto_lote) values(
 insert into contem(historico_codigo, fluxo_codigo) values(
     2, 1
 );
+
+select * from super_admin;

@@ -16,7 +16,7 @@ target/
 
 # Secrets
 .env
-src/main/resources/sql/insertsSensiveis.sql
+src/main/resources/sql/inserts.sql
 
 ### Eclipse ###
 .apt_generated

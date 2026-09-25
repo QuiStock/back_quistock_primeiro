@@ -7,8 +7,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Admin {
-    int id;
-    String email;
-    String senha;
-    String nome;
+    private int id;
+    private String email;
+    private String senha;
+    private String nome;
 }
