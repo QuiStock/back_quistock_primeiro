@@ -39,6 +39,7 @@ public class GerenteServlet extends HttpServlet{
     //doPost pra alterar tabela, seja criando ou editando
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         String action = request.getParameter("action");
+        if (action == null) action = "";
 
         switch (action){
             case "cadastrar":
