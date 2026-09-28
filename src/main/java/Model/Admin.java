@@ -9,6 +9,6 @@ import lombok.*;
 public class Admin {
     private int id;
     private String email;
-    private String senha;
-    private String nome;
+    private String password;
+    private String name;
 }
