@@ -18,32 +18,40 @@ public class RegionTypeServlet extends HttpServlet{
 
     private RegionTypeDAO regionTypeDAO = new RegionTypeDAO();
 
+    //doGet pra ver qual das duas ações vai fazer
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         String action = request.getParameter("action");
         if (action == null) action = "regionTypesList";
 
+        //averigua qual action que é e redireciona para o servlet correto
         switch (action){
             case "edit":
-                showUpdateForm(request, response);
-                break;
-            case "delete":
-                deleteRegionType(request, response);
+                showUpdateForm(request, response); //aparecer a interface pra editar
                 break;
             default:
                 readRegionTypes(request, response);
         }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    //doPost pra alterar tabela, seja criando, editando ou deletando
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        //traz pro teclado brasileiro
+        request.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
         if (action == null) action = "";
 
-        switch (action){
+        //averigua qual action que é e redireciona para o servlet correto
+        switch (action) {
             case "register":
                 createRegionType(request, response);
                 break;
             case "edit":
-                updateRegionType(request, response);
+                updateRegionType(request, response); //editar de fato
+                break;
+            case "delete":
+                deleteRegionType(request, response);
                 break;
         }
     }

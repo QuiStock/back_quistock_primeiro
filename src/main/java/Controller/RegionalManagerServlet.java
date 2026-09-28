@@ -23,30 +23,35 @@ public class RegionalManagerServlet extends HttpServlet{
         String action = request.getParameter("action");
         if (action == null) action = "regionalManagersList";
 
-        //switch e cases pra caso for editar, deletar ou listar
+        //averigua qual action que é e redireciona para o servlet correto
         switch (action){
             case "edit":
                 showUpdateForm(request, response); //aparecer a interface pra editar
-                break;
-            case "delete":
-                deleteRegionalManager(request, response);
                 break;
             default:
                 readRegionalManagers(request, response);
         }
     }
 
-    //doPost pra alterar tabela, seja criando ou editando
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    //doPost pra alterar tabela, seja criando, editando ou deletando
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        //traz pro teclado brasileiro
+        request.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
         if (action == null) action = "";
 
-        switch (action){
+        //averigua qual action que é e redireciona para o servlet correto
+        switch (action) {
             case "register":
                 createRegionalManager(request, response);
                 break;
             case "edit":
-                updateRegionalManager(request, response); //agora sim, editando o gerente
+                updateRegionalManager(request, response); //editar de fato
+                break;
+            case "delete":
+                deleteRegionalManager(request, response);
                 break;
         }
     }
