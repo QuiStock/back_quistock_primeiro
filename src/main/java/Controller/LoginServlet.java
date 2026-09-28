@@ -1,5 +1,6 @@
 package Controller;
 
+import Service.LoginResult;
 import Service.LoginService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -33,18 +34,22 @@ public class LoginServlet extends HttpServlet {
 
         try {
 
-            boolean login = loginService.validaLogin(email, pass);
+            LoginResult login = loginService.validateLogin(email, pass);
 
-            if (login) {
+            if (login==null) {
+
+                req.getRequestDispatcher("login.jsp").forward(req, resp);
+
+            }
+
+            else if (login.isSuccess() && login.getType().equals("ADMIN")) {
 
                 req.getRequestDispatcher("home-admin.jsp").forward(req, resp);
 
             }
 
-            else  {
-
-                req.getRequestDispatcher("login.jsp").forward(req, resp);
-
+            else if(login.isSuccess() && login.getType().equals("MANAGER")) {
+                req.getRequestDispatcher("home-manager.jsp").forward(req, resp);
             }
 
         } catch(Exception e) {
