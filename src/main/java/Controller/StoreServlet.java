@@ -23,30 +23,35 @@ public class StoreServlet extends HttpServlet{
         String action = request.getParameter("action");
         if (action == null) action = "storesList";
 
-        //switch e cases pra caso for editar, deletar ou listar
+        //averigua qual action que é e redireciona para o servlet correto
         switch (action){
             case "edit":
                 showUpdateForm(request, response); //aparecer a interface pra editar
-                break;
-            case "delete":
-                deleteStore(request, response);
                 break;
             default:
                 readStores(request, response);
         }
     }
 
-    //doPost pra alterar tabela, seja criando ou editando
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    //doPost pra alterar tabela, seja criando, editando ou deletando
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        //traz pro teclado brasileiro
+        request.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
         if (action == null) action = "";
 
-        switch (action){
+        //averigua qual action que é e redireciona para o servlet correto
+        switch (action) {
             case "register":
                 createStore(request, response);
                 break;
             case "edit":
-                updateStore(request, response); //agora sim, editando a loja
+                updateStore(request, response); //editar de fato
+                break;
+            case "delete":
+                deleteStore(request, response);
                 break;
         }
     }
