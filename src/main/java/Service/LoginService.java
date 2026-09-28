@@ -3,7 +3,7 @@ package Service;
 import lombok.*;
 
 import DAO.AdminDAO;
-import DAO.GerenteDAO;
+import DAO.RegionalManagerDAO;
 
 import Model.Admin;
 import Model.RegionalManager;
@@ -11,34 +11,41 @@ import Model.RegionalManager;
 import java.sql.SQLException;
 import java.util.List;
 
+@Setter
 @NoArgsConstructor
 public class LoginService {
 
     private AdminDAO daoAdm = new AdminDAO();
-    private GerenteDAO daoGer = new GerenteDAO();
+    private RegionalManagerDAO daoMan = new RegionalManagerDAO();
 
-    private RegionalManager gerente = new RegionalManager();
-    private Admin admin = new Admin();
+    public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
 
-    public LoginService(RegionalManager gerente) {
-        this.gerente = gerente;
-    }
+        List<RegionalManager> managers = daoMan.readRegionalManagers();
 
-    public LoginService(Admin admin) {
-        this.admin = admin;
-    }
+        for (RegionalManager man : managers) {
 
-    public RegionalManager validaLogin(String email, String senha) throws SQLException, ClassNotFoundException {
+            if (man.getEmail().equals(email) && man.getPassword().equals(password)) {
 
-        List<RegionalManager> gerentes = daoGer.read();
+                LoginResult result = new LoginResult(true, "MANAGER");
 
-        for (RegionalManager ger : gerentes) {
-            if (ger.getEmail().equals(email) && ger.getSenha().equals(senha)) {
-                return true;
+                return result;
+
+            }
+
+        }
+
+        List<Admin> admins = daoAdm.select();
+
+        for (Admin adm : admins) {
+            if (adm.getEmail().equals(email) && adm.getPassword().equals(password)) {
+
+                LoginResult result = new LoginResult(true, "ADMIN");
+
+                return result;
+
             }
         }
 
-        return false;
-
+        return null;
     }
 }
