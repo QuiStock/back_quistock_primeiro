@@ -1,6 +1,6 @@
 package DAO;
 
-import Model.Loja;
+import Model.Store;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,16 +9,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LojaDAO {
+public class StoreDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
     //Metodo pra imprimir todas as lojas
-    public List<Loja> readLojas() throws SQLException {
+    public List<Store> readStores() throws SQLException {
 
-        List<Loja> lojas = new ArrayList<>();
+        List<Store> stores = new ArrayList<>();
 
-        String sql = "SELECT * FROM loja";
+        String sql = "SELECT * FROM store";
 
 
         //try pra listar tudo de todas as lojas
@@ -28,51 +28,51 @@ public class LojaDAO {
 
             //laço pra repetir sempre q tiver loja na fila
             while (result.next()) {
-                Loja loja = new Loja();
-                loja.setCodigo(result.getInt("codigo"));
-                loja.setEmail(result.getString("email"));
-                loja.setSenha(result.getString("senha"));
-                lojas.add(loja);
+                Store store = new Store();
+                store.setId(result.getInt("id"));
+                store.setEmail(result.getString("email"));
+                store.setPassword(result.getString("password"));
+                stores.add(store);
             }
         }
-        return lojas;
+        return stores;
     }
 
     //metodo pra criar uma loja nova
-    public void createLoja(Loja loja) throws SQLException {
+    public void createStore(Store store) throws SQLException {
 
-        String sql = "INSERT INTO loja (email, senha) VALUES ( ?, ?)";
+        String sql = "INSERT INTO store (email, password) VALUES ( ?, ?)";
 
         //try pra adicionar informaçoes na nova loja
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
-            sttmt.setString(1, loja.getEmail());
-            sttmt.setString(2, loja.getSenha());
+            sttmt.setString(1, store.getEmail());
+            sttmt.setString(2, store.getPassword());
             sttmt.executeUpdate();
         }
     }
 
 
     //metodo pra encontrar a loja que deseja alterar
-    public Loja foundLoja(int codigo) throws SQLException {
+    public Store foundStore(int id) throws SQLException {
 
-        String sql = "SELECT * FROM loja WHERE codigo = ?";
+        String sql = "SELECT * FROM store WHERE id = ?";
 
         //try pra conectar com o banco e executar a query
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)) {
 
-            sttmt.setInt(1, codigo);
+            sttmt.setInt(1, id);
 
             //try pra retornar a loja do id especificadox
             try (ResultSet result = sttmt.executeQuery()) {
                 if (result.next()) {
-                    Loja loja = new Loja();
-                    loja.setCodigo(result.getInt("codigo"));
-                    loja.setEmail(result.getString("email"));
-                    loja.setSenha(result.getString("senha"));
-                    return loja;
+                    Store store = new Store();
+                    store.setId(result.getInt("id"));
+                    store.setEmail(result.getString("email"));
+                    store.setPassword(result.getString("password"));
+                    return store;
                 }
             }
             return null; //se nao encontrar nenhuma loja com esse id retorna null
@@ -80,28 +80,28 @@ public class LojaDAO {
     }
 
     //metodo pra atualizar a loja que encontrou no metodo passado
-    public void updateLoja(Loja loja) throws SQLException{
+    public void updateStore(Store store) throws SQLException{
 
-        String sql = "UPDATE loja SET email = ?, senha = ? WHERE codigo = ?";
+        String sql = "UPDATE store SET email = ?, password = ? WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
-            sttmt.setString(1, loja.getEmail());
-            sttmt.setString(2, loja.getSenha());
-            sttmt.setInt(3, loja.getCodigo());
+            sttmt.setString(1, store.getEmail());
+            sttmt.setString(2, store.getPassword());
+            sttmt.setInt(3, store.getId());
             sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir loja do banco de acordo com o id
-    public void deleteLoja(int codigo) throws SQLException {
+    public void deleteStore(int id) throws SQLException {
 
-        String sql = "DELETE FROM loja WHERE codigo = ?";
+        String sql = "DELETE FROM store WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, codigo);
+            sttmt.setInt(1, id);
             sttmt.executeUpdate();
         }
     }

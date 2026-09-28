@@ -6,8 +6,8 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Loja {
-    private int codigo;
+public class Store {
+    private int id;
     private String email;
-    private String senha;
+    private String password;
 }

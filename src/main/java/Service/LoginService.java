@@ -6,7 +6,7 @@ import DAO.AdminDAO;
 import DAO.GerenteDAO;
 
 import Model.Admin;
-import Model.Gerente;
+import Model.RegionalManager;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,10 +17,10 @@ public class LoginService {
     private AdminDAO daoAdm = new AdminDAO();
     private GerenteDAO daoGer = new GerenteDAO();
 
-    private Gerente gerente = new Gerente();
+    private RegionalManager gerente = new RegionalManager();
     private Admin admin = new Admin();
 
-    public LoginService(Gerente gerente) {
+    public LoginService(RegionalManager gerente) {
         this.gerente = gerente;
     }
 
@@ -28,11 +28,11 @@ public class LoginService {
         this.admin = admin;
     }
 
-    public Gerente validaLogin(String email, String senha) throws SQLException, ClassNotFoundException {
+    public RegionalManager validaLogin(String email, String senha) throws SQLException, ClassNotFoundException {
 
-        List<Gerente> gerentes = daoGer.read();
+        List<RegionalManager> gerentes = daoGer.read();
 
-        for (Gerente ger : gerentes) {
+        for (RegionalManager ger : gerentes) {
             if (ger.getEmail().equals(email) && ger.getSenha().equals(senha)) {
                 return true;
             }
