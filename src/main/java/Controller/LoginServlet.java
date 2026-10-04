@@ -21,6 +21,7 @@ public class LoginServlet extends HttpServlet {
 
     private LoginService loginService = new LoginService();
 
+    //Método para redirecionamento de acordo com o tipo de login e seu sucesso
     @Override
     protected void doPost(
             HttpServletRequest req,
