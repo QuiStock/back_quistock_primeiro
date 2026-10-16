@@ -17,7 +17,7 @@ public class AdminDAO {
     //método de inserção de novo admin
     public void insert (Admin admin) throws SQLException {
 
-        String query = "insert into super_admin (email, senha, nome) values(?, ?, ?); ";
+        String query = "insert into super_admin (email, password, name) values(?, ?, ?); ";
 
         try (Connection conn = factory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)){
@@ -46,6 +46,7 @@ public class AdminDAO {
 
                             rs.getInt("id"),
                             rs.getString("email"),
+                            rs.getString("password"),
                             rs.getString("name")
 
                     );
@@ -60,7 +61,7 @@ public class AdminDAO {
     //Método de update com uso de método auxiliar
     public void update (Admin admin) throws SQLException {
 
-        String query = "update super_admin set email = ?, senha = ?, nome = ? where id = ?;";
+        String query = "update super_admin set email = ?, password = ?, name = ? where id = ?;";
 
         try (
                 Connection conn = factory.getConnection();
@@ -110,8 +111,8 @@ public class AdminDAO {
                 Admin adm = new Admin(
                     rs.getInt("id"),
                     rs.getString("email"),
-                    rs.getString("senha"),
-                    rs.getString("nome")
+                    rs.getString("password"),
+                    rs.getString("nanme")
                 );
 
                 admins.add(adm);
