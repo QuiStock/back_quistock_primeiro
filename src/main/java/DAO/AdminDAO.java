@@ -112,7 +112,7 @@ public class AdminDAO {
                     rs.getInt("id"),
                     rs.getString("email"),
                     rs.getString("password"),
-                    rs.getString("nanme")
+                    rs.getString("name")
                 );
 
                 admins.add(adm);

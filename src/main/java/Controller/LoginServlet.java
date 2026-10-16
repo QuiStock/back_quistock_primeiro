@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
     ) throws ServletException, IOException {
 
         String email = req.getParameter("email");
-        String pass = req.getParameter("senha");
+        String pass = req.getParameter("password");
 
         
 

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ConnectionFactory {
 
     //Ler informações do .env
-    private final Dotenv dotenv = Dotenv.load();
+    private final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
     private final String url =  dotenv.get("url");
     private final String user = dotenv.get("user");
@@ -17,6 +17,16 @@ public class ConnectionFactory {
 
     //retornar Connection, lança exceção para ser tratada por outra classe
     public Connection getConnection() throws SQLException {
+
+        System.out.println("user.dir = " + System.getProperty("user.dir"));
+        System.out.println("url = " + (url != null) + ", user = " + (user != null) + ", password = " + (password != null));
+        System.out.println("env url = " + (System.getenv("url") != null));
+
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Driver PostgreSQL não encontrado no classpath", e);
+        }
 
         if (url == null || user == null || password == null) {
             throw new SQLException("URL and User/Password are mandatory");
