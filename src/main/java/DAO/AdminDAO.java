@@ -23,8 +23,8 @@ public class AdminDAO {
         PreparedStatement stmt = conn.prepareStatement(query)){
 
             stmt.setString(1, admin.getEmail());
-            stmt.setString(2, admin.getSenha());
-            stmt.setString(3, admin.getNome());
+            stmt.setString(2, admin.getPassword());
+            stmt.setString(3, admin.getName());
 
             stmt.executeUpdate();
         }
@@ -61,8 +61,8 @@ public class AdminDAO {
         ){
 
             stmt.setString(1, admin.getEmail());
-            stmt.setString(2, admin.getSenha());
-            stmt.setString(3, admin.getNome());
+            stmt.setString(2, admin.getPassword());
+            stmt.setString(3, admin.getName());
             stmt.setInt(4, admin.getId());
 
             stmt.executeUpdate();

@@ -19,4 +19,6 @@ public class Admin {
         this.name = name;
 
     }
+    private String password;
+    private String name;
 }

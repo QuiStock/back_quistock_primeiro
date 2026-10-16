@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
     ) throws ServletException, IOException {
 
         String email = req.getParameter("email");
-        String pass = req.getParameter("password");
+        String pass = req.getParameter("senha");
 
         
 
@@ -41,6 +41,16 @@ public class LoginServlet extends HttpServlet {
 
                 req.getRequestDispatcher("index.jsp").forward(req, resp);
 
+            }
+
+            else if (login.isSuccess() && login.getType().equals("ADMIN")) {
+
+                req.getRequestDispatcher("home-admin.jsp").forward(req, resp);
+
+            }
+
+            else if(login.isSuccess() && login.getType().equals("MANAGER")) {
+                req.getRequestDispatcher("home-manager.jsp").forward(req, resp);
             }
 
             else if (login.isSuccess() && login.getType().equals("ADMIN")) {
