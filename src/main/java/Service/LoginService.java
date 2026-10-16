@@ -16,6 +16,7 @@ import java.util.List;
 public class LoginService {
 
     private AdminDAO daoAdm = new AdminDAO();
+    private RegionalManagerDAO daoGer = new RegionalManagerDAO();
     private RegionalManagerDAO daoMan = new RegionalManagerDAO();
 
     public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
@@ -42,7 +43,6 @@ public class LoginService {
                 LoginResult result = new LoginResult(true, "ADMIN");
 
                 return result;
-
             }
         }
 

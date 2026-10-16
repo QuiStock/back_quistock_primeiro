@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ConnectionFactory {
 
     //Ler informações do .env
-    Dotenv dotenv = Dotenv.load();
+    private final Dotenv dotenv = Dotenv.load();
 
     private final String url =  dotenv.get("url");
     private final String user = dotenv.get("user");
@@ -18,7 +18,12 @@ public class ConnectionFactory {
     //retornar Connection, lança exceção para ser tratada por outra classe
     public Connection getConnection() throws SQLException {
 
+        if (url == null || user == null || password == null) {
+            throw new SQLException("URL and User/Password are mandatory");
+        }
+
         return DriverManager.getConnection(url, user, password);
 
     }
+
 }

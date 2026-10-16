@@ -9,16 +9,14 @@ import lombok.*;
 public class Admin {
     private int id;
     private String email;
-    private String senha;
+    private String password;
     private String name;
 
-    public Admin (String email, String senha, String name) {
+    public Admin (int id, String email, String name) {
 
+        this.id = id;
         this.email = email;
-        this.senha = senha;
         this.name = name;
 
     }
-    private String password;
-    private String name;
 }

@@ -17,7 +17,7 @@ public class AdminDAO {
     //método de inserção de novo admin
     public void insert (Admin admin) throws SQLException {
 
-        String query = "insert into admin (email, senha, nome) values(?, ?, ?); ";
+        String query = "insert into super_admin (email, senha, nome) values(?, ?, ?); ";
 
         try (Connection conn = factory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query)){
@@ -31,21 +31,28 @@ public class AdminDAO {
     }
 
     //método auxiliar para encontrar id de admin
-    private int searchAdmin(Admin admin) throws SQLException {
-        String query = "select id from admin where email = ?;";
+    public Admin searchAdmin(int id) throws SQLException {
+        String query = "select id, name, email from super_admin where id = ?;";
 
         try (Connection conn = factory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)){
 
-            stmt.setString(1, admin.getEmail());
+            stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()){
-                if (rs.next()) {
-                    return  rs.getInt("id");
+
+                if(rs.next()){
+                    return new Admin(
+
+                            rs.getInt("id"),
+                            rs.getString("email"),
+                            rs.getString("name")
+
+                    );
                 }
-                else {
-                    return 0;
-                }
+
+                return null;
+
             }
         }
     }
@@ -53,7 +60,7 @@ public class AdminDAO {
     //Método de update com uso de método auxiliar
     public void update (Admin admin) throws SQLException {
 
-        String query = "update admin set email = ?, senha = ?, nome = ? where id = ?;";
+        String query = "update super_admin set email = ?, senha = ?, nome = ? where id = ?;";
 
         try (
                 Connection conn = factory.getConnection();
@@ -72,7 +79,7 @@ public class AdminDAO {
 
     public void delete(Admin admin) throws SQLException{
 
-        String query = "delete from admin where id = ?;";
+        String query = "delete from super_admin where id = ?;";
 
         try (
                 Connection conn = factory.getConnection();
@@ -88,7 +95,7 @@ public class AdminDAO {
 
     public List<Admin> select() throws SQLException{
 
-        String query = "select * from admin;";
+        String query = "select * from super_admin;";
 
         List<Admin> admins = new ArrayList<>();
 
