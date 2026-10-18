@@ -37,7 +37,7 @@
 <div class="esquerda">
     <aside>
         <a href="home.html">Início</a>
-        <a href="admins.jsp">Admins</a>
+        <a href="${pageContext.request.contextPath}/admins">Admins</a>
         <a href="gerente.jsp">Gerente</a>
         <a href="loja.jsp">Loja</a>
         <a href="regiao.jsp">Região</a>
@@ -56,21 +56,7 @@
             </tr>
         </thead>
 
-        <% AdminDAO dao = new AdminDAO();
-            List<Admin> admins = dao.select();
 
-
-            for (Admin adm : admins) {
-                %>
-                <tr>
-                    <td><%= adm.getId() %></td>
-                    <td><%= adm.getName() %></td>
-                    <td><%= adm.getEmail() %></td>
-                </tr>
-                <%
-            }
-        %>
-        <!--
         <c:forEach var="admin" items="${admins}">
             <div class="linha-admin">
                 <tr>
@@ -91,7 +77,6 @@
 
             </div>
         </c:forEach>
-        -->
     </table>
 
 </div>

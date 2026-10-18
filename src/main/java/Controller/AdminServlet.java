@@ -17,6 +17,23 @@ public class AdminServlet extends HttpServlet {
     AdminDAO dao = new AdminDAO();
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        try {
+
+            req.setAttribute("admins", dao.select());
+            req.getRequestDispatcher("/admins.jsp").forward(req, resp);
+
+        } catch (SQLException ex) {
+
+            resp.sendError(500, ex.getMessage());
+
+        }
+
+    }
+
+    @Override
     protected void doPost(
             HttpServletRequest req,
             HttpServletResponse resp
