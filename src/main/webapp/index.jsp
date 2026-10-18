@@ -10,8 +10,8 @@
 
     <form action="${pageContext.request.contextPath}/login" method="post">
 
-        <input type="email" name="email">
-        <input type="text" name = "password">
+        <input type="email" name="email" placeholder="email">
+        <input type="text" name = "password" placeholder="senha">
 
         <input type="submit">
     </form>
