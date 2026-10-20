@@ -24,26 +24,27 @@ public class AdminServlet extends HttpServlet {
 
         try {
 
-            if (action.equals("new")){
+            if ("new".equals(action)){
                 //empty insert forms
                 req.getRequestDispatcher("crud-admin.jsp").forward(req, resp);
 
             }
 
-            else if (action.equals("edit")){
+            else if ("edit".equals(action)){
                 //forms filled with previous admin data
                 int id = Integer.parseInt(req.getParameter("id"));
                 Admin admin = dao.searchAdmin(id);
 
-                if (admin != null) {
+                if (admin == null) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+                    return;
                 }
 
                 //filled form
                 req.setAttribute("admin", admin);
                 req.getRequestDispatcher("/crud-admin.jsp").forward(req, resp);
             }
-            
+
             else {
                 req.setAttribute("admins", dao.select());
                 req.getRequestDispatcher("/admins.jsp").forward(req, resp);
@@ -74,7 +75,7 @@ public class AdminServlet extends HttpServlet {
             switch (action) {
 
                 case "delete": delete(req, resp); break;
-                case "add":
+                case "update":
 
             }
         } catch (NumberFormatException e){
@@ -94,6 +95,21 @@ public class AdminServlet extends HttpServlet {
         admin.setId(Integer.parseInt(req.getParameter("id")));
 
         dao.delete(admin);
+
+        resp.sendRedirect(req.getContextPath() + "/admins");
+    }
+
+    private void update (HttpServletRequest req, HttpServletResponse resp)
+            throws SQLException, ServletException, IOException{
+
+        int id = Integer.parseInt(req.getParameter("id"));
+        Admin admin = dao.searchAdmin(id);
+
+        if (admin != null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+        }
+
+        dao.update(admin);
 
         resp.sendRedirect(req.getContextPath() + "/admins");
     }

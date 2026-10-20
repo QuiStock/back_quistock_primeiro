@@ -113,6 +113,18 @@
             font-size: 13px;
         }
 
+        .acoes a {
+            display: inline-block;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: none;
+            background-color: #f59e0b;
+        }
+
         .acoes button[value="edit"] {
             background-color: #f59e0b;
         }
@@ -137,7 +149,7 @@
 <main>
     <div class="topo">
         <h1>Admins</h1>
-        <a class="btn-adicionar" href="crud-admin.jsp">Adicionar admin</a>
+        <a class="btn-adicionar" href="${pageContext.request.contextPath}/admins?action=new">Adicionar admin</a>
     </div>
 
     <table>
@@ -156,10 +168,11 @@
                 <td>${admin.name}</td>
                 <td>${admin.email}</td>
                 <td class="acoes">
+                    <a href="${pageContext.request.contextPath}/admins?action=edit%id=${admin.id}">Editar</a>
+
                     <form action="${pageContext.request.contextPath}/admins" method="post">
                         <input type="hidden" name="id" value="${admin.id}">
 
-                        <button type="submit" name="action" value="edit">Editar</button>
                         <button type="submit" name="action" value="delete">Deletar</button>
                     </form>
                 </td>

@@ -16,10 +16,12 @@ import java.util.List;
 @WebServlet("/regionalManagers")
 public class RegionalManagerServlet extends HttpServlet{
 
+    RegionalManagerDAO dao = new RegionalManagerDAO();
+
     private RegionalManagerDAO regionalManagerDAO = new RegionalManagerDAO();
 
     //doGet pra ver qual das duas ações vai fazer
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    /*protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         String action = request.getParameter("action");
         if (action == null) action = "regionalManagersList";
 
@@ -32,6 +34,25 @@ public class RegionalManagerServlet extends HttpServlet{
                 readRegionalManagers(request, response);
         }
     }
+    */
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        try {
+
+            req.setAttribute("managers", dao.readRegionalManagers());
+            req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
+
+        } catch (SQLException ex) {
+
+            resp.sendError(500, ex.getMessage());
+
+        }
+
+    }
+
 
     //doPost pra alterar tabela, seja criando, editando ou deletando
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
