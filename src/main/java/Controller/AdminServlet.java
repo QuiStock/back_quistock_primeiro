@@ -64,6 +64,8 @@ public class AdminServlet extends HttpServlet {
             HttpServletResponse resp
     ) throws ServletException, IOException {
 
+        req.setCharacterEncoding("UTF-8");
+
             String action = req.getParameter("action");
 
         if(action == null){
@@ -75,7 +77,8 @@ public class AdminServlet extends HttpServlet {
             switch (action) {
 
                 case "delete": delete(req, resp); break;
-                case "update":
+                case "update": update(req, resp); break;
+                case "add":
 
             }
         } catch (NumberFormatException e){
@@ -110,6 +113,19 @@ public class AdminServlet extends HttpServlet {
         }
 
         dao.update(admin);
+
+        resp.sendRedirect(req.getContextPath() + "/admins");
+    }
+
+    private void add (HttpServletRequest req, HttpServletResponse resp)
+            throws SQLException, ServletException, IOException{
+        Admin admin = new Admin(
+                req.getParameter("email"),
+                req.getParameter("name"),
+                req.getParameter("password")
+        );
+
+        dao.insert(admin);
 
         resp.sendRedirect(req.getContextPath() + "/admins");
     }
