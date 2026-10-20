@@ -12,11 +12,11 @@ public class Admin {
     private String password;
     private String name;
 
-    public Admin (int id, String email, String name) {
+    public Admin (String email, String name, String password) {
 
-        this.id = id;
         this.email = email;
         this.name = name;
+        this.password = password;
 
     }
 }
