@@ -78,7 +78,7 @@ public class AdminServlet extends HttpServlet {
 
                 case "delete": delete(req, resp); break;
                 case "update": update(req, resp); break;
-                case "add":
+                case "add": add(req, resp); break;
 
             }
         } catch (NumberFormatException e){
@@ -108,7 +108,7 @@ public class AdminServlet extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
         Admin admin = dao.searchAdmin(id);
 
-        if (admin != null) {
+        if (admin == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
         }
 

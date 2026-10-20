@@ -32,7 +32,7 @@ public class AdminDAO {
 
     //método auxiliar para encontrar id de admin
     public Admin searchAdmin(int id) throws SQLException {
-        String query = "select id, name, email from super_admin where id = ?;";
+        String query = "select id, name, email, password from super_admin where id = ?;";
 
         try (Connection conn = factory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)){
