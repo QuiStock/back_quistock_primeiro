@@ -168,7 +168,7 @@
                 <td>${admin.name}</td>
                 <td>${admin.email}</td>
                 <td class="acoes">
-                    <a href="${pageContext.request.contextPath}/admins?action=edit%id=${admin.id}">Editar</a>
+                    <a href="${pageContext.request.contextPath}/admins?action=edit&id=${admin.id}">Editar</a>
 
                     <form action="${pageContext.request.contextPath}/admins" method="post">
                         <input type="hidden" name="id" value="${admin.id}">
@@ -181,6 +181,5 @@
         </tbody>
     </table>
 </main>
-
 </body>
 </html>
