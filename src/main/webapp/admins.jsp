@@ -158,8 +158,6 @@
                 <td class="acoes">
                     <form action="${pageContext.request.contextPath}/admins" method="post">
                         <input type="hidden" name="id" value="${admin.id}">
-                        <input type="hidden" name="action" value="edit">
-                        <input type="hidden" value="delete">
 
                         <button type="submit" name="action" value="edit">Editar</button>
                         <button type="submit" name="action" value="delete">Deletar</button>
