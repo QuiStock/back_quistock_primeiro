@@ -1,0 +1,14 @@
+<%@ page pageEncoding="UTF-8" %>
+<%-- Menu lateral: escrito UMA vez e incluído em todas as telas.
+     A variável "menuAtivo" (enviada pelo Servlet) decide qual item fica destacado. --%>
+<aside>
+    <img src="${ctx}/assets/logo-branca.png" alt="QuiStock" id="logo">
+    <nav class="links">
+        <a href="${ctx}/inicio" class="${menuAtivo eq '/inicio' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/inicio.svg" alt="">Início</a>
+        <a href="${ctx}/admins" class="${menuAtivo eq '/admins' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/admin.svg" alt="">Admins</a>
+        <a href="${ctx}/gerentes" class="${menuAtivo eq '/gerentes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/gerente.svg" alt="">Gerente</a>
+        <a href="${ctx}/faq" class="${menuAtivo eq '/faq' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/faq.svg" alt="">FAQ</a>
+        <a href="${ctx}/regioes" class="${menuAtivo eq '/regioes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/regiao.svg" alt="">Região</a>
+        <a href="${ctx}/anotacoes" class="${menuAtivo eq '/anotacoes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/anotacoes.svg" alt="">Anotações</a>
+    </nav>
+</aside>

@@ -129,40 +129,5 @@ public class RegionalManagerServlet extends HttpServlet{
         }
     }
 
-    private void updateRegionalManager(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        RegionalManager regionalManager = new RegionalManager();
-
-        //definindo os valores novos do gerente
-        int id = Integer.parseInt(request.getParameter("regionalManagerId"));
-        String name = request.getParameter("regionalManagerName");
-        String email = request.getParameter("regionalManagerEmail");
-        String password = request.getParameter("regionalManagerPassword");
-        int regionTypeId = Integer.parseInt(request.getParameter("regionalManagerRegionTypeId"));
-
-        regionalManager.setId(id);
-        regionalManager.setName(name);
-        regionalManager.setEmail(email);
-        regionalManager.setPassword(password);
-        regionalManager.setRegionTypeId(regionTypeId);
-
-        //editando o gerente
-        try {
-            regionalManagerDAO.updateRegionalManager(regionalManager);
-            response.sendRedirect("regionalManagers");
-        }catch (SQLException e){
-            throw new ServletException("Erro ao atualizar gerente", e);
-        }
-    }
-
-    private void deleteRegionalManager(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        int id = Integer.parseInt(request.getParameter("regionalManagerId"));
-
-        try {
-            regionalManagerDAO.deleteRegionalManager(id);
-            response.sendRedirect("regionalManagers");
-        } catch (SQLException e) {
-            throw new ServletException("Erro ao deletar gerente", e);
-        }
-    }
 
 }
