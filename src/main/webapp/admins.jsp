@@ -139,7 +139,7 @@
 <aside>
     <a href="home.html">Início</a>
     <a href="${pageContext.request.contextPath}/admins">Admins</a>
-    <a href="gerente.jsp">Gerente</a>
+    <a href="${pageContext.request.contextPath}/regionalManagers">Gerente</a>
     <a href="loja.jsp">Loja</a>
     <a href="regiao.jsp">Região</a>
     <a href="pedido.jsp">Pedidos</a>

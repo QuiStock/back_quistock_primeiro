@@ -55,25 +55,26 @@ public class RegionalManagerServlet extends HttpServlet{
 
 
     //doPost pra alterar tabela, seja criando, editando ou deletando
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         //traz pro teclado brasileiro
-        request.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
 
-        String action = request.getParameter("action");
-        if (action == null) action = "";
+        String action = req.getParameter("action");
 
         //averigua qual action que é e redireciona para o servlet correto
-        switch (action) {
-            case "register":
-                createRegionalManager(request, response);
-                break;
-            case "edit":
-                updateRegionalManager(request, response); //editar de fato
-                break;
-            case "delete":
-                deleteRegionalManager(request, response);
-                break;
+        try {
+            switch (action) {
+                case "add": createRegionalManager(req, resp); break;
+                case "edit": updateRegionalManager(req, resp); break;
+                case "delete": deleteRegionalManager(req, resp); break;
+            }
+        } catch (NumberFormatException e){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID Inválido");
+        } catch (SQLException e){
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        } catch (IOException e){
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
