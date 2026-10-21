@@ -14,11 +14,11 @@ public class RegionalManagerDAO {
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
     //Metodo pra imprimir todos os gerentes
-    public List<RegionalManager> readRegionalManagers() throws SQLException {
+    public List<RegionalManager> select() throws SQLException {
 
         List<RegionalManager> regionalManagers = new ArrayList<>();
 
-        String sql = "SELECT * FROM regional_manager";
+        String sql = "SELECT id, name, email, password, region FROM regional_manager_vw order by id;";
 
         //try pra listar tudo de todos os gerentes
         try (Connection conn = connectionFactory.getConnection();
@@ -32,7 +32,7 @@ public class RegionalManagerDAO {
                 regionalManager.setName(result.getString("name"));
                 regionalManager.setEmail(result.getString("email"));
                 regionalManager.setPassword(result.getString("password"));
-                regionalManager.setRegionTypeId(result.getInt("region_type_id"));
+                regionalManager.setRegionType(result.getString("region"));
                 regionalManagers.add(regionalManager);
             }
         }
@@ -40,7 +40,7 @@ public class RegionalManagerDAO {
     }
 
     //metodo pra criar um gerente novo
-    public void createRegionalManager(RegionalManager regionalManager) throws SQLException {
+    public void insert(RegionalManager regionalManager) throws SQLException {
 
         String sql = "INSERT INTO regional_manager (name, email, password, region_type_id) VALUES ( ?, ?, ?, ?)";
 
@@ -51,14 +51,14 @@ public class RegionalManagerDAO {
             sttmt.setString(1, regionalManager.getName());
             sttmt.setString(2, regionalManager.getEmail());
             sttmt.setString(3, regionalManager.getPassword());
-            sttmt.setInt(4, regionalManager.getRegionTypeId());
+            sttmt.setString(4, regionalManager.getRegionType());
             sttmt.executeUpdate();
         }
     }
 
 
     //metodo pra encontrar gerente que deseja ser alterado
-    public RegionalManager foundRegionalManager(int id) throws SQLException {
+    public RegionalManager searchManager(int id) throws SQLException {
 
         String sql = "SELECT * FROM regional_manager WHERE id = ?";
 
@@ -68,7 +68,7 @@ public class RegionalManagerDAO {
 
             sttmt.setInt(1, id);
 
-            //try pra retornar o gerente do id especificadox
+            //try pra retornar o gerente do id especificado
             try (ResultSet result = sttmt.executeQuery()) {
                 if (result.next()) {
                     RegionalManager regionalManager = new RegionalManager();
@@ -76,7 +76,7 @@ public class RegionalManagerDAO {
                     regionalManager.setName(result.getString("name"));
                     regionalManager.setEmail(result.getString("email"));
                     regionalManager.setPassword(result.getString("password"));
-                    regionalManager.setRegionTypeId(result.getInt("region_type_id"));
+                    regionalManager.setRegionType(result.getString("region_type_id"));
                     return regionalManager;
                 }
             }
@@ -85,7 +85,7 @@ public class RegionalManagerDAO {
     }
 
     //metodo pra atualizar o gerente que encontrou no metodo passado
-    public void updateRegionalManager(RegionalManager regionalManager) throws SQLException{
+    public void update(RegionalManager regionalManager) throws SQLException{
 
         String sql = "UPDATE regional_manager SET name = ?, email = ?, password = ?, region_type_id = ? WHERE id = ?";
 
@@ -95,14 +95,14 @@ public class RegionalManagerDAO {
             sttmt.setString(1, regionalManager.getName());
             sttmt.setString(2, regionalManager.getEmail());
             sttmt.setString(3, regionalManager.getPassword());
-            sttmt.setInt(4, regionalManager.getRegionTypeId());
+            sttmt.setString(4, regionalManager.getRegionType());
             sttmt.setInt(5, regionalManager.getId());
             sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir gerente do banco de acordo com o id
-    public void deleteRegionalManager(int id) throws SQLException {
+    public void delete(int id) throws SQLException {
 
         String sql = "DELETE FROM regional_manager WHERE id = ?";
 

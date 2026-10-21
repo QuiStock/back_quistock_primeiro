@@ -26,15 +26,16 @@
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Email</th>
+
                 <th>Ações</th>
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="admin" items="${managers}">
+            <c:forEach var="manager" items="${managers}">
                 <tr>
-                    <td>${admin.id}</td>
-                    <td>${admin.name}</td>
-                    <td>${admin.email}</td>
+                    <td>${manager.id}</td>
+                    <td>${manager.name}</td>
+                    <td>${manager.email}</td>
                     <td class="acoes">
                         <a href="${pageContext.request.contextPath}/admins?action=edit&id=${admin.id}">Editar</a>
 

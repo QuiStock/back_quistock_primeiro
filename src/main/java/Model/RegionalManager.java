@@ -10,5 +10,12 @@ public class RegionalManager {
     private String email;
     private String name;
     private String password;
-    private int regionTypeId;
+    private String regionType;
+
+    public  RegionalManager(String email, String name, String password, String regionTypeId) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.regionType = regionTypeId;
+    }
 }

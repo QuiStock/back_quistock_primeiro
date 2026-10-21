@@ -21,7 +21,7 @@ public class LoginService {
 
     public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
 
-        List<RegionalManager> managers = daoMan.readRegionalManagers();
+        List<RegionalManager> managers = daoMan.select();
 
         for (RegionalManager man : managers) {
 
