@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.RegionalManagerDAO;
+import Model.Admin;
 import Model.RegionalManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.RequestDispatcher;
@@ -143,5 +144,24 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/admins");
     }
 
+    private void update (HttpServletRequest req, HttpServletResponse resp)
+            throws SQLException, ServletException, IOException{
 
+        int id = Integer.parseInt(req.getParameter("id"));
+        RegionalManager manager = dao.searchManager(id);
+
+        if (manager == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+            return;
+        }
+
+        manager.setName(req.getParameter("name"));
+        manager.setEmail(req.getParameter("email"));
+        manager.setPassword(req.getParameter("password"));
+        manager.setRegionType(req.getParameter("region-type"));
+
+        dao.update(manager);
+
+        resp.sendRedirect(req.getContextPath() + "/admins");
+    }
 }
