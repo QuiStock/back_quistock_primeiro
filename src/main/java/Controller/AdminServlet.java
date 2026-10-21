@@ -110,7 +110,12 @@ public class AdminServlet extends HttpServlet {
 
         if (admin == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+            return;
         }
+
+        admin.setName(req.getParameter("name"));
+        admin.setEmail(req.getParameter("email"));
+        admin.setPassword(req.getParameter("password"));
 
         dao.update(admin);
 
