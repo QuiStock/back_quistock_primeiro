@@ -41,7 +41,34 @@ public class RegionalManagerServlet extends HttpServlet{
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        String action = req.getParameter("action");
+
         try {
+
+            if ("new".equals(action)){
+                //empty insert forms
+                req.getRequestDispatcher("crud-regionalManager.jsp").forward(req, resp);
+            }
+
+            else if ("edit".equals(action)) {
+                //filled forms with previous data
+                int id = Integer.parseInt(req.getParameter("id"));
+                RegionalManager manager = dao.searchManager(id);
+
+                if (manager == null) {
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Manager not found");
+                    return;
+                }
+
+                //filling forms
+                req.setAttribute("manager", manager);
+                req.getRequestDispatcher("/crud-regionalManager.jsp").forward(req, resp);
+            }
+
+            else {
+                req.setAttribute("managers", dao.select());
+                req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
+            }
 
             req.setAttribute("managers", dao.select());
             req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
@@ -141,7 +168,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
         dao.insert(manager);
 
-        resp.sendRedirect(req.getContextPath() + "/admins");
+        resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
     private void update (HttpServletRequest req, HttpServletResponse resp)
@@ -162,6 +189,8 @@ public class RegionalManagerServlet extends HttpServlet{
 
         dao.update(manager);
 
-        resp.sendRedirect(req.getContextPath() + "/admins");
+        resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
+
+
 }

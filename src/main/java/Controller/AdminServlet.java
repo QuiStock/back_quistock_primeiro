@@ -36,11 +36,11 @@ public class AdminServlet extends HttpServlet {
                 Admin admin = dao.searchAdmin(id);
 
                 if (admin == null) {
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin not found");
                     return;
                 }
 
-                //filled form
+                //filling forms
                 req.setAttribute("admin", admin);
                 req.getRequestDispatcher("/crud-admin.jsp").forward(req, resp);
             }
