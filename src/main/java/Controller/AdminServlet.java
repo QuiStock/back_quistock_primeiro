@@ -14,8 +14,9 @@ import java.sql.SQLException;
 @WebServlet("/admins")
 public class AdminServlet extends HttpServlet {
 
-    AdminDAO dao = new AdminDAO();
+    private final AdminDAO dao = new AdminDAO();
 
+    //doGet to determine the path, based on action
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -46,6 +47,7 @@ public class AdminServlet extends HttpServlet {
             }
 
             else {
+                //default action
                 req.setAttribute("admins", dao.select());
                 req.getRequestDispatcher("/admins.jsp").forward(req, resp);
             }

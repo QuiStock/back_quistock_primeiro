@@ -102,13 +102,13 @@ public class RegionalManagerDAO {
     }
 
     //metodo pra excluir gerente do banco de acordo com o id
-    public void delete(int id) throws SQLException {
+    public void delete(RegionalManager manager) throws SQLException {
 
         String sql = "DELETE FROM regional_manager WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
-            sttmt.setInt(1, id);
+            sttmt.setInt(1, manager.getId());
             sttmt.executeUpdate();
         }
     }
