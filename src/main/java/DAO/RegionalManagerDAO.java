@@ -70,18 +70,49 @@ public class RegionalManagerDAO {
 
             //try pra retornar o gerente do id especificado
             try (ResultSet result = sttmt.executeQuery()) {
+
                 if (result.next()) {
+
                     RegionalManager regionalManager = new RegionalManager();
                     regionalManager.setId(result.getInt("id"));
                     regionalManager.setName(result.getString("name"));
                     regionalManager.setEmail(result.getString("email"));
                     regionalManager.setPassword(result.getString("password"));
                     regionalManager.setRegionType(result.getString("region_type_id"));
+
                     return regionalManager;
+
                 }
             }
             return null; //se nao encontrar nenhum gerente com esse id retorna null
         }
+    }
+
+    public RegionalManager findByEmail(String email) throws SQLException {
+        String query = "select id, name, email, password, region_type_id from regional_manager where email = ?";
+
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                if (rs.next()) {
+
+                    RegionalManager manager = new RegionalManager();
+                    manager.setId(rs.getInt("id"));
+                    manager.setName(rs.getString("name"));
+                    manager.setEmail(rs.getString("email"));
+                    manager.setPassword(rs.getString("password"));
+                    manager.setRegionType(rs.getString("region_type_id"));
+
+                    return manager;
+
+                }
+            }
+        }
+        return null;
     }
 
     //metodo pra atualizar o gerente que encontrou no metodo passado

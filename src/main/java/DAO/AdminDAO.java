@@ -58,6 +58,33 @@ public class AdminDAO {
         }
     }
 
+    //method that searches admin by email
+    public Admin findByEmail(String email) throws SQLException {
+        String query = "select id, name, email, password from super_admin where email = ?";
+        
+        try (Connection conn = factory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                if (rs.next()) {
+                    return new Admin(
+
+                            rs.getInt("id"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("name")
+
+                    );
+                }
+
+            }
+        }
+        return null;
+    }
+
     //Método de update com uso de método auxiliar
     public void update (Admin admin) throws SQLException {
 
