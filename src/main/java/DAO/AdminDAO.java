@@ -59,9 +59,9 @@ public class AdminDAO {
     }
 
     //method that searches admin by email
-    public Admin findByEmail(String email) throws SQLException {
+    public Admin searchByEmail(String email) throws SQLException {
         String query = "select id, name, email, password from super_admin where email = ?";
-        
+
         try (Connection conn = factory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 

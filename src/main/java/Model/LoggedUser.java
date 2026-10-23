@@ -9,6 +9,6 @@ public class LoggedUser implements Serializable {
     private int id;
     private String name;
     private String email;
-    private String type;
+    private String regionType;
     private Integer regionTypeId;
 }

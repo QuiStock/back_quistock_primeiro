@@ -1,5 +1,6 @@
 package Service;
 
+import Model.LoggedUser;
 import lombok.*;
 
 import DAO.AdminDAO;
@@ -16,24 +17,21 @@ import java.util.List;
 public class LoginService {
 
     private AdminDAO daoAdm = new AdminDAO();
-    private RegionalManagerDAO daoGer = new RegionalManagerDAO();
     private RegionalManagerDAO daoMan = new RegionalManagerDAO();
 
     public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
 
-        List<RegionalManager> managers = daoMan.select();
-
-        for (RegionalManager man : managers) {
-
-            if (man.getEmail().equals(email) && man.getPassword().equals(password)) {
-
-                LoginResult result = new LoginResult(true, "MANAGER");
-
-                return result;
-
-            }
-
+        RegionalManager manager = daoMan.searchByEmail(email);
+        if (manager.getPassword().equals(password)) {
+            return new LoginResult(
+                    true,
+                        new LoggedUser(
+                                manager.getId(),
+                                manager
+                        )
+            )
         }
+
 
         List<Admin> admins = daoAdm.select();
 

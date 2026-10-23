@@ -18,21 +18,27 @@ public class RegionalManagerDAO {
 
         List<RegionalManager> regionalManagers = new ArrayList<>();
 
-        String sql = "SELECT id, name, email, password, region FROM regional_manager_vw order by id;";
+        String sql = "SELECT id, name, email, password, region_type_id, region_name FROM regional_manager_vw order by id;";
 
         //try pra listar tudo de todos os gerentes
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql);
-             ResultSet result = sttmt.executeQuery()) {
+             ResultSet rs = sttmt.executeQuery()) {
 
             //laço pra repetir sempre q tiver gerente na fila
-            while (result.next()) {
-                RegionalManager regionalManager = new RegionalManager();
-                regionalManager.setId(result.getInt("id"));
-                regionalManager.setName(result.getString("name"));
-                regionalManager.setEmail(result.getString("email"));
-                regionalManager.setPassword(result.getString("password"));
-                regionalManager.setRegionType(result.getString("region"));
+            while (rs.next()) {
+
+                RegionalManager regionalManager = new RegionalManager(
+
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("name"),
+                        rs.getString("password"),
+                        rs.getString("region_name"),
+                        rs.getInt("region_type_id")
+
+                );
+
                 regionalManagers.add(regionalManager);
             }
         }
@@ -51,7 +57,7 @@ public class RegionalManagerDAO {
             sttmt.setString(1, regionalManager.getName());
             sttmt.setString(2, regionalManager.getEmail());
             sttmt.setString(3, regionalManager.getPassword());
-            sttmt.setString(4, regionalManager.getRegionType());
+            sttmt.setInt(4, regionalManager.getRegionTypeId());
             sttmt.executeUpdate();
         }
     }
@@ -78,7 +84,7 @@ public class RegionalManagerDAO {
                     regionalManager.setName(result.getString("name"));
                     regionalManager.setEmail(result.getString("email"));
                     regionalManager.setPassword(result.getString("password"));
-                    regionalManager.setRegionType(result.getString("region_type_id"));
+                    regionalManager.setRegionTypeId(result.getInt("region_type_id"));
 
                     return regionalManager;
 
@@ -88,7 +94,7 @@ public class RegionalManagerDAO {
         }
     }
 
-    public RegionalManager findByEmail(String email) throws SQLException {
+    public RegionalManager searchByEmail(String email) throws SQLException {
         String query = "select id, name, email, password, region_type_id from regional_manager where email = ?";
 
         try (Connection conn = connectionFactory.getConnection();
@@ -105,7 +111,7 @@ public class RegionalManagerDAO {
                     manager.setName(rs.getString("name"));
                     manager.setEmail(rs.getString("email"));
                     manager.setPassword(rs.getString("password"));
-                    manager.setRegionType(rs.getString("region_type_id"));
+                    manager.setRegionTypeId(rs.getInt("region_type_id"));
 
                     return manager;
 
@@ -126,7 +132,7 @@ public class RegionalManagerDAO {
             sttmt.setString(1, regionalManager.getName());
             sttmt.setString(2, regionalManager.getEmail());
             sttmt.setString(3, regionalManager.getPassword());
-            sttmt.setString(4, regionalManager.getRegionType());
+            sttmt.setInt(4, regionalManager.getRegionTypeId());
             sttmt.setInt(5, regionalManager.getId());
             sttmt.executeUpdate();
         }
