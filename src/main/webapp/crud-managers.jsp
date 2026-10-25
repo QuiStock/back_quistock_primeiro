@@ -1,15 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <form class="form-admin" action="${pageContext.request.contextPath}/regionalManagers" method="post">
     <h2>${empty admin ? 'Adicionar gerente' : 'Editar gerente'}</h2>
 
     <input type="hidden" value="${manager.id}" name="id">
-    <input type="hidden" value="${empty manager ? 'add' : 'update'}" name="action">
+    <input type="hidden" value="${empty manager ? 'add' : 'edit'}" name="action">
 
     <input type="text" name="name" placeholder="Nome" value="${manager.name}" required>
     <input type="email" name="email" placeholder="Email" value="${manager.email}" required>
     <input type="text" name="password" placeholder="Senha" value="${manager.password}" required>
 
+    <select name="region-type" required>
+        <option value="">Selecione a região</option>
+        <c:forEach var="r" items="${regionTypes}">
+            <option value="${r.id}" ${r.id == manager.regionTypeId ? 'selected' : ''}>${r.name}</option>
+        </c:forEach>
+    </select>
+    
     <div class="botoes">
         <button type="submit" class="salvar">Salvar</button>
         <button type="button" class="cancelar" onclick="this.closest('dialog').close()">Cancelar</button>

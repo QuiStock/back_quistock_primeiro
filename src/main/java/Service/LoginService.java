@@ -23,29 +23,45 @@ public class LoginService {
 
         RegionalManager manager = daoMan.searchByEmail(email);
         if (manager != null && manager.getPassword().equals(password)) {
+
             return new LoginResult(
+
                     true,
+
                         new LoggedUser(
+
                                 manager.getId(),
                                 manager.getName(),
                                 manager.getEmail(),
                                 "MANAGER",
                                 manager.getRegionTypeName(),
                                 manager.getRegionTypeId()
+
                         )
+
             );
         }
 
-        
-        for (Admin adm : admins) {
-            if (adm.getEmail().equals(email) && adm.getPassword().equals(password)) {
+        Admin admin = daoAdm.searchByEmail(email);
+        if (admin != null && admin.getPassword().equals(password)) {
 
-                LoginResult result = new LoginResult(true, "ADMIN");
+            return new LoginResult(
 
-                return result;
-            }
+                    true,
+
+                    new LoggedUser(
+
+                            admin.getId(),
+                            admin.getName(),
+                            admin.getEmail(),
+                            "ADMIN",
+                            null,
+                            null
+                    )
+
+            );
         }
 
-        return null;
+        return new LoginResult(false, null);
     }
 }

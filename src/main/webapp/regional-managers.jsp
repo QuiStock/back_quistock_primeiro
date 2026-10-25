@@ -208,11 +208,11 @@
                     <td>${manager.id}</td>
                     <td>${manager.name}</td>
                     <td>${manager.email}</td>
-                    <td>${manager.regionType}</td>
+                    <td>${manager.regionTypeName}</td>
                     <td class="acoes">
                         <a href="${pageContext.request.contextPath}/regionalManagers?action=edit&id=${manager.id}">Editar</a>
 
-                        <form action="${pageContext.request.contextPath}/admins" method="post">
+                        <form action="${pageContext.request.contextPath}/regionalManagers" method="post">
                             <input type="hidden" name="id" value="${manager.id}">
 
                             <button type="submit" name="action" value="delete">Deletar</button>

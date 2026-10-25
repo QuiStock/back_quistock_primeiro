@@ -7,9 +7,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @Getter
 @Setter
@@ -37,36 +39,28 @@ public class LoginServlet extends HttpServlet {
 
             LoginResult login = loginService.validateLogin(email, pass);
 
-            if (login==null || !login.isSuccess()) {
-
-                req.getRequestDispatcher("index.jsp").forward(req, resp);
-
+            if (!login.isSuccess()) {
+                req.setAttribute("error", "Email ou senha inválidos");
+                req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                return;
             }
 
-            else if (login.isSuccess() && login.getType().equals("ADMIN")) {
+            HttpSession old =  req.getSession(false);
+            if (old != null)old.invalidate();
 
-                req.getRequestDispatcher("home-admin.jsp").forward(req, resp);
+            HttpSession session = req.getSession(true);
+            session.setAttribute("loggedUser", login.getLoggedUser());
 
-            }
+            String way = "ADMIN".equals(login.getLoggedUser().getType())
+                    ? "/home-admin.jsp"
+                    : "/home-manager.jsp";
 
-            else if(login.isSuccess() && login.getType().equals("MANAGER")) {
-                req.getRequestDispatcher("home-manager.jsp").forward(req, resp);
-            }
+            resp.sendRedirect(req.getContextPath() + way);
 
-            else if (login.isSuccess() && login.getType().equals("ADMIN")) {
-
-                req.getRequestDispatcher("home-admin.jsp").forward(req, resp);
-
-            }
-
-            else if(login.isSuccess() && login.getType().equals("MANAGER")) {
-                req.getRequestDispatcher("home-manager.jsp").forward(req, resp);
-            }
-
-        } catch(Exception e) {
-
-            throw new ServletException(e);
-
+        } catch(SQLException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,  e.getMessage());
+        } catch(ClassNotFoundException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,  e.getMessage());
         }
 
     }

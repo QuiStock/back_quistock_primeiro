@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.RegionTypeDAO;
 import DAO.RegionalManagerDAO;
 import Model.RegionalManager;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 public class RegionalManagerServlet extends HttpServlet{
 
     private final RegionalManagerDAO dao = new RegionalManagerDAO();
+    private final RegionTypeDAO regionDAO = new RegionTypeDAO();
 
     //doGet to determine the path, based on action
     @Override
@@ -27,7 +29,8 @@ public class RegionalManagerServlet extends HttpServlet{
 
             if ("new".equals(action)){
                 //empty insert forms
-                req.getRequestDispatcher("/crud-regionalManager.jsp").forward(req, resp);
+                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
             else if ("edit".equals(action)) {
@@ -41,8 +44,8 @@ public class RegionalManagerServlet extends HttpServlet{
                 }
 
                 //filling forms
-                req.setAttribute("manager", manager);
-                req.getRequestDispatcher("/crud-regionalManager.jsp").forward(req, resp);
+                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
             else {
@@ -86,12 +89,12 @@ public class RegionalManagerServlet extends HttpServlet{
     }
 
     private void add (HttpServletRequest req, HttpServletResponse resp)
-            throws SQLException, ServletException, IOException{
+            throws SQLException, IOException{
         RegionalManager manager = new RegionalManager(
                 req.getParameter("email"),
                 req.getParameter("name"),
                 req.getParameter("password"),
-                req.getParameter("region-type")
+                Integer.parseInt(req.getParameter("region-type"))
         );
 
         dao.insert(manager);
@@ -113,7 +116,7 @@ public class RegionalManagerServlet extends HttpServlet{
         manager.setName(req.getParameter("name"));
         manager.setEmail(req.getParameter("email"));
         manager.setPassword(req.getParameter("password"));
-        manager.setRegionType(req.getParameter("region-type"));
+        manager.setRegionTypeId(Integer.parseInt(req.getParameter("region-type")));
 
         dao.update(manager);
 
