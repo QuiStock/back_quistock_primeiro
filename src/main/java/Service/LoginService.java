@@ -22,19 +22,21 @@ public class LoginService {
     public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
 
         RegionalManager manager = daoMan.searchByEmail(email);
-        if (manager.getPassword().equals(password)) {
+        if (manager != null && manager.getPassword().equals(password)) {
             return new LoginResult(
                     true,
                         new LoggedUser(
                                 manager.getId(),
-                                manager
+                                manager.getName(),
+                                manager.getEmail(),
+                                "MANAGER",
+                                manager.getRegionTypeName(),
+                                manager.getRegionTypeId()
                         )
-            )
+            );
         }
 
-
-        List<Admin> admins = daoAdm.select();
-
+        
         for (Admin adm : admins) {
             if (adm.getEmail().equals(email) && adm.getPassword().equals(password)) {
 

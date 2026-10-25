@@ -58,6 +58,26 @@ public class AdminDAO {
         }
     }
 
+    //functional interface to use a lambda method
+    private interface Binder {
+        //lambda method that is able to reutilize the same query for different searches
+        void bind(PreparedStatement stmt) throws SQLException;
+    }
+
+    public Admin searchBy(String where, Binder binder) throws SQLException {
+        String query = "SELECT id, name, email, password FROM super_admin WHERE email = ?";
+
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
+            binder.bind(stmt);
+            try(ResultSet rs = stmt.executeQuery()){
+                return rs.next() ?
+            }
+        }
+    }
+
     //method that searches admin by email
     public Admin searchByEmail(String email) throws SQLException {
         String query = "select id, name, email, password from super_admin where email = ?";

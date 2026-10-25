@@ -33,7 +33,7 @@ public class RegionalManagerServlet extends HttpServlet{
             else if ("edit".equals(action)) {
                 //filled forms with previous data
                 int id = Integer.parseInt(req.getParameter("id"));
-                RegionalManager manager = dao.searchManager(id);
+                RegionalManager manager = dao.searchById(id);
 
                 if (manager == null) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Manager not found");
@@ -103,7 +103,7 @@ public class RegionalManagerServlet extends HttpServlet{
             throws SQLException, ServletException, IOException{
 
         int id = Integer.parseInt(req.getParameter("id"));
-        RegionalManager manager = dao.searchManager(id);
+        RegionalManager manager = dao.searchById(id);
 
         if (manager == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
