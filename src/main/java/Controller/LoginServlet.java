@@ -31,42 +31,32 @@ public class LoginServlet extends HttpServlet {
         String email = req.getParameter("email");
         String pass = req.getParameter("password");
 
-        
+
 
         try {
-
             LoginResult login = loginService.validateLogin(email, pass);
 
-            if (login==null || !login.isSuccess()) {
-
+            if (login == null || !login.isSuccess()) {
                 req.getRequestDispatcher("index.jsp").forward(req, resp);
-
+                return;
             }
 
-            else if (login.isSuccess() && login.getType().equals("ADMIN")) {
+            String type = login.getLoggedUser().getType();
 
+            if ("ADMIN".equals(type)) {
                 req.getRequestDispatcher("home-admin.jsp").forward(req, resp);
-
+                return;
             }
 
-            else if(login.isSuccess() && login.getType().equals("MANAGER")) {
+            if ("MANAGER".equals(type)) {
                 req.getRequestDispatcher("home-manager.jsp").forward(req, resp);
+                return;
             }
 
-            else if (login.isSuccess() && login.getType().equals("ADMIN")) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Tipo de usuário inválido");
 
-                req.getRequestDispatcher("home-admin.jsp").forward(req, resp);
-
-            }
-
-            else if(login.isSuccess() && login.getType().equals("MANAGER")) {
-                req.getRequestDispatcher("home-manager.jsp").forward(req, resp);
-            }
-
-        } catch(Exception e) {
-
+        } catch (Exception e) {
             throw new ServletException(e);
-
         }
 
     }

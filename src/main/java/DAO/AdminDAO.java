@@ -73,7 +73,16 @@ public class AdminDAO {
         ) {
             binder.bind(stmt);
             try(ResultSet rs = stmt.executeQuery()){
-                return rs.next() ?
+                if (rs.next()) {
+                    return new Admin(
+                            rs.getInt("id"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("name")
+                    );
+                }
+
+                return null;
             }
         }
     }

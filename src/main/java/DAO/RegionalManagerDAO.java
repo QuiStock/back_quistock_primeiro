@@ -101,28 +101,27 @@ public class RegionalManagerDAO {
         return searchBy("WHERE m.email = ?",  stmt -> stmt.setString(1, email));
     }
 
-    //update method based on search by id
-    public void update(RegionalManager regionalManager) throws SQLException{
+    //atualiza nome, email e regiao sem alterar a senha
+    public int update(RegionalManager regionalManager) throws SQLException{
 
-        String sql = "UPDATE regional_manager SET name = ?, email = ?, password = ?, region_type_id = ? WHERE id = ?";
+        String sql = "UPDATE regional_manager SET name = ?, email = ?, region_type_id = ? WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
             sttmt.setString(1, regionalManager.getName());
             sttmt.setString(2, regionalManager.getEmail());
-            sttmt.setString(3, regionalManager.getPassword());
-            sttmt.setInt(4, regionalManager.getRegionTypeId());
-            sttmt.setInt(5, regionalManager.getId());
+            sttmt.setInt(3, regionalManager.getRegionTypeId());
+            sttmt.setInt(4, regionalManager.getId());
 
-            sttmt.executeUpdate();
+            return sttmt.executeUpdate();
 
         }
 
     }
 
     //metodo pra excluir gerente do banco de acordo com o id
-    public void delete(RegionalManager manager) throws SQLException {
+    public int delete(int id) throws SQLException {
 
         String sql = "DELETE FROM regional_manager WHERE id = ?";
 
@@ -131,8 +130,8 @@ public class RegionalManagerDAO {
                 PreparedStatement sttmt = conn.prepareStatement(sql)
         ){
 
-            sttmt.setInt(1, manager.getId());
-            sttmt.executeUpdate();
+            sttmt.setInt(1, id);
+            return sttmt.executeUpdate();
 
         }
 

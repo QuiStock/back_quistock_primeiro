@@ -19,4 +19,9 @@ public class RegionalManager {
         this.password = password;
         this.regionTypeId = regionTypeId;
     }
+
+    //nome usado pela tela de gerentes
+    public String getNome() {
+        return name;
+    }
 }

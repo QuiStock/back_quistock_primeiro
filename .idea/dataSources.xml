@@ -5,7 +5,7 @@
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://quistock-quistockmelhorinter-642a.j.aivencloud.com:11475/quistock</jdbc-url>
+      <jdbc-url>jdbc:postgresql://pg-1a8a59ef-quistockinterdisciplinar-a1d7.h.aivencloud.com:12969/primeiro_quistock?sslmode=require</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

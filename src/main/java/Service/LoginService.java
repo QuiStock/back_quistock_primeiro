@@ -19,31 +19,39 @@ public class LoginService {
     private AdminDAO daoAdm = new AdminDAO();
     private RegionalManagerDAO daoMan = new RegionalManagerDAO();
 
-    public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
+    public LoginResult validateLogin(String email, String password)
+            throws SQLException, ClassNotFoundException {
 
         RegionalManager manager = daoMan.searchByEmail(email);
+
         if (manager != null && manager.getPassword().equals(password)) {
             return new LoginResult(
                     true,
-                        new LoggedUser(
-                                manager.getId(),
-                                manager.getName(),
-                                manager.getEmail(),
-                                "MANAGER",
-                                manager.getRegionTypeName(),
-                                manager.getRegionTypeId()
-                        )
+                    new LoggedUser(
+                            manager.getId(),
+                            manager.getName(),
+                            manager.getEmail(),
+                            "MANAGER",
+                            manager.getRegionTypeName(),
+                            manager.getRegionTypeId()
+                    )
             );
         }
 
-        
-        for (Admin adm : admins) {
-            if (adm.getEmail().equals(email) && adm.getPassword().equals(password)) {
+        Admin admin = daoAdm.searchByEmail(email);
 
-                LoginResult result = new LoginResult(true, "ADMIN");
-
-                return result;
-            }
+        if (admin != null && admin.getPassword().equals(password)) {
+            return new LoginResult(
+                    true,
+                    new LoggedUser(
+                            admin.getId(),
+                            admin.getName(),
+                            admin.getEmail(),
+                            "ADMIN",
+                            null,
+                            null
+                    )
+            );
         }
 
         return null;
