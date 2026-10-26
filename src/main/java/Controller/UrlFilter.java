@@ -13,7 +13,7 @@ import java.util.Set;
 @WebFilter("/*")
 public class UrlFilter implements Filter {
 
-    //telas permitidas para cada tipo de login
+    //Allowed pages for each login
     private static final Set<String> general = Set.of("/", "/index.jsp", "/login", "/logout");
     private static final Set<String> only_admin = Set.of(
             "/home-admin.jsp", "/admins", "/crud-admin.jsp",
