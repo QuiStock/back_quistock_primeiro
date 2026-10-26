@@ -51,7 +51,7 @@ public class AdminDAO {
 
     //a method to be reutilized, can be used for both searches based on id and email
     public Admin searchBy(String where, Binder binder) throws SQLException {
-        String query = "SELECT id, name, email, password FROM super_admin ";
+        String query = "SELECT id, name, email, password FROM super_admin " + where;
 
         try (
                 Connection conn = factory.getConnection();
