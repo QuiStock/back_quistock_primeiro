@@ -29,7 +29,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
             if ("new".equals(action)){
                 //empty insert forms
-                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.setAttribute("regionTypes", regionDAO.select());
                 req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
@@ -44,7 +44,8 @@ public class RegionalManagerServlet extends HttpServlet{
                 }
 
                 //filling forms
-                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.setAttribute("regionTypes", regionDAO.select());
+                req.setAttribute("manager", manager);
                 req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 

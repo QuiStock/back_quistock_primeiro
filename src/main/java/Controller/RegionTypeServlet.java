@@ -58,7 +58,7 @@ public class RegionTypeServlet extends HttpServlet{
 
     private void readRegionTypes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         try {
-            List<RegionType> regionTypesList = regionTypeDAO.readRegionTypes();
+            List<RegionType> regionTypesList = regionTypeDAO.select();
 
             request.setAttribute("regionTypesList", regionTypesList);
             RequestDispatcher dispatcher = request.getRequestDispatcher("regionTypes.jsp");
@@ -74,7 +74,6 @@ public class RegionTypeServlet extends HttpServlet{
 
         RegionType regionType = new RegionType();
         regionType.setName(name);
-        regionType.setStoreId(storeId);
 
         try {
             regionTypeDAO.createRegionType(regionType);
@@ -88,7 +87,7 @@ public class RegionTypeServlet extends HttpServlet{
         int id = Integer.parseInt(request.getParameter("regionTypeId"));
 
         try {
-            RegionType regionType = regionTypeDAO.foundRegionType(id);
+            RegionType regionType = regionTypeDAO.searchById(id);
             request.setAttribute("regionType", regionType);
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("editRegionType.jsp");
@@ -103,11 +102,9 @@ public class RegionTypeServlet extends HttpServlet{
 
         int id = Integer.parseInt(request.getParameter("regionTypeId"));
         String name = request.getParameter("regionTypeName");
-        int storeId = Integer.parseInt(request.getParameter("regionTypeStoreId"));
 
         regionType.setId(id);
         regionType.setName(name);
-        regionType.setStoreId(storeId);
 
         try {
             regionTypeDAO.updateRegionType(regionType);
@@ -124,7 +121,7 @@ public class RegionTypeServlet extends HttpServlet{
             regionTypeDAO.deleteRegionType(id);
             response.sendRedirect("regionTypes");
         } catch (SQLException e) {
-            throw new ServletException("Erro ao deletar tipo de regiao", e);
+            response.sendError(500, e.getMessage());
         }
     }
 
