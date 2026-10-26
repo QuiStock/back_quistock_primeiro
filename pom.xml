@@ -77,6 +77,13 @@
             <version>3.0.1</version>
         </dependency>
 
+        <!--Hash-->
+        <dependency>
+            <groupId>at.favre.lib</groupId>
+            <artifactId>bcrypt</artifactId>
+            <version>0.10.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
