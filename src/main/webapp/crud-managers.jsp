@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
 <form class="form-admin" action="${pageContext.request.contextPath}/regionalManagers" method="post">
     <h2>${empty manager ? 'Adicionar gerente' : 'Editar gerente'}</h2>
 
@@ -22,3 +23,4 @@
         <button type="button" class="cancelar" onclick="this.closest('dialog').close()">Cancelar</button>
     </div>
 </form>
+<script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>

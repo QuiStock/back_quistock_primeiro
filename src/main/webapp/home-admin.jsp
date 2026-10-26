@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>Title</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
     <style>
         * {
             box-sizing: border-box;
@@ -51,6 +52,10 @@
     </style>
 </head>
 <body>
+    <div id="loading" class="loading hidden" aria-hidden="true">
+        <div class="chaotic-orbit"></div>
+    </div>
+
     <aside>
         <a href="home.html">Início</a>
         <a href="${pageContext.request.contextPath}/admins">Admins</a>
@@ -60,5 +65,6 @@
         <a href="pedido.jsp">Pedidos</a>
         <a href="faq.jsp">Faq</a>
     </aside>
+    <script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>
 </body>
 </html>
