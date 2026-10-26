@@ -1,49 +1,57 @@
 package Controller;
 
+import DAO.RegionTypeDAO;
 import DAO.RegionalManagerDAO;
 import Model.RegionalManager;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 //encaminha pra pagina gerentes
 @WebServlet("/regionalManagers")
 public class RegionalManagerServlet extends HttpServlet{
 
-    RegionalManagerDAO dao = new RegionalManagerDAO();
+    private final RegionalManagerDAO dao = new RegionalManagerDAO();
+    private final RegionTypeDAO regionDAO = new RegionTypeDAO();
 
-    private RegionalManagerDAO regionalManagerDAO = new RegionalManagerDAO();
-
-    //doGet pra ver qual das duas ações vai fazer
-    /*protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        String action = request.getParameter("action");
-        if (action == null) action = "regionalManagersList";
-
-        //averigua qual action que é e redireciona para o servlet correto
-        switch (action){
-            case "edit":
-                showUpdateForm(request, response); //aparecer a interface pra editar
-                break;
-            default:
-                readRegionalManagers(request, response);
-        }
-    }
-    */
-
+    //doGet to determine the path, based on action
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        String action = req.getParameter("action");
+
         try {
 
-            req.setAttribute("managers", dao.readRegionalManagers());
-            req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
+            if ("new".equals(action)){
+                //empty insert forms
+                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
+            }
+
+            else if ("edit".equals(action)) {
+                //filled forms with previous data
+                int id = Integer.parseInt(req.getParameter("id"));
+                RegionalManager manager = dao.searchById(id);
+
+                if (manager == null) {
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Manager not found");
+                    return;
+                }
+
+                //filling forms
+                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
+            }
+
+            else {
+                req.setAttribute("managers", dao.select());
+                req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
+            }
 
         } catch (SQLException ex) {
 
@@ -55,113 +63,74 @@ public class RegionalManagerServlet extends HttpServlet{
 
 
     //doPost pra alterar tabela, seja criando, editando ou deletando
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         //traz pro teclado brasileiro
-        request.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
 
-        String action = request.getParameter("action");
-        if (action == null) action = "";
+        String action = req.getParameter("action");
 
         //averigua qual action que é e redireciona para o servlet correto
-        switch (action) {
-            case "register":
-                createRegionalManager(request, response);
-                break;
-            case "edit":
-                updateRegionalManager(request, response); //editar de fato
-                break;
-            case "delete":
-                deleteRegionalManager(request, response);
-                break;
-        }
-    }
-
-    //metodo pra listar os gerentes
-    private void readRegionalManagers(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         try {
-            List<RegionalManager> regionalManagersList = regionalManagerDAO.readRegionalManagers();
-
-            request.setAttribute("regionalManagersList", regionalManagersList); //action do form
-            RequestDispatcher dispatcher = request.getRequestDispatcher("regionalManagers.jsp"); //onde vai redirecionar
-            dispatcher.forward(request, response);
-        } catch (SQLException e) {
-            throw new ServletException("Erro ao buscar gerentes", e);
+            switch (action) {
+                case "add": add(req, resp); break;
+                case "edit": update(req, resp); break;
+                case "delete": delete(req, resp); break;
+                default: doGet(req, resp); break;
+            }
+        } catch (NumberFormatException e){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID Inválido");
+        } catch (SQLException e){
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        } catch (IOException e){
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
-    //metodo pra criar os gerentes
-    private void createRegionalManager(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        //pegando info do forms
-        String name =  request.getParameter("regionalManagerName");
-        String email = request.getParameter("regionalManagerEmail");
-        String password = request.getParameter("regionalManagerPassword");
-        int regionTypeId = Integer.parseInt(request.getParameter("regionalManagerRegionTypeId"));
+    private void add (HttpServletRequest req, HttpServletResponse resp)
+            throws SQLException, IOException{
+        RegionalManager manager = new RegionalManager(
+                req.getParameter("email"),
+                req.getParameter("name"),
+                req.getParameter("password"),
+                Integer.parseInt(req.getParameter("region-type"))
+        );
 
-        //adicionadno as info num objeto do gerente
-        RegionalManager regionalManager = new RegionalManager();
-        regionalManager.setName(name);
-        regionalManager.setEmail(email);
-        regionalManager.setPassword(password);
-        regionalManager.setRegionTypeId(regionTypeId);
+        dao.insert(manager);
 
-        //criando o gerente novo no db
-        try {
-            regionalManagerDAO.createRegionalManager(regionalManager);
-            response.sendRedirect("regionalManagers"); //redireciona pra regionalManagers.jsp dnv
-        }catch (SQLException e){
-            throw new ServletException("Erro ao criar gerente", e);
-        }
+        resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
-    //mostra o formulario pro usuario editar o gerente
-    private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        int id = Integer.parseInt(request.getParameter("regionalManagerId"));
+    private void update (HttpServletRequest req, HttpServletResponse resp)
+            throws SQLException, ServletException, IOException{
 
-        try {
-            RegionalManager regionalManager = regionalManagerDAO.foundRegionalManager(id);
-            request.setAttribute("regionalManager", regionalManager); // agora manda o objeto inteiro
-            RequestDispatcher dispatcher = request.getRequestDispatcher("editRegionalManager.jsp");
-            dispatcher.forward(request, response);
-        } catch (SQLException e) {
-            throw new ServletException("Erro ao buscar gerente", e);
+        int id = Integer.parseInt(req.getParameter("id"));
+        RegionalManager manager = dao.searchById(id);
+
+        if (manager == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+            return;
         }
+
+        manager.setName(req.getParameter("name"));
+        manager.setEmail(req.getParameter("email"));
+        manager.setPassword(req.getParameter("password"));
+        manager.setRegionTypeId(Integer.parseInt(req.getParameter("region-type")));
+
+        dao.update(manager);
+
+        resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
-    private void updateRegionalManager(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        RegionalManager regionalManager = new RegionalManager();
+    private void delete (HttpServletRequest req, HttpServletResponse resp)
+            throws SQLException, ServletException,  IOException{
 
-        //definindo os valores novos do gerente
-        int id = Integer.parseInt(request.getParameter("regionalManagerId"));
-        String name = request.getParameter("regionalManagerName");
-        String email = request.getParameter("regionalManagerEmail");
-        String password = request.getParameter("regionalManagerPassword");
-        int regionTypeId = Integer.parseInt(request.getParameter("regionalManagerRegionTypeId"));
+        RegionalManager manager = new RegionalManager();
+        manager.setId(Integer.parseInt(req.getParameter("id")));
 
-        regionalManager.setId(id);
-        regionalManager.setName(name);
-        regionalManager.setEmail(email);
-        regionalManager.setPassword(password);
-        regionalManager.setRegionTypeId(regionTypeId);
+        dao.delete(manager);
 
-        //editando o gerente
-        try {
-            regionalManagerDAO.updateRegionalManager(regionalManager);
-            response.sendRedirect("regionalManagers");
-        }catch (SQLException e){
-            throw new ServletException("Erro ao atualizar gerente", e);
-        }
+        resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
-
-    private void deleteRegionalManager(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        int id = Integer.parseInt(request.getParameter("regionalManagerId"));
-
-        try {
-            regionalManagerDAO.deleteRegionalManager(id);
-            response.sendRedirect("regionalManagers");
-        } catch (SQLException e) {
-            throw new ServletException("Erro ao deletar gerente", e);
-        }
-    }
-
 }

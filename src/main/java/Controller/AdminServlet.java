@@ -14,8 +14,9 @@ import java.sql.SQLException;
 @WebServlet("/admins")
 public class AdminServlet extends HttpServlet {
 
-    AdminDAO dao = new AdminDAO();
+    private final AdminDAO dao = new AdminDAO();
 
+    //doGet to determine the path, based on action
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -33,19 +34,20 @@ public class AdminServlet extends HttpServlet {
             else if ("edit".equals(action)){
                 //forms filled with previous admin data
                 int id = Integer.parseInt(req.getParameter("id"));
-                Admin admin = dao.searchAdmin(id);
+                Admin admin = dao.searchById(id);
 
                 if (admin == null) {
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin not found");
                     return;
                 }
 
-                //filled form
+                //filling forms
                 req.setAttribute("admin", admin);
                 req.getRequestDispatcher("/crud-admin.jsp").forward(req, resp);
             }
 
             else {
+                //default action
                 req.setAttribute("admins", dao.select());
                 req.getRequestDispatcher("/admins.jsp").forward(req, resp);
             }
@@ -106,7 +108,7 @@ public class AdminServlet extends HttpServlet {
             throws SQLException, ServletException, IOException{
 
         int id = Integer.parseInt(req.getParameter("id"));
-        Admin admin = dao.searchAdmin(id);
+        Admin admin = dao.searchById(id);
 
         if (admin == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");

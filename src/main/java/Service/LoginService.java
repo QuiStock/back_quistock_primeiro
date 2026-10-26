@@ -1,5 +1,6 @@
 package Service;
 
+import Model.LoggedUser;
 import lombok.*;
 
 import DAO.AdminDAO;
@@ -16,36 +17,51 @@ import java.util.List;
 public class LoginService {
 
     private AdminDAO daoAdm = new AdminDAO();
-    private RegionalManagerDAO daoGer = new RegionalManagerDAO();
     private RegionalManagerDAO daoMan = new RegionalManagerDAO();
 
     public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
 
-        List<RegionalManager> managers = daoMan.readRegionalManagers();
+        RegionalManager manager = daoMan.searchByEmail(email);
+        if (manager != null && manager.getPassword().equals(password)) {
 
-        for (RegionalManager man : managers) {
+            return new LoginResult(
 
-            if (man.getEmail().equals(email) && man.getPassword().equals(password)) {
+                    true,
 
-                LoginResult result = new LoginResult(true, "MANAGER");
+                        new LoggedUser(
 
-                return result;
+                                manager.getId(),
+                                manager.getName(),
+                                manager.getEmail(),
+                                "MANAGER",
+                                manager.getRegionTypeName(),
+                                manager.getRegionTypeId()
 
-            }
+                        )
 
+            );
         }
 
-        List<Admin> admins = daoAdm.select();
+        Admin admin = daoAdm.searchByEmail(email);
+        if (admin != null && admin.getPassword().equals(password)) {
 
-        for (Admin adm : admins) {
-            if (adm.getEmail().equals(email) && adm.getPassword().equals(password)) {
+            return new LoginResult(
 
-                LoginResult result = new LoginResult(true, "ADMIN");
+                    true,
 
-                return result;
-            }
+                    new LoggedUser(
+
+                            admin.getId(),
+                            admin.getName(),
+                            admin.getEmail(),
+                            "ADMIN",
+                            null,
+                            null
+                    )
+
+            );
         }
 
-        return null;
+        return new LoginResult(false, null);
     }
 }

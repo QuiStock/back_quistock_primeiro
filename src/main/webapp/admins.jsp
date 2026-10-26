@@ -132,6 +132,52 @@
         .acoes button[value="delete"] {
             background-color: #dc2626;
         }
+
+        <!--Popup-->
+            dialog {
+                width: min(280px, 60vw);   /* no máximo 420px; em tela pequena, 90% da largura */
+                height: auto;              /* altura só do conteúdo */
+                max-height: 60vh;          /* nunca passa de 90% da altura da tela */
+                overflow-y: auto;
+                margin: auto;              /* centraliza */
+                padding: 24px;
+                border: none;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .form-admin {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-admin input {
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+
+        .form-admin .botoes {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .form-admin button {
+            border: none;
+            border-radius: 6px;
+            padding: 8px 14px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .form-admin .salvar { background-color: #2563eb; }
+        .form-admin .cancelar { background-color: #6b7280; }
     </style>
 </head>
 <body>
@@ -139,7 +185,7 @@
 <aside>
     <a href="home.html">Início</a>
     <a href="${pageContext.request.contextPath}/admins">Admins</a>
-    <a href="gerente.jsp">Gerente</a>
+    <a href="${pageContext.request.contextPath}/regionalManagers">Gerente</a>
     <a href="loja.jsp">Loja</a>
     <a href="regiao.jsp">Região</a>
     <a href="pedido.jsp">Pedidos</a>
@@ -149,7 +195,8 @@
 <main>
     <div class="topo">
         <h1>Admins</h1>
-        <a class="btn-adicionar" href="${pageContext.request.contextPath}/admins?action=new">Adicionar admin</a>
+        <a class="btn-adicionar" data-modal
+           href="${pageContext.request.contextPath}/admins?action=new">Adicionar admin</a>
     </div>
 
     <table>
@@ -168,7 +215,8 @@
                 <td>${admin.name}</td>
                 <td>${admin.email}</td>
                 <td class="acoes">
-                    <a href="${pageContext.request.contextPath}/admins?action=edit&id=${admin.id}">Editar</a>
+                    <a data-modal
+                       href="${pageContext.request.contextPath}/admins?action=edit&id=${admin.id}">Editar</a>
 
                     <form action="${pageContext.request.contextPath}/admins" method="post">
                         <input type="hidden" name="id" value="${admin.id}">
@@ -180,6 +228,34 @@
         </c:forEach>
         </tbody>
     </table>
+
+    <dialog id="modal-admin"></dialog>
+
+    <script>
+        const modal = document.getElementById('modal-admin');
+
+        document.querySelectorAll('a[data-modal]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                abrirModal(link.href);
+            });
+        });
+
+        async function abrirModal(url) {
+            const resp = await fetch(url);
+            if (!resp.ok) {
+                alert('Não foi possível carregar o formulário.');
+                return;
+            }
+            modal.innerHTML = await resp.text();
+            modal.showModal();
+        }
+
+        // fecha ao clicar fora (no fundo escuro)
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) modal.close();
+        });
+    </script>
 </main>
 </body>
 </html>
