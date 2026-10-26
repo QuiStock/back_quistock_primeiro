@@ -28,16 +28,16 @@ public class LoginService {
 
                     true,
 
-                    new LoggedUser(
+                        new LoggedUser(
 
-                            manager.getId(),
-                            manager.getName(),
-                            manager.getEmail(),
-                            "MANAGER",
-                            manager.getRegionTypeName(),
-                            manager.getRegionTypeId()
+                                manager.getId(),
+                                manager.getName(),
+                                manager.getEmail(),
+                                "MANAGER",
+                                manager.getRegionTypeName(),
+                                manager.getRegionTypeId()
 
-                    )
+                        )
 
             );
         }

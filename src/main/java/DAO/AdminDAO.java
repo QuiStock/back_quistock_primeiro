@@ -20,7 +20,7 @@ public class AdminDAO {
         String query = "insert into super_admin (email, password, name) values(?, ?, ?); ";
 
         try (Connection conn = factory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)){
+        PreparedStatement stmt = conn.prepareStatement(query)){
 
             stmt.setString(1, admin.getEmail());
             stmt.setString(2, admin.getPassword());
@@ -62,35 +62,6 @@ public class AdminDAO {
 
                 return rs.next() ? rsLine(rs) : null;
 
-            }
-        }
-    }
-
-    //functional interface to use a lambda method
-    private interface Binder {
-        //lambda method that is able to reutilize the same query for different searches
-        void bind(PreparedStatement stmt) throws SQLException;
-    }
-
-    public Admin searchBy(String where, Binder binder) throws SQLException {
-        String query = "SELECT id, name, email, password FROM super_admin WHERE email = ?";
-
-        try (
-                Connection conn = factory.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query);
-        ) {
-            binder.bind(stmt);
-            try(ResultSet rs = stmt.executeQuery()){
-                if (rs.next()) {
-                    return new Admin(
-                            rs.getInt("id"),
-                            rs.getString("email"),
-                            rs.getString("password"),
-                            rs.getString("name")
-                    );
-                }
-
-                return null;
             }
         }
     }
@@ -149,14 +120,14 @@ public class AdminDAO {
 
         try (
                 Connection conn = factory.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query);
+                 PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet rs = stmt.executeQuery()
         ){
 
             while(rs.next()){
 
                 admins.add(rsLine(rs));
-
+                
             }
         }
 

@@ -11,11 +11,11 @@
     <form action="${pageContext.request.contextPath}/login" method="post">
 
         <input type="email" name="email" placeholder="email">
-        <input type="text" name = "password" placeholder="senha">
+        <input type="password" name = "password" placeholder="senha">
 
         <input type="submit">
     </form>
 
-
+    <c:if test="${not empty error}"><p style="color:red">${error}</p></c:if>
 </body>
 </html>

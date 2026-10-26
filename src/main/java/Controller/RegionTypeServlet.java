@@ -70,12 +70,10 @@ public class RegionTypeServlet extends HttpServlet{
 
     private void createRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         String name = request.getParameter("regionTypeName");
-        int storeId = Integer.parseInt(request.getParameter("regionTypeStoreId"));
 
         //define os atributos
         RegionType regionType = new RegionType();
         regionType.setName(name);
-        regionType.setStoreId(storeId);
 
         try {
             regionTypeDAO.createRegionType(regionType);
@@ -111,11 +109,9 @@ public class RegionTypeServlet extends HttpServlet{
         //define os atributos
         int id = Integer.parseInt(request.getParameter("regionTypeId"));
         String name = request.getParameter("regionTypeName");
-        int storeId = Integer.parseInt(request.getParameter("regionTypeStoreId"));
 
         regionType.setId(id);
         regionType.setName(name);
-        regionType.setStoreId(storeId);
 
         try {
             regionTypeDAO.updateRegionType(regionType);

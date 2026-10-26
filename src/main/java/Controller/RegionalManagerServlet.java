@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.RegionTypeDAO;
 import DAO.RegionalManagerDAO;
 import Model.RegionalManager;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 public class RegionalManagerServlet extends HttpServlet{
 
     private final RegionalManagerDAO dao = new RegionalManagerDAO();
+    private final RegionTypeDAO regionDAO = new RegionTypeDAO();
 
     //doGet to determine the path, based on action
     @Override
@@ -27,12 +29,14 @@ public class RegionalManagerServlet extends HttpServlet{
 
             //averigua qual action veio e encaminha pra tela correta
             if ("new".equals(action)){
-                req.getRequestDispatcher("/crud-regionalManager.jsp").forward(req, resp);
+                //carrega as regioes no formulario
+                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
             else if ("edit".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
-                RegionalManager manager = dao.searchManager(id);
+                RegionalManager manager = dao.searchById(id);
 
                 //caso o gerente venha vazio, retorna tela de erro
                 if (manager == null) {
@@ -40,9 +44,10 @@ public class RegionalManagerServlet extends HttpServlet{
                     return;
                 }
 
-                //atualiza o gerente
+                //manda o gerente e as regioes pro formulario
                 req.setAttribute("manager", manager);
-                req.getRequestDispatcher("/crud-regionalManager.jsp").forward(req, resp);
+                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
             //caso nao seja nenhum dos actions acima, retorna lista de gerentes
@@ -98,13 +103,12 @@ public class RegionalManagerServlet extends HttpServlet{
 
     //metodo pra add gerente regional
     private void add (HttpServletRequest req, HttpServletResponse resp)
-            throws SQLException, ServletException, IOException{
-        RegionalManager manager = new RegionalManager(
-                req.getParameter("email"),
-                req.getParameter("name"),
-                req.getParameter("password"),
-                req.getParameter("region-type")
-        );
+            throws SQLException, IOException{
+        RegionalManager manager = new RegionalManager();
+        manager.setEmail(req.getParameter("email"));
+        manager.setName(req.getParameter("name"));
+        manager.setPassword(req.getParameter("password"));
+        manager.setRegionTypeId(Integer.parseInt(req.getParameter("region-type")));
 
         dao.insert(manager);
 
@@ -116,7 +120,7 @@ public class RegionalManagerServlet extends HttpServlet{
             throws SQLException, ServletException, IOException{
 
         int id = Integer.parseInt(req.getParameter("id"));
-        RegionalManager manager = dao.searchManager(id);
+        RegionalManager manager = dao.searchById(id);
 
         //caso o gerente tenha vazio, retorna msg de erro
         if (manager == null) {
@@ -127,7 +131,7 @@ public class RegionalManagerServlet extends HttpServlet{
         manager.setName(req.getParameter("name"));
         manager.setEmail(req.getParameter("email"));
         manager.setPassword(req.getParameter("password"));
-        manager.setRegionType(req.getParameter("region-type"));
+        manager.setRegionTypeId(Integer.parseInt(req.getParameter("region-type")));
 
         dao.update(manager);
 
@@ -138,10 +142,8 @@ public class RegionalManagerServlet extends HttpServlet{
     private void delete (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException,  IOException{
 
-        RegionalManager manager = new RegionalManager();
-        manager.setId(Integer.parseInt(req.getParameter("id")));
-
-        dao.delete(manager);
+        int id = Integer.parseInt(req.getParameter("id"));
+        dao.delete(id);
 
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
