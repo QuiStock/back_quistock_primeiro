@@ -13,6 +13,15 @@ public class RegionTypeDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
+    private RegionType rsLine(ResultSet rs) throws SQLException {
+
+        return new RegionType(
+                rs.getInt("id"),
+                rs.getString("name")
+        );
+
+    }
+
     //Metodo pra imprimir todos os tipos de regiao
     public List<RegionType> readRegionTypes() throws SQLException {
 
@@ -28,7 +37,6 @@ public class RegionTypeDAO {
                 RegionType regionType = new RegionType();
                 regionType.setId(result.getInt("id"));
                 regionType.setName(result.getString("name"));
-                regionType.setStoreId(result.getInt("store_id"));
                 regionTypes.add(regionType);
             }
         }

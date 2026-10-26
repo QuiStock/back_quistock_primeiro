@@ -37,7 +37,7 @@ public class UrlFilter implements Filter {
 
         //checks existent session, keeps null if null, otherwise, receives logged user
         HttpSession session = req.getSession(false);
-        LoggedUser user = session == null ? null : (LoggedUser) session.getAttribute("user");
+        LoggedUser user = session == null ? null : (LoggedUser) session.getAttribute("loggedUser");
 
         //if user is null, sends back to login page
         if (user == null) {
