@@ -18,7 +18,7 @@ public class RegionTypeDAO {
 
         List<RegionType> regionTypes = new ArrayList<>();
 
-        String sql = "SELECT * FROM region_type";
+        String sql = "SELECT id, name FROM region_type ORDER BY id";
 
         //try pra conectar com o banco e definir as variaveis do tipo de regiao pra listar
         try (Connection conn = connectionFactory.getConnection();
@@ -29,7 +29,6 @@ public class RegionTypeDAO {
                 RegionType regionType = new RegionType();
                 regionType.setId(result.getInt("id"));
                 regionType.setName(result.getString("name"));
-                regionType.setStoreId(result.getInt("store_id"));
                 regionTypes.add(regionType);
             }
         }
@@ -41,14 +40,14 @@ public class RegionTypeDAO {
     //metodo pra criar um tipo de regiao novo
     public void createRegionType(RegionType regionType) throws SQLException {
 
-        String sql = "INSERT INTO region_type (name, store_id) VALUES ( ?, ?)";
+        //regiao agora guarda so o nome, sem vinculo com loja
+        String sql = "INSERT INTO region_type (name) VALUES (?)";
 
         //try pra criar tipos de regiao
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
             sttmt.setString(1, regionType.getName());
-            sttmt.setInt(2, regionType.getStoreId());
             sttmt.executeUpdate();
         }
     }
@@ -56,7 +55,7 @@ public class RegionTypeDAO {
     //metodo pra encontrar o tipo de regiao que deseja alterar
     public RegionType foundRegionType(int id) throws SQLException {
 
-        String sql = "SELECT * FROM region_type WHERE id = ?";
+        String sql = "SELECT id, name FROM region_type WHERE id = ?";
 
         //try pra conectar com o banco e definir o tipo de regiao que a pessoa quer editar pra aparecer no popup
         try (Connection conn = connectionFactory.getConnection();
@@ -69,7 +68,6 @@ public class RegionTypeDAO {
                     RegionType regionType = new RegionType();
                     regionType.setId(result.getInt("id"));
                     regionType.setName(result.getString("name"));
-                    regionType.setStoreId(result.getInt("store_id"));
                     return regionType;
                 }
             }
@@ -78,23 +76,22 @@ public class RegionTypeDAO {
     }
 
     //metodo pra atualizar o tipo de regiao que encontrou no metodo passado
-    public void updateRegionType(RegionType regionType) throws SQLException{
+    public int updateRegionType(RegionType regionType) throws SQLException{
 
-        String sql = "UPDATE region_type SET name = ?, store_id = ? WHERE id = ?";
+        String sql = "UPDATE region_type SET name = ? WHERE id = ?";
 
         //try pra conectar com o banco, e atualizar as informações do tipo de regiao
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
             sttmt.setString(1, regionType.getName());
-            sttmt.setInt(2, regionType.getStoreId());
-            sttmt.setInt(3, regionType.getId());
-            sttmt.executeUpdate();
+            sttmt.setInt(2, regionType.getId());
+            return sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir tipo de regiao do banco de acordo com o id
-    public void deleteRegionType(int id) throws SQLException {
+    public int deleteRegionType(int id) throws SQLException {
 
         String sql = "DELETE FROM region_type WHERE id = ?";
 
@@ -102,7 +99,7 @@ public class RegionTypeDAO {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
             sttmt.setInt(1, id);
-            sttmt.executeUpdate();
+            return sttmt.executeUpdate();
         }
     }
 }

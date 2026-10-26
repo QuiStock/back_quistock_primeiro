@@ -18,7 +18,8 @@ public class StoreDAO {
 
         List<Store> stores = new ArrayList<>();
 
-        String sql = "SELECT * FROM store";
+        //nao precisa trazer a senha pra listagem
+        String sql = "SELECT id, email, region_type_id FROM store ORDER BY id";
 
 
         //try pra listar tudo de todas as lojas
@@ -31,7 +32,7 @@ public class StoreDAO {
                 Store store = new Store();
                 store.setId(result.getInt("id"));
                 store.setEmail(result.getString("email"));
-                store.setPassword(result.getString("password"));
+                store.setRegionTypeId(result.getInt("region_type_id"));
                 stores.add(store);
             }
         }
@@ -41,7 +42,7 @@ public class StoreDAO {
     //metodo pra criar uma loja nova
     public void createStore(Store store) throws SQLException {
 
-        String sql = "INSERT INTO store (email, password) VALUES ( ?, ?)";
+        String sql = "INSERT INTO store (email, password, region_type_id) VALUES (?, ?, ?)";
 
         //try pra adicionar informaçoes na nova loja
         try (Connection conn = connectionFactory.getConnection();
@@ -49,6 +50,7 @@ public class StoreDAO {
 
             sttmt.setString(1, store.getEmail());
             sttmt.setString(2, store.getPassword());
+            sttmt.setInt(3, store.getRegionTypeId());
             sttmt.executeUpdate();
         }
     }
@@ -57,7 +59,7 @@ public class StoreDAO {
     //metodo pra encontrar a loja que deseja alterar
     public Store foundStore(int id) throws SQLException {
 
-        String sql = "SELECT * FROM store WHERE id = ?";
+        String sql = "SELECT id, email, password, region_type_id FROM store WHERE id = ?";
 
         //try pra conectar com o banco e executar a query
         try (Connection conn = connectionFactory.getConnection();
@@ -72,6 +74,7 @@ public class StoreDAO {
                     store.setId(result.getInt("id"));
                     store.setEmail(result.getString("email"));
                     store.setPassword(result.getString("password"));
+                    store.setRegionTypeId(result.getInt("region_type_id"));
                     return store;
                 }
             }
@@ -80,29 +83,30 @@ public class StoreDAO {
     }
 
     //metodo pra atualizar a loja que encontrou no metodo passado
-    public void updateStore(Store store) throws SQLException{
+    public int updateStore(Store store) throws SQLException{
 
-        String sql = "UPDATE store SET email = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE store SET email = ?, password = ?, region_type_id = ? WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
             sttmt.setString(1, store.getEmail());
             sttmt.setString(2, store.getPassword());
-            sttmt.setInt(3, store.getId());
-            sttmt.executeUpdate();
+            sttmt.setInt(3, store.getRegionTypeId());
+            sttmt.setInt(4, store.getId());
+            return sttmt.executeUpdate();
         }
     }
 
     //metodo pra excluir loja do banco de acordo com o id
-    public void deleteStore(int id) throws SQLException {
+    public int deleteStore(int id) throws SQLException {
 
         String sql = "DELETE FROM store WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
             sttmt.setInt(1, id);
-            sttmt.executeUpdate();
+            return sttmt.executeUpdate();
         }
     }
 }
