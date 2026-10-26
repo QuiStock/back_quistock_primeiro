@@ -32,7 +32,7 @@ public class RegionalManagerDAO {
         return manager;
     }
 
-    //method that returns a List with all regional managers
+    //metodo pra retornar uma lista de todos os gerentes regionais cadastrados
     public List<RegionalManager> select() throws SQLException {
 
         List<RegionalManager> regionalManagers = new ArrayList<>();
@@ -41,7 +41,7 @@ public class RegionalManagerDAO {
              PreparedStatement sttmt = conn.prepareStatement(query + "ORDER BY m.id");
              ResultSet rs = sttmt.executeQuery()) {
 
-            //repeats while there is another line
+            //repete o while enquanto ainda tem gerente na fila
             while (rs.next()) {
                 regionalManagers.add(rsLine(rs));
             }
@@ -71,13 +71,13 @@ public class RegionalManagerDAO {
         }
     }
 
-    //functional interface to use a lambda method
+    //interface visual pra usar metodo do lambda
     private interface Binder{
-        //lambda method that is able to reutilize the same query for different searches
+        //metodo do lambda que permite utilizar diferentes querys
         void bind(PreparedStatement stmt) throws SQLException;
     }
 
-    //method that searches for a manager based on the id
+    //metodo que procura o gerente de acordo com o ID
     public RegionalManager searchById(int id) throws SQLException {
         return searchBy("where m.id = ?", stmt -> stmt.setInt(1, id));
     }
@@ -96,7 +96,7 @@ public class RegionalManagerDAO {
 
     }
 
-    //search method based on email, using lambda method
+    //procura o metodo baseado no email, utilizando lambda
     public RegionalManager searchByEmail(String email) throws SQLException {
         return searchBy("WHERE m.email = ?",  stmt -> stmt.setString(1, email));
     }

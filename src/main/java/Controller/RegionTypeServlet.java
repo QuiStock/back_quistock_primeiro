@@ -29,7 +29,7 @@ public class RegionTypeServlet extends HttpServlet{
                 showUpdateForm(request, response); //aparecer a interface pra editar
                 break;
             default:
-                readRegionTypes(request, response);
+                readRegionTypes(request, response); //retorna a tela da lista de tipos de regiao
         }
     }
 
@@ -48,7 +48,7 @@ public class RegionTypeServlet extends HttpServlet{
                 createRegionType(request, response);
                 break;
             case "edit":
-                updateRegionType(request, response); //editar de fato
+                updateRegionType(request, response);
                 break;
             case "delete":
                 deleteRegionType(request, response);

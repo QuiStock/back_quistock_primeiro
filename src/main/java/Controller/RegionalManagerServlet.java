@@ -18,7 +18,7 @@ public class RegionalManagerServlet extends HttpServlet{
     private final RegionalManagerDAO dao = new RegionalManagerDAO();
     private final RegionTypeDAO regionDAO = new RegionTypeDAO();
 
-    //doGet to determine the path, based on action
+    //doGet pra determinar o caminho baseado na action
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -34,6 +34,7 @@ public class RegionalManagerServlet extends HttpServlet{
                 req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
+            //else if pra editar o gerente
             else if ("edit".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 RegionalManager manager = dao.searchById(id);
@@ -58,7 +59,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
         } catch (SQLException ex) {
 
-            resp.sendError(500, ex.getMessage()); //retorna o erro 500
+            resp.sendError(500, ex.getMessage()); //retorna caso de erro 500
 
         }
 
@@ -72,7 +73,7 @@ public class RegionalManagerServlet extends HttpServlet{
         //traz pro teclado brasileiro
         req.setCharacterEncoding("UTF-8");
 
-        String action = req.getParameter("action");
+        String action = req.getParameter("action"); 
 
         //averigua qual action que é e redireciona para o servlet correto
         try {
