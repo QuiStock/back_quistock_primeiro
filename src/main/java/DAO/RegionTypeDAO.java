@@ -13,6 +13,7 @@ public class RegionTypeDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
+    //method that simply return the line of a SQL ResultSet
     private RegionType rsLine(ResultSet rs) throws SQLException {
 
         return new RegionType(
@@ -22,7 +23,7 @@ public class RegionTypeDAO {
 
     }
 
-    //Metodo pra imprimir todos os tipos de regiao
+    //Select method for all regions
     public List<RegionType> select() throws SQLException {
 
         List<RegionType> regionTypes = new ArrayList<>();
@@ -43,7 +44,7 @@ public class RegionTypeDAO {
         return regionTypes;
     }
 
-    //metodo pra criar um tipo de regiao novo
+    //Insert method for a region
     public void createRegionType(RegionType regionType) throws SQLException {
 
         String sql = "INSERT INTO region_type (name) VALUES (?)";
@@ -56,7 +57,7 @@ public class RegionTypeDAO {
         }
     }
 
-    //metodo pra encontrar o tipo de regiao que deseja alterar
+    //Search method of a region, based on id
     public RegionType searchById(int id) throws SQLException {
 
         String sql = "SELECT id, name FROM region_type WHERE id = ?";
@@ -72,7 +73,7 @@ public class RegionTypeDAO {
         }
     }
 
-    //metodo pra atualizar o tipo de regiao que encontrou no metodo passado
+    //update method for region
     public void updateRegionType(RegionType regionType) throws SQLException{
 
         String sql = "UPDATE region_type SET name = ? WHERE id = ?";
@@ -86,7 +87,7 @@ public class RegionTypeDAO {
         }
     }
 
-    //metodo pra excluir tipo de regiao do banco de acordo com o id
+    //delete method
     public void deleteRegionType(int id) throws SQLException {
 
         String sql = "DELETE FROM region_type WHERE id = ?";
