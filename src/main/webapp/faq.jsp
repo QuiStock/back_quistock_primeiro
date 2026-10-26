@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
     <style>
 
         .esquerda {
@@ -23,6 +24,10 @@
     </style>
 </head>
 <body>
+    <div id="loading" class="loading hidden" aria-hidden="true">
+        <div class="chaotic-orbit"></div>
+    </div>
+
     <div class="esquerda">
         <aside>
         <a href="home.html">Início</a>
@@ -43,5 +48,6 @@
             </tr>
         </table>
     </div>
+    <script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>
 </body>
 </html>

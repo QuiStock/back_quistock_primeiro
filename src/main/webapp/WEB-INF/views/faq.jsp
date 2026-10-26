@@ -13,9 +13,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${ctx}/css/quistock.css">
+    <link rel="stylesheet" href="${ctx}/css/loading.css">
     <title>QuiStock - FAQ</title>
 </head>
 <body>
+    <div id="loading" class="loading hidden" aria-hidden="true">
+        <div class="chaotic-orbit"></div>
+    </div>
 
     <%-- Menu lateral (copiado em cada página: aqui não existe include) --%>
     <aside>
@@ -168,5 +172,6 @@
 
     </c:forEach>
 
+    <script src="${ctx}/assets/js/loading.js"></script>
 </body>
 </html>
