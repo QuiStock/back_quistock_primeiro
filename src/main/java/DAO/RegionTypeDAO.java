@@ -20,6 +20,7 @@ public class RegionTypeDAO {
 
         String sql = "SELECT * FROM region_type";
 
+        //try pra conectar com o banco e definir as variaveis do tipo de regiao pra listar
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql);
              ResultSet result = sttmt.executeQuery()) {
@@ -32,6 +33,8 @@ public class RegionTypeDAO {
                 regionTypes.add(regionType);
             }
         }
+
+        //retorna o tipo de regiao criado pra aparecer na lista
         return regionTypes;
     }
 
@@ -40,6 +43,7 @@ public class RegionTypeDAO {
 
         String sql = "INSERT INTO region_type (name, store_id) VALUES ( ?, ?)";
 
+        //try pra criar tipos de regiao
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
@@ -54,6 +58,7 @@ public class RegionTypeDAO {
 
         String sql = "SELECT * FROM region_type WHERE id = ?";
 
+        //try pra conectar com o banco e definir o tipo de regiao que a pessoa quer editar pra aparecer no popup
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)) {
 
@@ -77,6 +82,7 @@ public class RegionTypeDAO {
 
         String sql = "UPDATE region_type SET name = ?, store_id = ? WHERE id = ?";
 
+        //try pra conectar com o banco, e atualizar as informações do tipo de regiao
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
@@ -92,6 +98,7 @@ public class RegionTypeDAO {
 
         String sql = "DELETE FROM region_type WHERE id = ?";
 
+        //try pra encontrar o tipo de regiao baseado no id e exclui-lo
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
             sttmt.setInt(1, id);

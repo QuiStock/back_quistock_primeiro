@@ -20,7 +20,7 @@ public class AdminDAO {
         String query = "insert into super_admin (email, password, name) values(?, ?, ?); ";
 
         try (Connection conn = factory.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query)){
+             PreparedStatement stmt = conn.prepareStatement(query)){
 
             stmt.setString(1, admin.getEmail());
             stmt.setString(2, admin.getPassword());
@@ -30,29 +30,37 @@ public class AdminDAO {
         }
     }
 
-    //método auxiliar para encontrar id de admin
-    public Admin searchAdmin(int id) throws SQLException {
-        String query = "select id, name, email, password from super_admin where id = ? order by id;";
+    private Admin rsLine(ResultSet rs) throws SQLException {
 
-        try (Connection conn = factory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)){
+        Admin admin = new Admin(
+                rs.getInt("id"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("name")
+        );
 
-            stmt.setInt(1, id);
+        return admin;
+    }
 
-            try (ResultSet rs = stmt.executeQuery()){
+    //functional interface to use a lambda method
+    private interface Binder {
+        //lambda method that is able to reutilize the same query for different searches
+        void bind(PreparedStatement stmt) throws SQLException;
+    }
 
-                if(rs.next()){
-                    return new Admin(
+    public Admin searchBy(String where, Binder binder) throws SQLException {
+        String query = "SELECT id, name, email, password FROM super_admin WHERE email = ?";
 
-                            rs.getInt("id"),
-                            rs.getString("email"),
-                            rs.getString("password"),
-                            rs.getString("name")
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query);
+        ) {
 
-                    );
-                }
+            binder.bind(stmt);
 
-                return null;
+            try(ResultSet rs = stmt.executeQuery()){
+
+                return rs.next() ? rsLine(rs) : null;
 
             }
         }
@@ -60,29 +68,12 @@ public class AdminDAO {
 
     //method that searches admin by email
     public Admin searchByEmail(String email) throws SQLException {
-        String query = "select id, name, email, password from super_admin where email = ?";
+        return searchBy("where email = ?", stmt -> stmt.setString(1, email));
+    }
 
-        try (Connection conn = factory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, email);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                if (rs.next()) {
-                    return new Admin(
-
-                            rs.getInt("id"),
-                            rs.getString("email"),
-                            rs.getString("password"),
-                            rs.getString("name")
-
-                    );
-                }
-
-            }
-        }
-        return null;
+    //method that searches admin by ID
+    public Admin searchById(int id) throws SQLException {
+        return searchBy("where id = ?", stmt -> stmt.setInt(1, id));
     }
 
     //Método de update com uso de método auxiliar
@@ -129,21 +120,14 @@ public class AdminDAO {
 
         try (
                 Connection conn = factory.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet rs = stmt.executeQuery()
         ){
 
             while(rs.next()){
 
-                Admin adm = new Admin(
-                    rs.getInt("id"),
-                    rs.getString("email"),
-                    rs.getString("password"),
-                    rs.getString("name")
-                );
+                admins.add(rsLine(rs));
 
-                admins.add(adm);
-                
             }
         }
 

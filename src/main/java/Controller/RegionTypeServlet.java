@@ -72,6 +72,7 @@ public class RegionTypeServlet extends HttpServlet{
         String name = request.getParameter("regionTypeName");
         int storeId = Integer.parseInt(request.getParameter("regionTypeStoreId"));
 
+        //define os atributos
         RegionType regionType = new RegionType();
         regionType.setName(name);
         regionType.setStoreId(storeId);
@@ -79,11 +80,14 @@ public class RegionTypeServlet extends HttpServlet{
         try {
             regionTypeDAO.createRegionType(regionType);
             response.sendRedirect("regionTypes");
+
+        //retorna erro caso nao consiga adicionar o tipo de regiao
         }catch (SQLException e){
             throw new ServletException("Erro ao criar tipo de regiao", e);
         }
     }
 
+    //metodo pra mostrar o popup de edição
     private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         int id = Integer.parseInt(request.getParameter("regionTypeId"));
 
@@ -93,14 +97,18 @@ public class RegionTypeServlet extends HttpServlet{
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("editRegionType.jsp");
             dispatcher.forward(request, response);
+
+        //retorna erro caso nao consiga ter encontrado o tipo de regiao
         } catch (SQLException e) {
             throw new ServletException("Erro ao buscar tipo de regiao", e);
         }
     }
 
+    //metodo pra atualizar/editar um tipo de regiao
     private void updateRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         RegionType regionType = new RegionType();
 
+        //define os atributos
         int id = Integer.parseInt(request.getParameter("regionTypeId"));
         String name = request.getParameter("regionTypeName");
         int storeId = Integer.parseInt(request.getParameter("regionTypeStoreId"));
@@ -112,17 +120,23 @@ public class RegionTypeServlet extends HttpServlet{
         try {
             regionTypeDAO.updateRegionType(regionType);
             response.sendRedirect("regionTypes");
+
+        //retorna erro caso nao consiga editar o tipo de regiao
         }catch (SQLException e){
             throw new ServletException("Erro ao atualizar tipo de regiao", e);
         }
     }
 
+
+    //metodo pra excluir tipo de regiao
     private void deleteRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         int id = Integer.parseInt(request.getParameter("regionTypeId"));
 
         try {
             regionTypeDAO.deleteRegionType(id);
             response.sendRedirect("regionTypes");
+
+            //retorna erro caso nao consiga editar o tipo de regiao
         } catch (SQLException e) {
             throw new ServletException("Erro ao deletar tipo de regiao", e);
         }

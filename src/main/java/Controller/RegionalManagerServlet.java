@@ -25,26 +25,27 @@ public class RegionalManagerServlet extends HttpServlet{
 
         try {
 
+            //averigua qual action veio e encaminha pra tela correta
             if ("new".equals(action)){
-                //empty insert forms
                 req.getRequestDispatcher("/crud-regionalManager.jsp").forward(req, resp);
             }
 
             else if ("edit".equals(action)) {
-                //filled forms with previous data
                 int id = Integer.parseInt(req.getParameter("id"));
                 RegionalManager manager = dao.searchManager(id);
 
+                //caso o gerente venha vazio, retorna tela de erro
                 if (manager == null) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Manager not found");
                     return;
                 }
 
-                //filling forms
+                //atualiza o gerente
                 req.setAttribute("manager", manager);
                 req.getRequestDispatcher("/crud-regionalManager.jsp").forward(req, resp);
             }
 
+            //caso nao seja nenhum dos actions acima, retorna lista de gerentes
             else {
                 req.setAttribute("managers", dao.select());
                 req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
@@ -52,7 +53,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
         } catch (SQLException ex) {
 
-            resp.sendError(500, ex.getMessage());
+            resp.sendError(500, ex.getMessage()); //retorna o erro 500
 
         }
 
@@ -71,11 +72,21 @@ public class RegionalManagerServlet extends HttpServlet{
         //averigua qual action que é e redireciona para o servlet correto
         try {
             switch (action) {
-                case "add": add(req, resp); break;
-                case "edit": update(req, resp); break;
-                case "delete": delete(req, resp); break;
-                default: doGet(req, resp); break;
+                case "add":
+                    add(req, resp);
+                    break;
+                case "edit":
+                    update(req, resp);
+                    break;
+                case "delete":
+                    delete(req, resp);
+                    break;
+                default:
+                    doGet(req, resp);
+                    break;
             }
+
+        //retorna os erros
         } catch (NumberFormatException e){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID Inválido");
         } catch (SQLException e){
@@ -85,6 +96,7 @@ public class RegionalManagerServlet extends HttpServlet{
         }
     }
 
+    //metodo pra add gerente regional
     private void add (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
         RegionalManager manager = new RegionalManager(
@@ -99,12 +111,14 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
+    //metodo pra atualizar gerente regional
     private void update (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
 
         int id = Integer.parseInt(req.getParameter("id"));
         RegionalManager manager = dao.searchManager(id);
 
+        //caso o gerente tenha vazio, retorna msg de erro
         if (manager == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
             return;
@@ -120,6 +134,7 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
+    //metodo pra excluir gerente regional
     private void delete (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException,  IOException{
 

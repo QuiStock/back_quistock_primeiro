@@ -34,7 +34,7 @@ public class AdminServlet extends HttpServlet {
             else if ("edit".equals(action)){
                 //forms filled with previous admin data
                 int id = Integer.parseInt(req.getParameter("id"));
-                Admin admin = dao.searchAdmin(id);
+                Admin admin = dao.searchById(id);
 
                 if (admin == null) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin not found");
@@ -68,7 +68,7 @@ public class AdminServlet extends HttpServlet {
 
         req.setCharacterEncoding("UTF-8");
 
-            String action = req.getParameter("action");
+        String action = req.getParameter("action");
 
         if(action == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
@@ -108,7 +108,7 @@ public class AdminServlet extends HttpServlet {
             throws SQLException, ServletException, IOException{
 
         int id = Integer.parseInt(req.getParameter("id"));
-        Admin admin = dao.searchAdmin(id);
+        Admin admin = dao.searchById(id);
 
         if (admin == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
