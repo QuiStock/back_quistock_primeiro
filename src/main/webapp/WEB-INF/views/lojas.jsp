@@ -7,9 +7,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/css/quistock.css">
+    <link rel="stylesheet" href="${ctx}/css/loading.css">
     <title>QuiStock - Lojas</title>
 </head>
 <body>
+    <div id="loading" class="loading hidden" aria-hidden="true">
+        <div class="chaotic-orbit"></div>
+    </div>
     <aside>
         <img src="${ctx}/assets/logo-branca.png" alt="QuiStock" id="logo">
         <nav class="links">
@@ -151,5 +155,6 @@
             </form>
         </div>
     </c:forEach>
+    <script src="${ctx}/assets/js/loading.js"></script>
 </body>
 </html>
