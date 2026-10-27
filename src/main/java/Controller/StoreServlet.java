@@ -69,14 +69,14 @@ public class StoreServlet extends HttpServlet {
         String password = request.getParameter("storePassword");
         String regionTypeId = request.getParameter("regionTypeId");
 
-        if (!validEmail(email) || password == null || password.trim().isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email ou senha inválidos");
+        if (!validEmail(email) || !validPassword(password)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email ou Senha inválidos");
             return;
         }
 
         Store store = new Store();
         store.setEmail(email.trim());
-        store.setPassword(password);
+        store.setPassword(password.trim());
         store.setRegionTypeId(parseId(regionTypeId));
         if (regionTypeDAO.searchById(store.getRegionTypeId()) == null) {
             response.sendRedirect(request.getContextPath());
@@ -113,12 +113,14 @@ public class StoreServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath());
             return;
         }
-        if (password != null){
-            if (password.trim().isEmpty()) {
+
+        if (password != null && !password.trim().isEmpty()) {
+            if (!validPassword(password)) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Senha inválida");
                 return;
             }
-            store.setPassword(password);
+
+            store.setPassword(password.trim());
         }
 
         if (storeDAO.updateStore(store) == 0) {
@@ -149,7 +151,22 @@ public class StoreServlet extends HttpServlet {
 
     //confere formato e tamanho do email antes de salvar
     private boolean validEmail(String email) {
-        return email != null && email.length() <= 320
-                && email.trim().matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
+        if (email == null) {
+            return false;
+        }
+
+        String regex = "^[A-Za-z0-9À-ÿ._%+-]+@[A-Za-z0-9À-ÿ-]+\\.[A-Za-z0-9À-ÿ.-]+$";
+
+        return email.trim().length() <= 320 && email.trim().matches(regex);
+    }
+
+    private boolean validPassword(String pass){
+        if (pass == null){
+            return false;
+        }
+
+        String regex = "^[a-zA-Z0-9._]{8,50}$";
+
+        return pass.trim().matches(regex);
     }
 }
