@@ -12,4 +12,5 @@ public class Faq {
     private String question;
     private String answer;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

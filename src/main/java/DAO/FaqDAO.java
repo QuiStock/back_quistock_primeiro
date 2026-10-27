@@ -18,12 +18,13 @@ public class FaqDAO {
                 rs.getInt("id"),
                 rs.getString("question"),
                 rs.getString("answer"),
-                rs.getTimestamp("created_at").toLocalDateTime()
+                rs.getTimestamp("created_at").toLocalDateTime(),
+                rs.getTimestamp("updated_at").toLocalDateTime()
         );
     }
 
     public List<Faq> select() throws SQLException {
-        String query = "select id, question, answer, created_at from faq order by id;";
+        String query = "SELECT id, question, answer, created_at FROM faq ORDER BY id;";
         List<Faq> faqs = new ArrayList<>();
 
         try (
@@ -40,7 +41,22 @@ public class FaqDAO {
     }
 
     public void insert(Faq faq) throws SQLException {
-        String query = "insert into faq(question, answer, created_at) values(?, ?, ?);";
+        String query = "INSERT INTO faq(question, answer, created_at, updated_at) VALUES(?, ?, ?, ?);";
+
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement smt = conn.prepareStatement(query);
+                ResultSet rs = smt.executeQuery();
+        ) {
+            smt.setString(1, faq.getQuestion());
+            smt.setString(2, faq.getAnswer());
+            smt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            smt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+        }
+    }
+
+    public void update(Faq faq) throws SQLException {
+        String query = "UPDATE faq set question =  ?, answer = ?, updated_at = ? WHERE id = ?;";
 
         try (
                 Connection conn = factory.getConnection();
