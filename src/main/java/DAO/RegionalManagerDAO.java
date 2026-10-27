@@ -13,79 +13,97 @@ public class RegionalManagerDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    //Metodo pra imprimir todos os gerentes
-    public List<RegionalManager> readRegionalManagers() throws SQLException {
+    private static final String query = "select id, name, email, password, region_type_id, region_name from regional_manager_vw ";
+
+    //method that simply return the line of a SQL ResultSet
+    private RegionalManager rsLine(ResultSet rs) throws SQLException {
+
+        RegionalManager manager = new RegionalManager(
+
+                rs.getInt("id"),
+                rs.getString("email"),
+                rs.getString("name"),
+                rs.getString("password"),
+                rs.getString("region_name"),
+                rs.getInt("region_type_id")
+
+        );
+
+        return manager;
+    }
+
+    //metodo pra retornar uma lista de todos os gerentes regionais cadastrados
+    public List<RegionalManager> select() throws SQLException {
 
         List<RegionalManager> regionalManagers = new ArrayList<>();
 
-        String sql = "SELECT * FROM regional_manager";
-
-        //try pra listar tudo de todos os gerentes
         try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement sttmt = conn.prepareStatement(sql);
-             ResultSet result = sttmt.executeQuery()) {
+             PreparedStatement sttmt = conn.prepareStatement(query + "ORDER BY id");
+             ResultSet rs = sttmt.executeQuery()) {
 
-            //laço pra repetir sempre q tiver gerente na fila
-            while (result.next()) {
-                RegionalManager regionalManager = new RegionalManager();
-                regionalManager.setId(result.getInt("id"));
-                regionalManager.setName(result.getString("name"));
-                regionalManager.setEmail(result.getString("email"));
-                regionalManager.setPassword(result.getString("password"));
-                regionalManager.setRegionTypeId(result.getInt("region_type_id"));
-                regionalManagers.add(regionalManager);
+            //repete o while enquanto ainda tem gerente na fila
+            while (rs.next()) {
+                regionalManagers.add(rsLine(rs));
             }
         }
+
         return regionalManagers;
     }
 
-    //metodo pra criar um gerente novo
-    public void createRegionalManager(RegionalManager regionalManager) throws SQLException {
+    //method for a new manager
+    public void insert(RegionalManager regionalManager) throws SQLException {
 
         String sql = "INSERT INTO regional_manager (name, email, password, region_type_id) VALUES ( ?, ?, ?, ?)";
 
         //try pra adicionar informaçoes no novo gerente
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement sttmt = conn.prepareStatement(sql)){
+        try (
+                Connection conn = connectionFactory.getConnection();
+                PreparedStatement sttmt = conn.prepareStatement(sql)
+        ){
 
             sttmt.setString(1, regionalManager.getName());
             sttmt.setString(2, regionalManager.getEmail());
             sttmt.setString(3, regionalManager.getPassword());
             sttmt.setInt(4, regionalManager.getRegionTypeId());
+
             sttmt.executeUpdate();
+
         }
     }
 
+    //visual interface for using the lambda method
+    private interface Binder{
+        //metodo do lambda que permite utilizar diferentes querys
+        void bind(PreparedStatement stmt) throws SQLException;
+    }
 
-    //metodo pra encontrar gerente que deseja ser alterado
-    public RegionalManager foundRegionalManager(int id) throws SQLException {
+    //method that searches for a manager by id
+    public RegionalManager searchById(int id) throws SQLException {
+        return searchBy("where id = ?", stmt -> stmt.setInt(1, id));
+    }
 
-        String sql = "SELECT * FROM regional_manager WHERE id = ?";
+    //a method to be reutilized, can be used for both searches based on id and email
+    private RegionalManager searchBy(String where, Binder binder) throws SQLException{
 
-        //try pra conectar com o banco e executar a query
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement sttmt = conn.prepareStatement(sql)) {
-
-            sttmt.setInt(1, id);
-
-            //try pra retornar o gerente do id especificadox
-            try (ResultSet result = sttmt.executeQuery()) {
-                if (result.next()) {
-                    RegionalManager regionalManager = new RegionalManager();
-                    regionalManager.setId(result.getInt("id"));
-                    regionalManager.setName(result.getString("name"));
-                    regionalManager.setEmail(result.getString("email"));
-                    regionalManager.setPassword(result.getString("password"));
-                    regionalManager.setRegionTypeId(result.getInt("region_type_id"));
-                    return regionalManager;
-                }
+        try (
+                Connection conn = connectionFactory.getConnection();
+                PreparedStatement sttmt = conn.prepareStatement(query + where);
+        ){
+            binder.bind(sttmt);
+            try (ResultSet rs = sttmt.executeQuery()) {
+                return rs.next() ? rsLine(rs) : null;
             }
-            return null; //se nao encontrar nenhum gerente com esse id retorna null
         }
+
     }
 
-    //metodo pra atualizar o gerente que encontrou no metodo passado
-    public void updateRegionalManager(RegionalManager regionalManager) throws SQLException{
+    //retrieves the method base on email, with lambda
+    public RegionalManager searchByEmail(String email) throws SQLException {
+        return searchBy("WHERE email = ?",  stmt -> stmt.setString(1, email));
+    }
+
+    //update the data and save the password in hash
+    public int update(RegionalManager regionalManager) throws SQLException{
 
         String sql = "UPDATE regional_manager SET name = ?, email = ?, password = ?, region_type_id = ? WHERE id = ?";
 
@@ -97,19 +115,27 @@ public class RegionalManagerDAO {
             sttmt.setString(3, regionalManager.getPassword());
             sttmt.setInt(4, regionalManager.getRegionTypeId());
             sttmt.setInt(5, regionalManager.getId());
-            sttmt.executeUpdate();
+
+            return sttmt.executeUpdate();
+
         }
+
     }
 
-    //metodo pra excluir gerente do banco de acordo com o id
-    public void deleteRegionalManager(int id) throws SQLException {
+    //method that delete a manager by ID
+    public int delete(int id) throws SQLException {
 
         String sql = "DELETE FROM regional_manager WHERE id = ?";
 
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement sttmt = conn.prepareStatement(sql)){
+        try (
+                Connection conn = connectionFactory.getConnection();
+                PreparedStatement sttmt = conn.prepareStatement(sql)
+        ){
+
             sttmt.setInt(1, id);
-            sttmt.executeUpdate();
+            return sttmt.executeUpdate();
+
         }
+
     }
 }

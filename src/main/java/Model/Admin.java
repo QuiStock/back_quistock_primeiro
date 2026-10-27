@@ -11,4 +11,12 @@ public class Admin {
     private String email;
     private String password;
     private String name;
+
+    public Admin (String email, String name, String password) {
+
+        this.email = email;
+        this.name = name;
+        this.password = password;
+
+    }
 }

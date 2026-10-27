@@ -1,5 +1,6 @@
 package Service;
 
+import Model.LoggedUser;
 import lombok.*;
 
 import DAO.AdminDAO;
@@ -20,32 +21,55 @@ public class LoginService {
 
     public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
 
-        List<RegionalManager> managers = daoMan.readRegionalManagers();
-
-        for (RegionalManager man : managers) {
-
-            if (man.getEmail().equals(email) && man.getPassword().equals(password)) {
-
-                LoginResult result = new LoginResult(true, "MANAGER");
-
-                return result;
-
+        RegionalManager manager = daoMan.searchByEmail(email);
+        if (manager != null && PasswordService.verify(password, manager.getPassword())) {
+            if (PasswordService.needsMigration(manager.getPassword())) {
+                manager.setPassword(PasswordService.genHash(password));
+                daoMan.update(manager);
             }
 
+            return new LoginResult(
+
+                    true,
+
+                        new LoggedUser(
+
+                                manager.getId(),
+                                manager.getName(),
+                                manager.getEmail(),
+                                "MANAGER",
+                                manager.getRegionTypeName(),
+                                manager.getRegionTypeId()
+
+                        )
+
+            );
         }
 
-        List<Admin> admins = daoAdm.select();
-
-        for (Admin adm : admins) {
-            if (adm.getEmail().equals(email) && adm.getPassword().equals(password)) {
-
-                LoginResult result = new LoginResult(true, "ADMIN");
-
-                return result;
-
+        Admin admin = daoAdm.searchByEmail(email);
+        if (admin != null && PasswordService.verify(password, admin.getPassword())) {
+            if (PasswordService.needsMigration(admin.getPassword())) {
+                admin.setPassword(PasswordService.genHash(password));
+                daoAdm.update(admin);
             }
+
+            return new LoginResult(
+
+                    true,
+
+                    new LoggedUser(
+
+                            admin.getId(),
+                            admin.getName(),
+                            admin.getEmail(),
+                            "ADMIN",
+                            null,
+                            null
+                    )
+
+            );
         }
 
-        return null;
+        return new LoginResult(false, null);
     }
 }
