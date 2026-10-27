@@ -166,7 +166,7 @@ public class RegionTypeServlet extends HttpServlet{
         String regex = "^[\\p{L}]+(?:[ '\\u2019-][\\p{L}]+)*$";
 
         //retorna se o nome atende aos requisitos do regex
-        return name.matches(regex);
+        return name.trim().length() <=100 && name.matches(regex);
     }
 
 }

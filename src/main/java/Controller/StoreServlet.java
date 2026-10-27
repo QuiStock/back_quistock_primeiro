@@ -120,7 +120,7 @@ public class StoreServlet extends HttpServlet {
                 return;
             }
 
-            store.setPassword(password);
+            store.setPassword(password.trim());
         }
 
         if (storeDAO.updateStore(store) == 0) {
