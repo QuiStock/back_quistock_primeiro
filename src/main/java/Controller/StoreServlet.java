@@ -120,7 +120,7 @@ public class StoreServlet extends HttpServlet {
                 return;
             }
 
-            store.setPassword(password.trim());
+            store.setPassword(password);
         }
 
         if (storeDAO.updateStore(store) == 0) {
@@ -149,7 +149,7 @@ public class StoreServlet extends HttpServlet {
         return id;
     }
 
-    //confere formato e tamanho do email antes de salvar
+    //metodo regex que confere formato e tamanho do email e os caracteres pra validar
     private boolean validEmail(String email) {
         if (email == null) {
             return false;
@@ -160,6 +160,7 @@ public class StoreServlet extends HttpServlet {
         return email.trim().length() <= 320 && email.trim().matches(regex);
     }
 
+    //metodo regex que confere os caracteres pra validar a senha
     private boolean validPassword(String pass){
         if (pass == null){
             return false;

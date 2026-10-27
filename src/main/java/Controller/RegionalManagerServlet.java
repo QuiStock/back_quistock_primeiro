@@ -104,13 +104,33 @@ public class RegionalManagerServlet extends HttpServlet{
     }
 
     //metodo pra add gerente regional
-    private void add (HttpServletRequest req, HttpServletResponse resp)
-            throws SQLException, IOException{
+    private void add (HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException{
         RegionalManager manager = new RegionalManager();
-        manager.setEmail(req.getParameter("email"));
-        manager.setName(req.getParameter("name"));
-        manager.setPassword(PasswordService.genHash(req.getParameter("password")));
-        manager.setRegionTypeId(Integer.parseInt(req.getParameter("region-type")));
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String name = req.getParameter("name");
+
+        if(!validEmail(email) || !validPassword(password)){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email ou Senha inválidos");
+            return;
+        }
+        if(!validName(name)){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Nome inválido!");
+            return;
+        }
+
+        manager.setEmail(email.trim());
+        manager.setName(name.trim());
+        manager.setPassword(PasswordService.genHash(password.trim()));
+
+        int regionTypeId = Integer.parseInt(req.getParameter("region-type"));
+
+        if (regionDAO.searchById(regionTypeId) == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Região inválida");
+            return;
+        }
+
+        manager.setRegionTypeId(regionTypeId);
 
         dao.insert(manager);
 
@@ -121,8 +141,17 @@ public class RegionalManagerServlet extends HttpServlet{
     private void update (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
 
+        int regionTypeId = Integer.parseInt(req.getParameter("region-type"));
+
+        if (regionDAO.searchById(regionTypeId) == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Região inválida");
+            return;
+        }
         int id = Integer.parseInt(req.getParameter("id"));
+
         RegionalManager manager = dao.searchById(id);
+
+
 
         //caso o gerente tenha vazio, retorna msg de erro
         if (manager == null) {
@@ -130,15 +159,33 @@ public class RegionalManagerServlet extends HttpServlet{
             return;
         }
 
-        manager.setName(req.getParameter("name"));
-        manager.setEmail(req.getParameter("email"));
-        String newPass = req.getParameter("password");
-        //if the password is different, a new hash is generated
-        if (newPass != null && !newPass.isBlank() && !newPass.equals(manager.getPassword())) {
-            manager.setPassword(PasswordService.genHash(newPass));
+        //define as variaveis e faz a validação
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String name = req.getParameter("name");
+
+        if (!validEmail(email)) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email inválido");
+            return;
         }
 
-        manager.setRegionTypeId(Integer.parseInt(req.getParameter("region-type")));
+        if (!validName(name)) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Nome inválido!");
+            return;
+        }
+
+        manager.setName(name.trim());
+        manager.setEmail(email.trim());
+        manager.setRegionTypeId(regionTypeId);
+
+        if (password != null && !password.trim().isEmpty()) {
+            if (!validPassword(password)) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Senha inválida");
+                return;
+            }
+
+            manager.setPassword(PasswordService.genHash(password.trim()));
+        }
 
         dao.update(manager);
 
@@ -154,4 +201,40 @@ public class RegionalManagerServlet extends HttpServlet{
 
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
+
+    //metodo regex que confere formato e tamanho do email e os caracteres pra validar
+    private boolean validEmail(String email) {
+        if (email == null) {
+            return false;
+        }
+
+        String regex = "^[A-Za-z0-9À-ÿ._%+-]+@[A-Za-z0-9À-ÿ-]+\\.[A-Za-z0-9À-ÿ.-]+$";
+
+        return email.trim().length() <= 320 && email.trim().matches(regex);
+    }
+
+    //metodo regex que confere os caracteres pra validar a senha
+    private boolean validPassword(String pass){
+        if (pass == null){
+            return false;
+        }
+
+        String regex = "^[a-zA-Z0-9._]{8,50}$";
+
+        return pass.trim().matches(regex);
+    }
+
+    //metodo regex que confere os caracteres pra validar o nome
+    private boolean validName(String name){
+
+        if(name == null){
+            return false;
+        }
+
+        String regex = "^[a-zA-ZÀ-ÿ]+(\s+[a-zA-ZÀ-ÿ]+)+$"; // apenas letras maiusculas e minusculas com/sem acento e espaço.
+
+        return name.trim().length() <= 60 && name.trim().matches(regex); //valida tambem a quantidade maxima de caracteres
+
+    }
+
 }
