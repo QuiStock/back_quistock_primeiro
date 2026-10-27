@@ -81,4 +81,21 @@ public class FaqDAO {
             smt.executeUpdate();
         }
     }
+
+    public Faq searchById(int id) throws SQLException{
+        String query = "SELECT id, question, answer, created_ad, updated_at FROM faq WHERE id = ?;";
+
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement smt = conn.prepareStatement(query);
+        ) {
+            smt.setInt(1, id);
+
+            try (
+                    ResultSet rs = smt.executeQuery();
+            ){
+                return rsLine(rs);
+            }
+        }
+    }
 }
