@@ -3,6 +3,7 @@ package Controller;
 import DAO.RegionTypeDAO;
 import DAO.RegionalManagerDAO;
 import Model.RegionalManager;
+import Service.PasswordService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,7 +30,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
             if ("new".equals(action)){
                 //empty insert forms
-                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.setAttribute("regionTypes", regionDAO.select());
                 req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
@@ -44,7 +45,8 @@ public class RegionalManagerServlet extends HttpServlet{
                 }
 
                 //filling forms
-                req.setAttribute("regionTypes", regionDAO.readRegionTypes());
+                req.setAttribute("regionTypes", regionDAO.select());
+                req.setAttribute("manager", manager);
                 req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
@@ -93,7 +95,7 @@ public class RegionalManagerServlet extends HttpServlet{
         RegionalManager manager = new RegionalManager(
                 req.getParameter("email"),
                 req.getParameter("name"),
-                req.getParameter("password"),
+                PasswordService.genHash(req.getParameter("password")),
                 Integer.parseInt(req.getParameter("region-type"))
         );
 
@@ -115,7 +117,12 @@ public class RegionalManagerServlet extends HttpServlet{
 
         manager.setName(req.getParameter("name"));
         manager.setEmail(req.getParameter("email"));
-        manager.setPassword(req.getParameter("password"));
+        String newPass = req.getParameter("password");
+        //if the password is different, a new hash is generated
+        if (newPass != null && !newPass.isBlank() && !newPass.equals(manager.getPassword())) {
+            manager.setPassword(PasswordService.genHash(newPass));
+        }
+
         manager.setRegionTypeId(Integer.parseInt(req.getParameter("region-type")));
 
         dao.update(manager);
