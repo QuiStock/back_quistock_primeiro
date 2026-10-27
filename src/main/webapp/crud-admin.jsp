@@ -9,7 +9,9 @@
 
     <input type="text" name="name" placeholder="Nome" value="${admin.name}" required>
     <input type="email" name="email" placeholder="Email" value="${admin.email}" required>
-    <input type="text" name="password" placeholder="Senha" value="${admin.password}" required>
+    <input type="password" name="password"
+           placeholder="${empty admin ? 'Senha' : 'Nova senha (vazio mantém a atual)'}"
+    ${empty admin ? 'required' : ''}>
 
     <div class="botoes">
         <button type="submit" class="salvar">Salvar</button>

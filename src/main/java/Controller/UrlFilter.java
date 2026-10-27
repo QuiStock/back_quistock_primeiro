@@ -13,7 +13,7 @@ import java.util.Set;
 @WebFilter("/*")
 public class UrlFilter implements Filter {
 
-    //telas permitidas para cada tipo de login
+    //Allowed pages for each login
     private static final Set<String> general = Set.of("/", "/index.jsp", "/login", "/logout");
     private static final Set<String> only_admin = Set.of(
             "/home-admin.jsp", "/admins", "/crud-admin.jsp",
@@ -37,7 +37,7 @@ public class UrlFilter implements Filter {
 
         //checks existent session, keeps null if null, otherwise, receives logged user
         HttpSession session = req.getSession(false);
-        LoggedUser user = session == null ? null : (LoggedUser) session.getAttribute("user");
+        LoggedUser user = session == null ? null : (LoggedUser) session.getAttribute("loggedUser");
 
         //if user is null, sends back to login page
         if (user == null) {

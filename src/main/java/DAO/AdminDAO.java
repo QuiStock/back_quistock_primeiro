@@ -14,7 +14,7 @@ import java.util.List;
 public class AdminDAO {
     ConnectionFactory factory = new ConnectionFactory();
 
-    //método de inserção de novo admin
+    //admin insert method
     public void insert (Admin admin) throws SQLException {
 
         String query = "insert into super_admin (email, password, name) values(?, ?, ?); ";
@@ -30,6 +30,7 @@ public class AdminDAO {
         }
     }
 
+    //method that simply return the line of a SQL ResultSet
     private Admin rsLine(ResultSet rs) throws SQLException {
 
         Admin admin = new Admin(
@@ -48,8 +49,9 @@ public class AdminDAO {
         void bind(PreparedStatement stmt) throws SQLException;
     }
 
+    //a method to be reutilized, can be used for both searches based on id and email
     public Admin searchBy(String where, Binder binder) throws SQLException {
-        String query = "SELECT id, name, email, password FROM super_admin WHERE email = ?";
+        String query = "SELECT id, name, email, password FROM super_admin " + where;
 
         try (
                 Connection conn = factory.getConnection();
@@ -76,7 +78,7 @@ public class AdminDAO {
         return searchBy("where id = ?", stmt -> stmt.setInt(1, id));
     }
 
-    //Método de update com uso de método auxiliar
+    //Update method
     public void update (Admin admin) throws SQLException {
 
         String query = "update super_admin set email = ?, password = ?, name = ? where id = ?;";
@@ -96,6 +98,7 @@ public class AdminDAO {
         }
     }
 
+    //delete method
     public void delete(Admin admin) throws SQLException{
 
         String query = "delete from super_admin where id = ?;";
@@ -112,6 +115,7 @@ public class AdminDAO {
         }
     }
 
+    //returns a list with all the admins
     public List<Admin> select() throws SQLException{
 
         String query = "select * from super_admin;";

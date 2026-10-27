@@ -58,8 +58,10 @@ public class LoginServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + way);
 
         } catch(SQLException e) {
+            e.printStackTrace();
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,  e.getMessage());
         } catch(ClassNotFoundException e) {
+            e.printStackTrace();
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,  e.getMessage());
         }
 

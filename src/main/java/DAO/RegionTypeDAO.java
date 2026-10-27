@@ -13,8 +13,18 @@ public class RegionTypeDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    //Metodo pra imprimir todos os tipos de regiao
-    public List<RegionType> readRegionTypes() throws SQLException {
+    //method that simply return the line of a SQL ResultSet
+    private RegionType rsLine(ResultSet rs) throws SQLException {
+
+        return new RegionType(
+                rs.getInt("id"),
+                rs.getString("name")
+        );
+
+    }
+
+    //Select method for all regions
+    public List<RegionType> select() throws SQLException {
 
         List<RegionType> regionTypes = new ArrayList<>();
 
@@ -37,7 +47,7 @@ public class RegionTypeDAO {
         return regionTypes;
     }
 
-    //metodo pra criar um tipo de regiao novo
+    //Insert method for a region
     public void createRegionType(RegionType regionType) throws SQLException {
 
         //regiao agora guarda so o nome, sem vinculo com loja
@@ -52,8 +62,8 @@ public class RegionTypeDAO {
         }
     }
 
-    //metodo pra encontrar o tipo de regiao que deseja alterar
-    public RegionType foundRegionType(int id) throws SQLException {
+    //Search method of a region, based on id
+    public RegionType searchById(int id) throws SQLException {
 
         String sql = "SELECT id, name FROM region_type WHERE id = ?";
 
@@ -64,14 +74,8 @@ public class RegionTypeDAO {
             sttmt.setInt(1, id);
 
             try (ResultSet result = sttmt.executeQuery()) {
-                if (result.next()) {
-                    RegionType regionType = new RegionType();
-                    regionType.setId(result.getInt("id"));
-                    regionType.setName(result.getString("name"));
-                    return regionType;
-                }
+                return result.next() ? rsLine(result) : null;
             }
-            return null; //se nao encontrar nenhum tipo de regiao com esse id retorna null
         }
     }
 

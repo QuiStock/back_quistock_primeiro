@@ -9,7 +9,9 @@
 
     <input type="text" name="name" placeholder="Nome" value="${manager.name}" required>
     <input type="email" name="email" placeholder="Email" value="${manager.email}" required>
-    <input type="text" name="password" placeholder="Senha" value="${manager.password}" required>
+    <input type="password" name="password"
+           placeholder="${empty manager ? 'Senha' : 'Nova senha (vazio mantém a atual)'}"
+    ${empty manager ? 'required' : ''}>
 
     <select name="region-type" required>
         <option value="">Selecione a região</option>

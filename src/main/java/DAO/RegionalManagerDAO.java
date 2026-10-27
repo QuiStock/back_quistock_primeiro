@@ -16,6 +16,7 @@ public class RegionalManagerDAO {
     private static final String query = "SELECT m.id, m.name, m.email, m.password, m.region_type_id, r.name AS region_name " +
                                         "FROM regional_manager m LEFT JOIN region_type r ON r.id = m.region_type_id ";
 
+    //method that simply return the line of a SQL ResultSet
     private RegionalManager rsLine(ResultSet rs) throws SQLException {
 
         RegionalManager manager = new RegionalManager(
@@ -50,7 +51,7 @@ public class RegionalManagerDAO {
         return regionalManagers;
     }
 
-    //metodo pra criar um gerente novo
+    //method for a new manager
     public void insert(RegionalManager regionalManager) throws SQLException {
 
         String sql = "INSERT INTO regional_manager (name, email, password, region_type_id) VALUES ( ?, ?, ?, ?)";
@@ -82,6 +83,7 @@ public class RegionalManagerDAO {
         return searchBy("where m.id = ?", stmt -> stmt.setInt(1, id));
     }
 
+    //a method to be reutilized, can be used for both searches based on id and email
     private RegionalManager searchBy(String where, Binder binder) throws SQLException{
 
         try (
@@ -101,18 +103,19 @@ public class RegionalManagerDAO {
         return searchBy("WHERE m.email = ?",  stmt -> stmt.setString(1, email));
     }
 
-    //atualiza nome, email e regiao sem alterar a senha
+    //atualiza os dados e grava a senha atual ou o novo hash
     public int update(RegionalManager regionalManager) throws SQLException{
 
-        String sql = "UPDATE regional_manager SET name = ?, email = ?, region_type_id = ? WHERE id = ?";
+        String sql = "UPDATE regional_manager SET name = ?, email = ?, password = ?, region_type_id = ? WHERE id = ?";
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
             sttmt.setString(1, regionalManager.getName());
             sttmt.setString(2, regionalManager.getEmail());
-            sttmt.setInt(3, regionalManager.getRegionTypeId());
-            sttmt.setInt(4, regionalManager.getId());
+            sttmt.setString(3, regionalManager.getPassword());
+            sttmt.setInt(4, regionalManager.getRegionTypeId());
+            sttmt.setInt(5, regionalManager.getId());
 
             return sttmt.executeUpdate();
 

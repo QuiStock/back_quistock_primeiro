@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.AdminDAO;
 import Model.Admin;
+import Service.PasswordService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -117,7 +118,11 @@ public class AdminServlet extends HttpServlet {
 
         admin.setName(req.getParameter("name"));
         admin.setEmail(req.getParameter("email"));
-        admin.setPassword(req.getParameter("password"));
+        //if the password is different, a new hash is generated
+        String newPass = req.getParameter("password");
+        if (newPass != null && !newPass.isBlank() && !newPass.equals(admin.getPassword())) {
+            admin.setPassword(PasswordService.genHash(newPass));
+        }
 
         dao.update(admin);
 
@@ -129,7 +134,7 @@ public class AdminServlet extends HttpServlet {
         Admin admin = new Admin(
                 req.getParameter("email"),
                 req.getParameter("name"),
-                req.getParameter("password")
+                PasswordService.genHash(req.getParameter("password"))
         );
 
         dao.insert(admin);

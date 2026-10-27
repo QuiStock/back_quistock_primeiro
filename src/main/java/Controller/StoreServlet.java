@@ -24,7 +24,7 @@ public class StoreServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setAttribute("storesList", storeDAO.readStores());
-            request.setAttribute("regioes", regionTypeDAO.readRegionTypes());
+            request.setAttribute("regioes", regionTypeDAO.select());
             request.getRequestDispatcher("/WEB-INF/views/lojas.jsp").forward(request, response);
         } catch (SQLException e) {
             throw new ServletException("Erro ao buscar lojas", e);
@@ -78,7 +78,7 @@ public class StoreServlet extends HttpServlet {
         store.setEmail(email.trim());
         store.setPassword(password);
         store.setRegionTypeId(parseId(regionTypeId));
-        if (regionTypeDAO.foundRegionType(store.getRegionTypeId()) == null) {
+        if (regionTypeDAO.searchById(store.getRegionTypeId()) == null) {
             response.sendRedirect(request.getContextPath());
             return;
         }
@@ -109,7 +109,7 @@ public class StoreServlet extends HttpServlet {
         String password = request.getParameter("storePassword");
         store.setEmail(email.trim());
         store.setRegionTypeId(parseId(regionTypeId));
-        if (regionTypeDAO.foundRegionType(store.getRegionTypeId()) == null) {
+        if (regionTypeDAO.searchById(store.getRegionTypeId()) == null) {
             response.sendRedirect(request.getContextPath());
             return;
         }
