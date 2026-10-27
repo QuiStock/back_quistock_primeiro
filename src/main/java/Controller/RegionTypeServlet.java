@@ -81,9 +81,16 @@ public class RegionTypeServlet extends HttpServlet{
         String name = request.getParameter("nome");
         if (name == null) name = request.getParameter("regionTypeName");
 
+        //verifica se atende aos requisitos
+        if(!nomeValidado(name)){
+            request.setAttribute("erro", "Digite um nome válido para o tipo de região.");
+            readRegionTypes(request, response);
+            return;
+        }
+
         //define os atributos
         RegionType regionType = new RegionType();
-        regionType.setName(name);
+        regionType.setName(name.trim());
 
         try {
             regionTypeDAO.createRegionType(regionType);
@@ -95,36 +102,27 @@ public class RegionTypeServlet extends HttpServlet{
         }
     }
 
-    //metodo pra mostrar o popup de edição
-    private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        int id = Integer.parseInt(request.getParameter("regionTypeId"));
-
-        try {
-            RegionType regionType = regionTypeDAO.searchById(id);
-            request.setAttribute("regionType", regionType);
-
-            RequestDispatcher dispatcher = request.getRequestDispatcher("editRegionType.jsp");
-            dispatcher.forward(request, response);
-
-        //retorna erro caso nao consiga ter encontrado o tipo de regiao
-        } catch (SQLException e) {
-            throw new ServletException("Erro ao buscar tipo de regiao", e);
-        }
-    }
-
     //metodo pra atualizar/editar um tipo de regiao
     private void updateRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         RegionType regionType = new RegionType();
 
         //define os atributos
-        String idValue = request.getParameter("id");
-        if (idValue == null) idValue = request.getParameter("regionTypeId");
-        int id = Integer.parseInt(idValue);
         String name = request.getParameter("nome");
         if (name == null) name = request.getParameter("regionTypeName");
 
+        int id = Integer.parseInt(request.getParameter("id"));
         regionType.setId(id);
-        regionType.setName(name);
+
+        //verifica se atende aos requisitos
+        if(!nomeValidado(name)){
+            request.setAttribute("erro", "Digite um nome válido para o tipo de região.");
+            readRegionTypes(request, response);
+            return;
+        }
+
+
+        regionType.setName(name.trim());
+
 
         try {
             regionTypeDAO.updateRegionType(regionType);
@@ -151,6 +149,24 @@ public class RegionTypeServlet extends HttpServlet{
         } catch (SQLException e) {
             response.sendError(500, e.getMessage());
         }
+    }
+
+    //metodo regex pra validar o nome da região
+    private boolean nomeValidado(String name){
+
+        //se o nome for vazio retorna false
+        if (name == null){
+            return false;
+        }
+
+        //remove os espaços em branco nas pontas do nome
+        name = name.trim();
+
+        //define a limitação pro nome, sendo letras com acento no começo, ífen ou espaço no meio e letras no final no final
+        String regex = "^[\\p{L}]+(?:[ '\\u2019-][\\p{L}]+)*$";
+
+        //retorna se o nome atende aos requisitos do regex
+        return name.matches(regex);
     }
 
 }
