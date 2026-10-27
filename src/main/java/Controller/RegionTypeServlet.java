@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 //encaminha pra pagina regionTypes
-@WebServlet("/regionTypes")
+@WebServlet({"/regionTypes", "/regioes"})
 public class RegionTypeServlet extends HttpServlet{
 
     private RegionTypeDAO regionTypeDAO = new RegionTypeDAO();
@@ -25,9 +25,6 @@ public class RegionTypeServlet extends HttpServlet{
 
         //averigua qual action que é e redireciona para o servlet correto
         switch (action){
-            case "edit":
-                showUpdateForm(request, response); //aparecer a interface pra editar
-                break;
             default:
                 readRegionTypes(request, response); //retorna a tela da lista de tipos de regiao
         }
@@ -39,11 +36,22 @@ public class RegionTypeServlet extends HttpServlet{
         //traz pro teclado brasileiro
         request.setCharacterEncoding("UTF-8");
 
-        String action = request.getParameter("action");
+        String action = request.getParameter("acao");
+        if (action == null) action = request.getParameter("action");
         if (action == null) action = "";
 
         //averigua qual action que é e redireciona para o servlet correto
         switch (action) {
+            case "salvar":
+                if (request.getParameter("id") == null || request.getParameter("id").isBlank()) {
+                    createRegionType(request, response);
+                } else {
+                    updateRegionType(request, response);
+                }
+                break;
+            case "remover":
+                deleteRegionType(request, response);
+                break;
             case "register":
                 createRegionType(request, response);
                 break;
@@ -61,7 +69,8 @@ public class RegionTypeServlet extends HttpServlet{
             List<RegionType> regionTypesList = regionTypeDAO.select();
 
             request.setAttribute("regionTypesList", regionTypesList);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("regionTypes.jsp");
+            request.setAttribute("itens", regionTypesList);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/regioes.jsp");
             dispatcher.forward(request, response);
         } catch (SQLException e) {
             throw new ServletException("Erro ao buscar tipos de regiao", e);
@@ -69,7 +78,8 @@ public class RegionTypeServlet extends HttpServlet{
     }
 
     private void createRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        String name = request.getParameter("regionTypeName");
+        String name = request.getParameter("nome");
+        if (name == null) name = request.getParameter("regionTypeName");
 
         //define os atributos
         RegionType regionType = new RegionType();
@@ -77,7 +87,7 @@ public class RegionTypeServlet extends HttpServlet{
 
         try {
             regionTypeDAO.createRegionType(regionType);
-            response.sendRedirect("regionTypes");
+            response.sendRedirect(request.getContextPath() + "/regioes");
 
         //retorna erro caso nao consiga adicionar o tipo de regiao
         }catch (SQLException e){
@@ -107,15 +117,18 @@ public class RegionTypeServlet extends HttpServlet{
         RegionType regionType = new RegionType();
 
         //define os atributos
-        int id = Integer.parseInt(request.getParameter("regionTypeId"));
-        String name = request.getParameter("regionTypeName");
+        String idValue = request.getParameter("id");
+        if (idValue == null) idValue = request.getParameter("regionTypeId");
+        int id = Integer.parseInt(idValue);
+        String name = request.getParameter("nome");
+        if (name == null) name = request.getParameter("regionTypeName");
 
         regionType.setId(id);
         regionType.setName(name);
 
         try {
             regionTypeDAO.updateRegionType(regionType);
-            response.sendRedirect("regionTypes");
+            response.sendRedirect(request.getContextPath() + "/regioes");
 
         //retorna erro caso nao consiga editar o tipo de regiao
         }catch (SQLException e){
@@ -126,11 +139,13 @@ public class RegionTypeServlet extends HttpServlet{
 
     //metodo pra excluir tipo de regiao
     private void deleteRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        int id = Integer.parseInt(request.getParameter("regionTypeId"));
+        String idValue = request.getParameter("id");
+        if (idValue == null) idValue = request.getParameter("regionTypeId");
+        int id = Integer.parseInt(idValue);
 
         try {
             regionTypeDAO.deleteRegionType(id);
-            response.sendRedirect("regionTypes");
+            response.sendRedirect(request.getContextPath() + "/regioes");
 
             //retorna erro caso nao consiga editar o tipo de regiao
         } catch (SQLException e) {

@@ -60,7 +60,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
         } catch (SQLException ex) {
 
-            resp.sendError(500, ex.getMessage()); //retorna caso de erro 500
+            resp.sendError(500, ex.getMessage()); //retorna mensagem caso de erro 500
 
         }
 

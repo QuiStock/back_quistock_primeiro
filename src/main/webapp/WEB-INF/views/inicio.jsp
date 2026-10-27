@@ -27,11 +27,14 @@
         <img src="${ctx}/assets/logo-branca.png" alt="QuiStock" id="logo">
         <nav class="links">
             <a href="${ctx}/inicio" class="ativo"><img src="${ctx}/assets/icons/inicio.svg" alt="">Início</a>
-            <a href="${ctx}/admins"><img src="${ctx}/assets/icons/admin.svg" alt="">Admins</a>
-            <a href="${ctx}/gerentes"><img src="${ctx}/assets/icons/gerente.svg" alt="">Gerente</a>
-            <a href="${ctx}/faq"><img src="${ctx}/assets/icons/faq.svg" alt="">FAQ</a>
-            <a href="${ctx}/regioes"><img src="${ctx}/assets/icons/regiao.svg" alt="">Região</a>
-            <a href="${ctx}/anotacoes"><img src="${ctx}/assets/icons/anotacoes.svg" alt="">Anotações</a>
+            <c:if test="${sessionScope.loggedUser.type eq 'ADMIN'}">
+                <a href="${ctx}/admins"><img src="${ctx}/assets/icons/admin.svg" alt="">Admins</a>
+                <a href="${ctx}/gerentes"><img src="${ctx}/assets/icons/gerente.svg" alt="">Gerente</a>
+                <a href="${ctx}/faq"><img src="${ctx}/assets/icons/faq.svg" alt="">FAQ</a>
+                <a href="${ctx}/regioes"><img src="${ctx}/assets/icons/regiao.svg" alt="">Região</a>
+                <a href="${ctx}/stores">Lojas</a>
+                <a href="${ctx}/anotacoes"><img src="${ctx}/assets/icons/anotacoes.svg" alt="">Anotações</a>
+            </c:if>
         </nav>
     </aside>
 
@@ -39,7 +42,9 @@
         <h2 class="boas-vindas">Bem vindo(a), <c:out value="${nome}"/></h2>
 
         <div id="acoes-inicio">
-            <a class="botao verde" href="${ctx}/admins">Ver administradores</a>
+            <c:if test="${sessionScope.loggedUser.type eq 'ADMIN'}">
+                <a class="botao verde" href="${ctx}/admins">Ver administradores</a>
+            </c:if>
             <%-- "${ctx}/" é a raiz do sistema: lá abre o index da landing page --%>
             <a class="botao contorno" href="${ctx}/">Voltar para a landing</a>
         </div>

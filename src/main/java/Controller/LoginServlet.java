@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
 
             String way = "ADMIN".equals(login.getLoggedUser().getType())
                     ? "/home-admin.jsp"
-                    : "/home-manager.jsp";
+                    : "/inicio";
 
             resp.sendRedirect(req.getContextPath() + way);
 

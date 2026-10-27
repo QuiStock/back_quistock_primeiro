@@ -188,13 +188,12 @@
 </div>
 
 <aside>
-    <a href="home.html">Início</a>
+    <a href="${pageContext.request.contextPath}/inicio">Início</a>
     <a href="${pageContext.request.contextPath}/admins">Admins</a>
     <a href="${pageContext.request.contextPath}/regionalManagers">Gerente</a>
-    <a href="loja.jsp">Loja</a>
-    <a href="regiao.jsp">Região</a>
-    <a href="pedido.jsp">Pedidos</a>
-    <a href="faq.jsp">Faq</a>
+    <a href="${pageContext.request.contextPath}/stores">Loja</a>
+    <a href="${pageContext.request.contextPath}/regioes">Região</a>
+    <a href="${pageContext.request.contextPath}/faq.jsp">Faq</a>
 </aside>
 
 <main>

@@ -13,8 +13,7 @@ public class RegionalManagerDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    private static final String query = "SELECT m.id, m.name, m.email, m.password, m.region_type_id, r.name AS region_name " +
-                                        "FROM regional_manager m LEFT JOIN region_type r ON r.id = m.region_type_id ";
+    private static final String query = "select id, name, email, password, region_type_id, region_name from regional_manager_vw ";
 
     //method that simply return the line of a SQL ResultSet
     private RegionalManager rsLine(ResultSet rs) throws SQLException {
@@ -39,7 +38,7 @@ public class RegionalManagerDAO {
         List<RegionalManager> regionalManagers = new ArrayList<>();
 
         try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement sttmt = conn.prepareStatement(query + "ORDER BY m.id");
+             PreparedStatement sttmt = conn.prepareStatement(query + "ORDER BY id");
              ResultSet rs = sttmt.executeQuery()) {
 
             //repete o while enquanto ainda tem gerente na fila
@@ -72,15 +71,15 @@ public class RegionalManagerDAO {
         }
     }
 
-    //interface visual pra usar metodo do lambda
+    //visual interface for using the lambda method
     private interface Binder{
         //metodo do lambda que permite utilizar diferentes querys
         void bind(PreparedStatement stmt) throws SQLException;
     }
 
-    //metodo que procura o gerente de acordo com o ID
+    //method that searches for a manager by id
     public RegionalManager searchById(int id) throws SQLException {
-        return searchBy("where m.id = ?", stmt -> stmt.setInt(1, id));
+        return searchBy("where id = ?", stmt -> stmt.setInt(1, id));
     }
 
     //a method to be reutilized, can be used for both searches based on id and email
@@ -98,12 +97,12 @@ public class RegionalManagerDAO {
 
     }
 
-    //procura o metodo baseado no email, utilizando lambda
+    //retrieves the method base on email, with lambda
     public RegionalManager searchByEmail(String email) throws SQLException {
-        return searchBy("WHERE m.email = ?",  stmt -> stmt.setString(1, email));
+        return searchBy("WHERE email = ?",  stmt -> stmt.setString(1, email));
     }
 
-    //atualiza os dados e grava a senha atual ou o novo hash
+    //update the data and save the password in hash
     public int update(RegionalManager regionalManager) throws SQLException{
 
         String sql = "UPDATE regional_manager SET name = ?, email = ?, password = ?, region_type_id = ? WHERE id = ?";
@@ -123,7 +122,7 @@ public class RegionalManagerDAO {
 
     }
 
-    //metodo pra excluir gerente do banco de acordo com o id
+    //method that delete a manager by ID
     public int delete(int id) throws SQLException {
 
         String sql = "DELETE FROM regional_manager WHERE id = ?";
