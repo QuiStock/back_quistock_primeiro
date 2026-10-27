@@ -2,7 +2,7 @@ package Model;
 
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -11,5 +11,5 @@ public class Faq {
     private int id;
     private String question;
     private String answer;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 }
