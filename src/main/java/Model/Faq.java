@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Faq {
     private int id;
     private String question;

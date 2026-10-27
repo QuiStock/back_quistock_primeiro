@@ -68,4 +68,17 @@ public class FaqDAO {
             smt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
         }
     }
+
+    public void delete(Faq faq) throws SQLException{
+        String query = "DELETE FROM faq WHERE id = ?;";
+
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement smt = conn.prepareStatement(query);
+        ) {
+            smt.setInt(1, faq.getId());
+
+            smt.executeUpdate();
+        }
+    }
 }
