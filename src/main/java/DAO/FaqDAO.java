@@ -4,6 +4,7 @@ import Model.Faq;
 import lombok.NoArgsConstructor;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,8 @@ public class FaqDAO {
                 rs.getInt("id"),
                 rs.getString("question"),
                 rs.getString("answer"),
-                rs.getTimestamp("created_at").toLocalDateTime(),
-                rs.getTimestamp("updated_at").toLocalDateTime()
+                rs.getDate("created_at").toLocalDate(),
+                rs.getDate("updated_at").toLocalDate()
         );
     }
 
@@ -46,12 +47,13 @@ public class FaqDAO {
         try (
                 Connection conn = factory.getConnection();
                 PreparedStatement smt = conn.prepareStatement(query);
-                ResultSet rs = smt.executeQuery();
         ) {
             smt.setString(1, faq.getQuestion());
             smt.setString(2, faq.getAnswer());
-            smt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-            smt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+            smt.setDate(3, Date.valueOf(LocalDate.now()));
+            smt.setDate(4, Date.valueOf(LocalDate.now()));
+
+            smt.executeUpdate();
         }
     }
 
@@ -61,11 +63,12 @@ public class FaqDAO {
         try (
                 Connection conn = factory.getConnection();
                 PreparedStatement smt = conn.prepareStatement(query);
-                ResultSet rs = smt.executeQuery();
         ) {
             smt.setString(1, faq.getQuestion());
             smt.setString(2, faq.getAnswer());
-            smt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            smt.setDate(3, Date.valueOf(LocalDate.now()));
+
+            smt.executeUpdate();
         }
     }
 

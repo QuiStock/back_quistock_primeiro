@@ -13,7 +13,7 @@ public class Promotion {
     private double discountPercentage;
     private LocalDate promotionValidFrom;
     private LocalDate promotionValidUntil;
-    private int productId;
+    private String productName;
 
     public Promotion(
             int id,
@@ -22,7 +22,7 @@ public class Promotion {
             double discountPercentage,
             LocalDate promotionValidFrom,
             LocalDate promotionValidUntil,
-            int productId
+            String productName
             ) {
         this.id = id;
         this.sugestionType = sugestionType;
@@ -30,6 +30,6 @@ public class Promotion {
         this.discountPercentage = discountPercentage;
         this.promotionValidFrom = promotionValidFrom;
         this.promotionValidUntil = promotionValidUntil;
-        this.productId = productId;
+        this.productName = productName;
     }
 }
