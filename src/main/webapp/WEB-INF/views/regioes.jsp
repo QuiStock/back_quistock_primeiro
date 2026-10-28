@@ -13,39 +13,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${ctx}/css/quistock.css">
-    <link rel="stylesheet" href="${ctx}/css/loading.css">
     <title>QuiStock - Região</title>
 </head>
 <body>
-    <div id="loading" class="loading hidden" aria-hidden="true">
-        <div class="chaotic-orbit"></div>
-    </div>
 
     <%-- Menu lateral (copiado em cada página: aqui não existe include) --%>
     <aside>
         <img src="${ctx}/assets/logo-branca.png" alt="QuiStock" id="logo">
-        <nav class="links">
-            <a href="${ctx}/inicio"><img src="${ctx}/assets/icons/inicio.svg" alt="">Início</a>
-            <a href="${ctx}/admins"><img src="${ctx}/assets/icons/admin.svg" alt="">Admins</a>
-            <a href="${ctx}/gerentes"><img src="${ctx}/assets/icons/gerente.svg" alt="">Gerente</a>
-            <a href="${ctx}/faq"><img src="${ctx}/assets/icons/faq.svg" alt="">FAQ</a>
-            <a href="${ctx}/regioes" class="ativo"><img src="${ctx}/assets/icons/regiao.svg" alt="">Região</a>
-            <a href="${ctx}/stores">Lojas</a>
-            <a href="${ctx}/anotacoes"><img src="${ctx}/assets/icons/anotacoes.svg" alt="">Anotações</a>
-        </nav>
+        <jsp:include page="/WEB-INF/views/menu.jsp"><jsp:param name="ativo" value="regioes"/></jsp:include>
     </aside>
 
     <main>
         <h1>Região</h1>
 
-        <%-- O Servlet manda o erro pela URL. --%>
+        <%-- Mensagem de erro: o Servlet guarda o código na sessão e ele aparece só uma vez.
+             O CSS (#erro) faz a mensagem sumir sozinha depois de 4 segundos. --%>
         <c:if test="${not empty erro}">
             <p class="alerta" id="erro" role="alert">
                 <c:choose>
                     <c:when test="${erro eq 'vazio'}">Preencha todos os campos antes de salvar.</c:when>
                     <c:when test="${erro eq 'tamanho'}">Algum campo ultrapassou o tamanho permitido.</c:when>
-                    <c:when test="${erro eq 'duplicado'}">Esse nome já está cadastrado.</c:when>
-                    <c:when test="${erro eq 'vinculo'}">Esta região possui registros vinculados.</c:when>
+                    <c:when test="${erro eq 'email'}">Informe um email válido.</c:when>
+                    <c:when test="${erro eq 'duplicado'}">Esse email já está cadastrado.</c:when>
                     <c:otherwise>Não foi possível concluir a operação. Tente novamente.</c:otherwise>
                 </c:choose>
             </p>
@@ -69,18 +58,15 @@
                         <button type="button" class="botao" popovertarget="popup-adicionar"><img src="${ctx}/assets/icons/adicionar.svg" alt="">Adicionar</button>
                     </div>
 
-                    <%-- regiao tem so id e nome --%>
-                    <div id="tabela" style="--colunas: 2">
+                    <div id="tabela" class="tabela-uma-coluna">
                         <div id="cabecalho">
-                            <h3>ID</h3>
                             <h3>Nome</h3>
                             <h3>Ações</h3>
                         </div>
 
                         <c:forEach var="item" items="${itens}">
                             <div class="linha">
-                                <span><c:out value="${item.id}"/></span>
-                                <span><c:out value="${item.name}"/></span>
+                                <span><c:out value="${item.nome}"/></span>
 
                                 <%-- Botões desta linha: abrem os popups "editar-ID" e "remover-ID" --%>
                                 <div class="acoes-linha">
@@ -153,6 +139,5 @@
 
     </c:forEach>
 
-    <script src="${ctx}/assets/js/loading.js"></script>
 </body>
 </html>
