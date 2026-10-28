@@ -247,6 +247,9 @@ main h1 {
     scrollbar-color: var(--violeta) transparent;
 }
 
+.tabela-uma-coluna { --colunas: 1; }
+.tabela-tres-colunas { --colunas: 3; }
+
 #tabela::-webkit-scrollbar {
     width: 6px;
 }
@@ -403,7 +406,8 @@ main.centralizado {
 }
 
 .campo input,
-.campo textarea {
+.campo textarea,
+.campo select {
     padding: 10px 14px;
     border: 2px solid var(--branco);
     border-radius: 12px;
@@ -414,7 +418,8 @@ main.centralizado {
 }
 
 .campo input:focus,
-.campo textarea:focus {
+.campo textarea:focus,
+.campo select:focus {
     border-color: var(--violeta);
     outline: none;
 }

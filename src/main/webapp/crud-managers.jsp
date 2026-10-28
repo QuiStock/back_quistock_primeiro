@@ -1,28 +1,36 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
 <form class="form-admin" action="${pageContext.request.contextPath}/regionalManagers" method="post">
     <h2>${empty manager ? 'Adicionar gerente' : 'Editar gerente'}</h2>
 
     <input type="hidden" value="${manager.id}" name="id">
     <input type="hidden" value="${empty manager ? 'add' : 'edit'}" name="action">
 
-    <input type="text" name="name" placeholder="Nome" value="${manager.name}" required>
-    <input type="email" name="email" placeholder="Email" value="${manager.email}" required>
-    <input type="password" name="password"
-           placeholder="${empty manager ? 'Senha' : 'Nova senha (vazio mantém a atual)'}"
-    ${empty manager ? 'required' : ''}>
+    <div class="campo">
+        <label for="gerente-nome">Nome</label>
+        <input id="gerente-nome" type="text" name="name" value="${manager.name}" required>
+    </div>
+    <div class="campo">
+        <label for="gerente-email">Email</label>
+        <input id="gerente-email" type="email" name="email" value="${manager.email}" required>
+    </div>
+    <div class="campo">
+        <label for="gerente-senha">${empty manager ? 'Senha' : 'Nova senha (vazio mantém a atual)'}</label>
+        <input id="gerente-senha" type="password" name="password" ${empty manager ? 'required' : ''}>
+    </div>
 
-    <select name="region-type" required>
-        <option value="">Selecione a região</option>
-        <c:forEach var="r" items="${regionTypes}">
-            <option value="${r.id}" ${r.id == manager.regionTypeId ? 'selected' : ''}>${r.name}</option>
-        </c:forEach>
-    </select>
+    <div class="campo">
+        <label for="gerente-regiao">Região</label>
+        <select id="gerente-regiao" name="region-type" required>
+            <option value="">Selecione a região</option>
+            <c:forEach var="r" items="${regionTypes}">
+                <option value="${r.id}" ${r.id == manager.regionTypeId ? 'selected' : ''}>${r.name}</option>
+            </c:forEach>
+        </select>
+    </div>
 
-    <div class="botoes">
-        <button type="submit" class="salvar">Salvar</button>
-        <button type="button" class="cancelar" onclick="this.closest('dialog').close()">Cancelar</button>
+    <div class="acoes-popup">
+        <button type="button" class="botao" onclick="this.closest('dialog').close()">Cancelar</button>
+        <button type="submit" class="botao primario">Salvar</button>
     </div>
 </form>
-<script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>
