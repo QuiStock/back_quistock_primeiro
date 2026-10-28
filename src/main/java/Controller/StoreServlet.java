@@ -3,6 +3,7 @@ package Controller;
 import DAO.StoreDAO;
 import DAO.RegionTypeDAO;
 import Model.Store;
+import Service.PasswordService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -76,7 +77,7 @@ public class StoreServlet extends HttpServlet {
 
         Store store = new Store();
         store.setEmail(email.trim());
-        store.setPassword(password.trim());
+        store.setPassword(PasswordService.genHash(password.trim()));
         store.setRegionTypeId(parseId(regionTypeId));
         if (regionTypeDAO.searchById(store.getRegionTypeId()) == null) {
             response.sendRedirect(request.getContextPath());
@@ -120,7 +121,7 @@ public class StoreServlet extends HttpServlet {
                 return;
             }
 
-            store.setPassword(password.trim());
+            store.setPassword(PasswordService.genHash(password.trim()));
         }
 
         if (storeDAO.updateStore(store) == 0) {
