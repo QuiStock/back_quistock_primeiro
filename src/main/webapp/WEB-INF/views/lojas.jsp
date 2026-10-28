@@ -16,12 +16,7 @@
     </div>
     <aside>
         <img src="${ctx}/assets/logo-branca.png" alt="QuiStock" id="logo">
-        <nav class="links">
-            <a href="${ctx}/inicio"><img src="${ctx}/assets/icons/inicio.svg" alt="">Início</a>
-            <a href="${ctx}/gerentes"><img src="${ctx}/assets/icons/gerente.svg" alt="">Gerentes</a>
-            <a href="${ctx}/regioes"><img src="${ctx}/assets/icons/regiao.svg" alt="">Regiões</a>
-            <a href="${ctx}/stores" class="ativo">Lojas</a>
-        </nav>
+        <jsp:include page="/WEB-INF/views/menu.jsp"><jsp:param name="ativo" value="lojas"/></jsp:include>
     </aside>
 
     <main>
