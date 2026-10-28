@@ -13,8 +13,7 @@ public class RegionalManagerDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    private static final String query = "SELECT m.id, m.name, m.email, m.password, m.region_type_id, r.name AS region_name " +
-                                        "FROM regional_manager m LEFT JOIN region_type r ON r.id = m.region_type_id ";
+    private static final String query = "select id, name, email, password, region_type_id, region_name from regional_manager_vw ";
 
     //method that simply return the line of a SQL ResultSet
     private RegionalManager rsLine(ResultSet rs) throws SQLException {
@@ -33,16 +32,16 @@ public class RegionalManagerDAO {
         return manager;
     }
 
-    //method that returns a List with all regional managers
+    //metodo pra retornar uma lista de todos os gerentes regionais cadastrados
     public List<RegionalManager> select() throws SQLException {
 
         List<RegionalManager> regionalManagers = new ArrayList<>();
 
         try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement sttmt = conn.prepareStatement(query + "ORDER BY m.id");
+             PreparedStatement sttmt = conn.prepareStatement(query + "ORDER BY id");
              ResultSet rs = sttmt.executeQuery()) {
 
-            //repeats while there is another line
+            //repete o while enquanto ainda tem gerente na fila
             while (rs.next()) {
                 regionalManagers.add(rsLine(rs));
             }
@@ -72,15 +71,15 @@ public class RegionalManagerDAO {
         }
     }
 
-    //functional interface to use a lambda method
+    //visual interface for using the lambda method
     private interface Binder{
-        //lambda method that is able to reutilize the same query for different searches
+        //metodo do lambda que permite utilizar diferentes querys
         void bind(PreparedStatement stmt) throws SQLException;
     }
 
-    //method that searches for a manager based on the id
+    //method that searches for a manager by id
     public RegionalManager searchById(int id) throws SQLException {
-        return searchBy("where m.id = ?", stmt -> stmt.setInt(1, id));
+        return searchBy("where id = ?", stmt -> stmt.setInt(1, id));
     }
 
     //a method to be reutilized, can be used for both searches based on id and email
@@ -98,13 +97,13 @@ public class RegionalManagerDAO {
 
     }
 
-    //search method based on email, using lambda method
+    //retrieves the method base on email, with lambda
     public RegionalManager searchByEmail(String email) throws SQLException {
-        return searchBy("WHERE m.email = ?",  stmt -> stmt.setString(1, email));
+        return searchBy("WHERE email = ?",  stmt -> stmt.setString(1, email));
     }
 
-    //update method based on search by id
-    public void update(RegionalManager regionalManager) throws SQLException{
+    //update the data and save the password in hash
+    public int update(RegionalManager regionalManager) throws SQLException{
 
         String sql = "UPDATE regional_manager SET name = ?, email = ?, password = ?, region_type_id = ? WHERE id = ?";
 
@@ -117,14 +116,14 @@ public class RegionalManagerDAO {
             sttmt.setInt(4, regionalManager.getRegionTypeId());
             sttmt.setInt(5, regionalManager.getId());
 
-            sttmt.executeUpdate();
+            return sttmt.executeUpdate();
 
         }
 
     }
 
-    //delete method
-    public void delete(RegionalManager manager) throws SQLException {
+    //method that delete a manager by ID
+    public int delete(int id) throws SQLException {
 
         String sql = "DELETE FROM regional_manager WHERE id = ?";
 
@@ -133,8 +132,8 @@ public class RegionalManagerDAO {
                 PreparedStatement sttmt = conn.prepareStatement(sql)
         ){
 
-            sttmt.setInt(1, manager.getId());
-            sttmt.executeUpdate();
+            sttmt.setInt(1, id);
+            return sttmt.executeUpdate();
 
         }
 

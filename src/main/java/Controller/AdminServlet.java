@@ -69,7 +69,7 @@ public class AdminServlet extends HttpServlet {
 
         req.setCharacterEncoding("UTF-8");
 
-            String action = req.getParameter("action");
+        String action = req.getParameter("action");
 
         if(action == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");

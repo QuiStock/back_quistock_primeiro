@@ -4,8 +4,13 @@
 <html>
 <head>
     <title>JSP - Hello World</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
 </head>
 <body>
+
+<div id="loading" class="loading hidden" aria-hidden="true">
+    <div class="chaotic-orbit"></div>
+</div>
 
 
     <form action="${pageContext.request.contextPath}/login" method="post">
@@ -17,5 +22,7 @@
     </form>
 
     <c:if test="${not empty error}"><p style="color:red">${error}</p></c:if>
+
+    <script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>
 </body>
 </html>

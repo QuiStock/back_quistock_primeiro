@@ -13,7 +13,12 @@ public class PasswordService {
 
     public static boolean verify(String pass, String hash) {
         if (pass == null || hash == null) return false;
+        if (needsMigration(hash)) return pass.equals(hash);
         return BCrypt.verifyer().verify(pass.toCharArray(), hash).verified;
     }
-    
+
+    public static boolean needsMigration(String hash) {
+        return hash != null && !hash.startsWith("$2");
+    }
+
 }

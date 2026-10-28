@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admins</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
     <style>
         * {
             box-sizing: border-box;
@@ -182,14 +183,17 @@
 </head>
 <body>
 
+<div id="loading" class="loading hidden" aria-hidden="true">
+    <div class="chaotic-orbit"></div>
+</div>
+
 <aside>
-    <a href="home.html">Início</a>
+    <a href="${pageContext.request.contextPath}/inicio">Início</a>
     <a href="${pageContext.request.contextPath}/admins">Admins</a>
     <a href="${pageContext.request.contextPath}/regionalManagers">Gerente</a>
-    <a href="loja.jsp">Loja</a>
-    <a href="regiao.jsp">Região</a>
-    <a href="pedido.jsp">Pedidos</a>
-    <a href="faq.jsp">Faq</a>
+    <a href="${pageContext.request.contextPath}/stores">Loja</a>
+    <a href="${pageContext.request.contextPath}/regioes">Região</a>
+    <a href="${pageContext.request.contextPath}/faq.jsp">Faq</a>
 </aside>
 
 <main>
@@ -242,13 +246,21 @@
         });
 
         async function abrirModal(url) {
-            const resp = await fetch(url);
-            if (!resp.ok) {
+            window.mostrarLoading();
+
+            try {
+                const resp = await fetch(url);
+                if (!resp.ok) {
+                    alert('Não foi possível carregar o formulário.');
+                    return;
+                }
+                modal.innerHTML = await resp.text();
+                modal.showModal();
+            } catch (e) {
                 alert('Não foi possível carregar o formulário.');
-                return;
+            } finally {
+                window.esconderLoading();
             }
-            modal.innerHTML = await resp.text();
-            modal.showModal();
         }
 
         // fecha ao clicar fora (no fundo escuro)
@@ -256,6 +268,7 @@
             if (e.target === modal) modal.close();
         });
     </script>
+    <script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>
 </main>
 </body>
 </html>

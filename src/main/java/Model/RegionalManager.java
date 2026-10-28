@@ -3,8 +3,8 @@ import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class RegionalManager {
     private int id;
     private String email;
@@ -12,11 +12,4 @@ public class RegionalManager {
     private String password;
     private String regionTypeName;
     private int regionTypeId;
-
-    public  RegionalManager(String email, String name, String password, int regionTypeId) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.regionTypeId = regionTypeId;
-    }
 }

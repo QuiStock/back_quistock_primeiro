@@ -18,7 +18,7 @@ public class UrlFilter implements Filter {
     private static final Set<String> only_admin = Set.of(
             "/home-admin.jsp", "/admins", "/crud-admin.jsp",
             "/regionalManagers", "/regional-managers.jsp", "/crud-managers.jsp",
-            "/regionTypes", "/stores");
+            "/regionTypes", "/regioes", "/stores");
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filter)
