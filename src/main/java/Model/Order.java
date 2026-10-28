@@ -12,6 +12,7 @@ public class Order {
     private int id;
     private String suggestionType;
     private LocalDate suggestionDate;
+    private LocalDate orderDate;
     private double totalOrderPrice;
-    private int productId;
+    private String productName;
 }

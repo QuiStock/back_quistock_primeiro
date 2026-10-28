@@ -50,7 +50,7 @@ public class PromotionDAO {
     public void insert(Promotion promotion) throws SQLException {
         String query = """
                     insert into suggestion (suggestion_type, suggestion_date, discount_percentage, 
-                    promotion_valid_from, promotion_valid_until, product_id) values ("promotion", ?, ?, ?, ?, ?);
+                    promotion_valid_from, promotion_valid_until, product_id) values ('promotion', ?, ?, ?, ?, ?);
                 """;
 
         try (
@@ -69,7 +69,7 @@ public class PromotionDAO {
     }
 
     public void delete(Promotion promotion) throws SQLException {
-        String query = "delete from  suggestion where id = ?;";
+        String query = "delete from suggestion where id = ?;";
 
         try (
             Connection conn = factory.getConnection();
