@@ -51,11 +51,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = req.getSession(true);
             session.setAttribute("loggedUser", login.getLoggedUser());
 
-            String way = "ADMIN".equals(login.getLoggedUser().getType())
-                    ? "/home-admin.jsp"
-                    : "/inicio";
-
-            resp.sendRedirect(req.getContextPath() + way);
+            resp.sendRedirect(req.getContextPath() + "/inicio");
 
         } catch(SQLException e) {
             e.printStackTrace();
