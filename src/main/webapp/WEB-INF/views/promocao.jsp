@@ -27,7 +27,6 @@
         <div id="lista">
             <div id="tabela" class="tabela-consulta tabela-promocao">
                 <div id="cabecalho">
-                    <h3>ID</h3>
                     <h3>Data</h3>
                     <h3>Desconto</h3>
                     <h3>Validade</h3>
@@ -35,7 +34,6 @@
                 </div>
                 <c:forEach var="item" items="${itens}">
                     <div class="linha">
-                        <span><c:out value="${item.id}"/></span>
                         <span><c:out value="${item.data}"/></span>
                         <span><c:out value="${item.desconto}"/></span>
                         <span><c:out value="${item.validade}"/></span>

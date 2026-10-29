@@ -80,7 +80,7 @@ public class StoreServlet extends HttpServlet {
         store.setPassword(PasswordService.genHash(password.trim()));
         store.setRegionTypeId(parseId(regionTypeId));
         if (regionTypeDAO.searchById(store.getRegionTypeId()) == null) {
-            response.sendRedirect(request.getContextPath());
+            response.sendRedirect(request.getContextPath() + "/stores?erro=regiao");
             return;
         }
         storeDAO.createStore(store);
@@ -111,7 +111,7 @@ public class StoreServlet extends HttpServlet {
         store.setEmail(email.trim());
         store.setRegionTypeId(parseId(regionTypeId));
         if (regionTypeDAO.searchById(store.getRegionTypeId()) == null) {
-            response.sendRedirect(request.getContextPath());
+            response.sendRedirect(request.getContextPath() + "/stores?erro=regiao");
             return;
         }
 

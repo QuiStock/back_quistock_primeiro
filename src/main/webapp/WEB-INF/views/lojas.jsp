@@ -48,19 +48,17 @@
                     <%-- mostra os dados da loja sem mandar a senha pro navegador --%>
                     <div id="tabela" style="--colunas: 4">
                         <div id="cabecalho">
-                            <h3>ID</h3>
                             <h3>Email</h3>
                             <h3>Senha</h3>
-                            <h3>Região ID</h3>
+                            <h3>Região</h3>
                             <h3>Ações</h3>
                         </div>
 
                         <c:forEach var="item" items="${storesList}">
                             <div class="linha">
-                                <span><c:out value="${item.id}"/></span>
                                 <span><c:out value="${item.email}"/></span>
                                 <span>••••••</span>
-                                <span><c:out value="${item.regionTypeId}"/></span>
+                                <span><c:out value="${item.regionName}"/></span>
                                 <div class="acoes-linha">
                                     <button type="button" class="botao pequeno" popovertarget="editar-${item.id}"><img src="${ctx}/assets/icons/editar.svg" alt="">Editar</button>
                                     <button type="button" class="botao pequeno perigo" popovertarget="remover-${item.id}"><img src="${ctx}/assets/icons/remover.svg" alt="">Remover</button>
@@ -93,7 +91,7 @@
                 <select id="add-regiao" name="regionTypeId" required>
                     <option value="">Selecione</option>
                     <c:forEach var="regiao" items="${regioes}">
-                        <option value="${regiao.id}"><c:out value="${regiao.id}"/> - <c:out value="${regiao.name}"/></option>
+                        <option value="${regiao.id}"><c:out value="${regiao.name}"/></option>
                     </c:forEach>
                 </select>
             </div>
@@ -125,7 +123,7 @@
                     <label for="editar-${item.id}-regiao">Região</label>
                     <select id="editar-${item.id}-regiao" name="regionTypeId" required>
                         <c:forEach var="regiao" items="${regioes}">
-                            <option value="${regiao.id}" <c:if test="${regiao.id eq item.regionTypeId}">selected</c:if>><c:out value="${regiao.id}"/> - <c:out value="${regiao.name}"/></option>
+                            <option value="${regiao.id}" <c:if test="${regiao.id eq item.regionTypeId}">selected</c:if>><c:out value="${regiao.name}"/></option>
                         </c:forEach>
                     </select>
                 </div>
