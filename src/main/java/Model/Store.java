@@ -10,5 +10,5 @@ public class Store {
     private String email;
     private String password;
     private int regionTypeId;
-    private String region_name;
+    private String regionName;
 }
