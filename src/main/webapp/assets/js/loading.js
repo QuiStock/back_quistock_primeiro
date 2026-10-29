@@ -52,13 +52,22 @@
         document.addEventListener("click", function (event) {
             const link = event.target.closest("a");
 
-            if (!link || event.defaultPrevented || link.hasAttribute("data-modal")) {
+            if (!link || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || link.hasAttribute("data-modal") || link.hasAttribute("download")) {
                 return;
             }
 
             const href = link.getAttribute("href");
 
-            if (!href || href.startsWith("#") || href.startsWith("javascript:") || link.target === "_blank") {
+            if (!href || link.target && link.target !== "_self") {
+                return;
+            }
+
+            const destino = new URL(link.href, window.location.href);
+            if (destino.protocol !== "http:" && destino.protocol !== "https:") {
+                return;
+            }
+            if (destino.href === window.location.href ||
+                destino.pathname === window.location.pathname && destino.search === window.location.search && destino.hash) {
                 return;
             }
 

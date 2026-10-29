@@ -44,5 +44,6 @@
             <c:if test="${empty itens}"><p class="mensagem-vazia">Nenhum pedido cadastrado.</p></c:if>
         </div>
     </main>
+    <script src="${ctx}/assets/js/loading.js"></script>
 </body>
 </html>

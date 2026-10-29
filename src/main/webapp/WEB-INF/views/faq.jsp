@@ -13,6 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${ctx}/css/quistock.css">
+    <link rel="stylesheet" href="${ctx}/css/loading.css">
     <title>QuiStock - FAQ</title>
 </head>
 <body>
@@ -161,5 +162,6 @@
 
     </c:forEach>
 
+    <script src="${ctx}/assets/js/loading.js"></script>
 </body>
 </html>
