@@ -44,6 +44,17 @@
         //mostra o carregamento em qualquer formulario de crud enviado
         document.addEventListener("submit", function (event) {
             if (!event.defaultPrevented) {
+                const modal = event.target.closest("dialog[open], [popover]:popover-open");
+
+                //fecha o modal depois que o formulario passou pela validacao
+                if (modal) {
+                    if (modal.matches("dialog")) {
+                        modal.close();
+                    } else {
+                        modal.hidePopover();
+                    }
+                }
+
                 window.mostrarLoading();
             }
         });

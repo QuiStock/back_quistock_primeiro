@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>408</title>
     <link rel="stylesheet" href="../css/error408.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css?v=2">
 </head>
 <body>
 

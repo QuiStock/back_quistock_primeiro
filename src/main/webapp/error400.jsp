@@ -159,7 +159,7 @@
             }
         }
     </style>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css?v=2">
 </head>
 <body>
 

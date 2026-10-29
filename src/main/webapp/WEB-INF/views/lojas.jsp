@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/css/quistock.css">
-    <link rel="stylesheet" href="${ctx}/css/loading.css">
+    <link rel="stylesheet" href="${ctx}/css/loading.css?v=2">
     <title>QuiStock - Lojas</title>
 </head>
 <body>

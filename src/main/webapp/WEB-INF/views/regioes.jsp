@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${ctx}/css/quistock.css">
-    <link rel="stylesheet" href="${ctx}/css/loading.css">
+    <link rel="stylesheet" href="${ctx}/css/loading.css?v=2">
     <title>QuiStock - Região</title>
 </head>
 <body>
@@ -34,9 +34,7 @@
                 <c:choose>
                     <c:when test="${erro eq 'vazio'}">Preencha todos os campos antes de salvar.</c:when>
                     <c:when test="${erro eq 'tamanho'}">Algum campo ultrapassou o tamanho permitido.</c:when>
-                    <c:when test="${erro eq 'email'}">Informe um email válido.</c:when>
-                    <c:when test="${erro eq 'duplicado'}">Esse email já está cadastrado.</c:when>
-                    <c:otherwise>Não foi possível concluir a operação. Tente novamente.</c:otherwise>
+                    <c:otherwise>Apenas são permitidas letras e hífens no nome da região.</c:otherwise>
                 </c:choose>
             </p>
         </c:if>

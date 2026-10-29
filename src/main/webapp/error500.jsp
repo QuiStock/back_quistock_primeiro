@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>500</title>
     <link rel="stylesheet" href="../css/error500.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css?v=2">
 </head>
 <body>
 <img src="../assets/error-assets/500_dissolucao.svg" alt="505">
