@@ -19,7 +19,7 @@ public class StoreDAO {
         List<Store> stores = new ArrayList<>();
 
         //nao precisa trazer a senha pra listagem
-        String sql = "SELECT id, email, region_type_id FROM store ORDER BY id";
+        String sql = "SELECT id, email, region_name FROM store_view ORDER BY id";
 
 
         //try pra listar tudo de todas as lojas
@@ -32,7 +32,7 @@ public class StoreDAO {
                 Store store = new Store();
                 store.setId(result.getInt("id"));
                 store.setEmail(result.getString("email"));
-                store.setRegionTypeId(result.getInt("region_type_id"));
+                store.setRegion_name(result.getString("region_name"));
                 stores.add(store);
             }
         }
@@ -59,7 +59,8 @@ public class StoreDAO {
     //metodo pra encontrar a loja que deseja alterar
     public Store foundStore(int id) throws SQLException {
 
-        String sql = "SELECT id, email, password, region_type_id FROM store WHERE id = ?";
+        String sql = "SELECT s.id, s.email, s.password, s.region_type_id, r.name AS region_name " +
+                "FROM store s JOIN region_type r ON r.id = s.region_type_id WHERE s.id = ?";
 
         //try pra conectar com o banco e executar a query
         try (Connection conn = connectionFactory.getConnection();
@@ -75,6 +76,7 @@ public class StoreDAO {
                     store.setEmail(result.getString("email"));
                     store.setPassword(result.getString("password"));
                     store.setRegionTypeId(result.getInt("region_type_id"));
+                    store.setRegion_name(result.getString("region_name"));
                     return store;
                 }
             }
