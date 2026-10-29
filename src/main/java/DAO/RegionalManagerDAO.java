@@ -13,7 +13,8 @@ public class RegionalManagerDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    private static final String query = "select id, name, email, password, region_type_id, region_name from regional_manager_vw ";
+    private static final String query = "SELECT rm.id, rm.name, rm.email, rm.password, rm.region_type_id, rt.name AS region_name " +
+            "FROM regional_manager rm JOIN region_type rt ON rt.id = rm.region_type_id ";
 
     //method that simply return the line of a SQL ResultSet
     private RegionalManager rsLine(ResultSet rs) throws SQLException {
@@ -38,7 +39,7 @@ public class RegionalManagerDAO {
         List<RegionalManager> regionalManagers = new ArrayList<>();
 
         try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement sttmt = conn.prepareStatement(query + "ORDER BY id");
+             PreparedStatement sttmt = conn.prepareStatement(query + "ORDER BY rm.id");
              ResultSet rs = sttmt.executeQuery()) {
 
             //repete o while enquanto ainda tem gerente na fila
@@ -79,7 +80,7 @@ public class RegionalManagerDAO {
 
     //method that searches for a manager by id
     public RegionalManager searchById(int id) throws SQLException {
-        return searchBy("where id = ?", stmt -> stmt.setInt(1, id));
+        return searchBy("where rm.id = ?", stmt -> stmt.setInt(1, id));
     }
 
     //a method to be reutilized, can be used for both searches based on id and email
@@ -99,7 +100,7 @@ public class RegionalManagerDAO {
 
     //retrieves the method base on email, with lambda
     public RegionalManager searchByEmail(String email) throws SQLException {
-        return searchBy("WHERE email = ?",  stmt -> stmt.setString(1, email));
+        return searchBy("WHERE rm.email = ?",  stmt -> stmt.setString(1, email));
     }
 
     //update the data and save the password in hash
