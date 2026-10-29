@@ -56,6 +56,15 @@ public class FaqServlet extends HttpServlet {
         faq.setQuestion(question);
         faq.setAnswer(answer);
 
+        if (!validText(question)) {
+            req.setAttribute("erro", "Digite uma pergunta válida");
+            return;
+        }
+        if (!validText(answer)) {
+            req.setAttribute("erro", "Digite uma resposta válida");
+            return;
+        }
+
         dao.insert(faq);
 
         resp.sendRedirect(req.getContextPath() + "/faq");
@@ -76,10 +85,17 @@ public class FaqServlet extends HttpServlet {
         Faq faq = new Faq();
 
         int id = Integer.parseInt(req.getParameter("id"));
-
         String question = req.getParameter("question");
-
         String answer = req.getParameter("answer");
+
+        if (!validText(question)){
+            req.setAttribute("erro", "Digite uma pergunta válida");
+            return;
+        }
+        if (!validText(answer)){
+            req.setAttribute("erro","Digite uma resposta válida");
+            return;
+        }
 
         faq.setId(id);
         faq.setQuestion(question);
@@ -88,6 +104,12 @@ public class FaqServlet extends HttpServlet {
         dao.update(faq);
 
         resp.sendRedirect(req.getContextPath() + "/faq");
+    }
+
+    private boolean validText(String text) {
+        text = text.trim();
+
+        return text != null && text.matches("(?=.*\\p{L})[\\s\\S]{1,100}");
     }
 
 }
