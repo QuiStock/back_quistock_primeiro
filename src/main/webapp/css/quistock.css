@@ -250,6 +250,30 @@ main h1 {
 .tabela-uma-coluna { --colunas: 1; }
 .tabela-tres-colunas { --colunas: 3; }
 
+#tabela.tabela-consulta {
+    overflow-x: auto;
+}
+
+.tabela-consulta #cabecalho,
+.tabela-consulta .linha {
+    grid-template-columns: repeat(var(--colunas), minmax(0, 1fr));
+}
+
+.tabela-pedido { --colunas: 4; }
+.tabela-promocao { --colunas: 5; }
+
+.tabela-pedido #cabecalho,
+.tabela-pedido .linha { min-width: 640px; }
+
+.tabela-promocao #cabecalho,
+.tabela-promocao .linha { min-width: 760px; }
+
+.mensagem-vazia {
+    align-self: center;
+    margin-top: 24px;
+    color: var(--verde-texto);
+}
+
 #tabela::-webkit-scrollbar {
     width: 6px;
 }
