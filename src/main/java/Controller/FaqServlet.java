@@ -40,8 +40,32 @@ public class FaqServlet extends HttpServlet {
                 req.setAttribute("faq", faq);
                 req.getRequestDispatcher("/WEB-INF/views/faq.jsp").forward(req, resp);
             }
-        } catch (SQLException ex) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+        } catch (SQLException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.setCharacterEncoding("UTF-8");
+        String action = req.getParameter("action");
+
+        try {
+            switch (action) {
+
+                case "add": add(req, resp); break;
+                case "edit": update(req, resp); break;
+                case "delete": delete(req, resp); break;
+
+            }
+        } catch (NumberFormatException e){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
+        } catch (SQLException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        } catch (IOException e){
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
