@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Faq {
     private int id;

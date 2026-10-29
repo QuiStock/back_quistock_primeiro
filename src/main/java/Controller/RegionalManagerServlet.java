@@ -236,5 +236,4 @@ public class RegionalManagerServlet extends HttpServlet{
         return name.trim().length() <= 60 && name.trim().matches(regex); //valida tambem a quantidade maxima de caracteres
 
     }
-
 }
