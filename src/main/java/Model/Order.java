@@ -15,4 +15,5 @@ public class Order {
     private LocalDate orderDate;
     private double totalOrderPrice;
     private String productName;
+    private int productId;
 }

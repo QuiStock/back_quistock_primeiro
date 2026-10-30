@@ -20,14 +20,18 @@ public class OrderDAO {
                 suggestionDate == null ? null : suggestionDate.toLocalDate(),
                 orderDate == null ? null : orderDate.toLocalDate(),
                 rs.getDouble("total_order_price"),
-                rs.getString("product_name")
+                rs.getString("product_name"),
+                rs.getInt("product_id")
         );
     }
 
     public List<Order> select() throws SQLException {
         String query = """
-                select id, suggestion_type, suggestion_date, order_date, total_order_price, product_name
-                from orders_vw;
+                select s.id, s.suggestion_type, s.suggestion_date, s.order_date,
+                       s.total_order_price, p.name as product_name, s.product_id
+                from suggestion s
+                join product p on p.id = s.product_id
+                where s.suggestion_type = 'order';
                 """;
         List<Order> orders = new ArrayList<>();
 
@@ -46,7 +50,7 @@ public class OrderDAO {
 
     public void insert(Order order) throws SQLException {
         String query = """
-                insert into suggestion(suggestion_type, suggestion_date, order_date, total_order_price, product_name)
+                insert into suggestion(suggestion_type, suggestion_date, order_date, total_order_price, product_id)
                 values ('order', ?, ?, ?, ?)
         """;
         try (
@@ -56,7 +60,7 @@ public class OrderDAO {
             smt.setDate(1, Date.valueOf(LocalDate.now()));
             smt.setDate(2, Date.valueOf(LocalDate.now()));
             smt.setDouble(3, order.getTotalOrderPrice());
-            smt.setString(4, order.getProductName());
+            smt.setInt(4, order.getProductId());
 
             smt.executeUpdate();
         }
@@ -76,8 +80,13 @@ public class OrderDAO {
     }
 
     public Order searchById(int id) throws SQLException{
-        String query = "select id, suggestion_type, suggestion_date, order_date, total_order_price, product_name " +
-                "from suggestion where id = ? and suggestion_type = 'order';";
+        String query = """
+                select s.id, s.suggestion_type, s.suggestion_date, s.order_date,
+                       s.total_order_price, p.name as product_name, s.product_id
+                from suggestion s
+                join product p on p.id = s.product_id
+                where s.id = ? and s.suggestion_type = 'order';
+                """;
 
         try (
                 Connection conn = factory.getConnection();
@@ -87,6 +96,18 @@ public class OrderDAO {
             try (ResultSet rs = smt.executeQuery()) {
                 return rs.next() ? rsLine(rs) : null;
             }
+        }
+    }
+
+    //atualiza o produto e o valor do pedido
+    public void update(Order order) throws SQLException {
+        String query = "update suggestion set product_id = ?, total_order_price = ? where id = ? and suggestion_type = 'order';";
+        try (Connection conn = factory.getConnection();
+             PreparedStatement smt = conn.prepareStatement(query)) {
+            smt.setInt(1, order.getProductId());
+            smt.setDouble(2, order.getTotalOrderPrice());
+            smt.setInt(3, order.getId());
+            smt.executeUpdate();
         }
     }
 }
