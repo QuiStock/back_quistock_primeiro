@@ -12,11 +12,13 @@ public class OrderDAO {
     private final ConnectionFactory factory = new ConnectionFactory();
 
     private Order rsLine(ResultSet rs) throws SQLException {
+        Date suggestionDate = rs.getDate("suggestion_date");
+        Date orderDate = rs.getDate("order_date");
         return new Order(
                 rs.getInt("id"),
                 rs.getString("suggestion_type"),
-                rs.getDate("suggestion_date").toLocalDate(),
-                rs.getDate("order_date").toLocalDate(),
+                suggestionDate == null ? null : suggestionDate.toLocalDate(),
+                orderDate == null ? null : orderDate.toLocalDate(),
                 rs.getDouble("total_order_price"),
                 rs.getString("product_name")
         );
@@ -61,7 +63,7 @@ public class OrderDAO {
     }
 
     public void delete(Order order) throws SQLException {
-        String query = "delete from suggestion where id = ?;";
+        String query = "delete from suggestion where id = ? and suggestion_type = 'order';";
 
         try (
                 Connection conn = factory.getConnection();
@@ -74,14 +76,17 @@ public class OrderDAO {
     }
 
     public Order searchById(int id) throws SQLException{
-        String query = "select * from suggestion where id = ?;";
+        String query = "select id, suggestion_type, suggestion_date, order_date, total_order_price, product_name " +
+                "from suggestion where id = ? and suggestion_type = 'order';";
 
         try (
                 Connection conn = factory.getConnection();
                 PreparedStatement smt = conn.prepareStatement(query);
-                ResultSet rs = smt.executeQuery();
         ) {
-            return rsLine(rs);
+            smt.setInt(1, id);
+            try (ResultSet rs = smt.executeQuery()) {
+                return rs.next() ? rsLine(rs) : null;
+            }
         }
     }
 }

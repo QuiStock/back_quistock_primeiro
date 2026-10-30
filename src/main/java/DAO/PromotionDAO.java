@@ -104,7 +104,7 @@ public class PromotionDAO {
             PreparedStatement smt = conn.prepareStatement(query);
             ResultSet rs = smt.executeQuery();
         ) {
-            return rsLine(rs);
+            return rs.next() ? rsLine(rs) : null;
         }
     }
 }
