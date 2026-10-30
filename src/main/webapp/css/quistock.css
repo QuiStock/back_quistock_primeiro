@@ -250,6 +250,26 @@ main h1 {
 .tabela-uma-coluna { --colunas: 1; }
 .tabela-tres-colunas { --colunas: 3; }
 
+#tabela.tabela-produtos {
+    overflow-x: auto;
+}
+
+.tabela-produtos #cabecalho,
+.tabela-produtos .linha {
+    grid-template-columns: minmax(80px, 0.8fr) minmax(160px, 2fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(110px, 1fr) 200px;
+    min-width: 900px;
+    flex-shrink: 0;
+    padding: 12px 24px;
+}
+
+.tabela-produtos .acoes-linha {
+    flex-wrap: nowrap;
+}
+
+.tabela-produtos .acoes-linha .botao {
+    flex-shrink: 0;
+}
+
 #tabela.tabela-consulta {
     overflow-x: auto;
 }
