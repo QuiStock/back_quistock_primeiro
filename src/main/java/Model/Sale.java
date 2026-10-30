@@ -4,9 +4,11 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class Promotion {
+public class Sale {
     private int id;
     private String sugestionType;
     private LocalDate sugestionDate;
@@ -14,17 +16,16 @@ public class Promotion {
     private LocalDate promotionValidFrom;
     private LocalDate promotionValidUntil;
     private String productName;
+    private int ProductId;
 
-    public Promotion(
-            int id,
+    public Sale(
             String sugestionType,
             LocalDate sugestionDate,
             double discountPercentage,
             LocalDate promotionValidFrom,
             LocalDate promotionValidUntil,
             String productName
-            ) {
-        this.id = id;
+            ){
         this.sugestionType = sugestionType;
         this.sugestionDate = sugestionDate;
         this.discountPercentage = discountPercentage;
