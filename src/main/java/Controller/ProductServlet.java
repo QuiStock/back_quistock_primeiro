@@ -1,8 +1,10 @@
 package Controller;
 
 import DAO.ProductDAO;
+import DAO.StoreDAO;
 import Model.Product;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,10 +12,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
+@WebServlet("/products")
 public class ProductServlet extends HttpServlet {
 
     private final ProductDAO dao = new ProductDAO();
+    private final StoreDAO storeDAO = new StoreDAO();
 
     @Override
     protected void doGet(HttpServletRequest req,  HttpServletResponse resp)
@@ -25,34 +30,36 @@ public class ProductServlet extends HttpServlet {
         try {
 
             if ("new".equals(action)){
-                //carrega as regioes no formulario
-                req.setAttribute("products", dao.select());
+                //carrega as lojas no formulario
+                req.setAttribute("stores", storeDAO.readStores());
                 req.getRequestDispatcher("/crud-product.jsp").forward(req, resp);
             }
 
-            //else if pra editar o gerente
+            //carrega o produto pra editar
             else if ("edit".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Product product = dao.searchById(id);
 
-                //caso o gerente venha vazio, retorna tela de erro
+                //retorna erro se o produto nao existir
                 if (product == null) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
                     return;
                 }
 
-                //manda o gerente e as regioes pro formulario
+                req.setAttribute("stores", storeDAO.readStores());
                 req.setAttribute("product", product);
                 req.getRequestDispatcher("/crud-product.jsp").forward(req, resp);
             }
 
-            //caso nao seja nenhum dos actions acima, retorna lista de gerentes
+            //mostra a lista de produtos
             else {
-                req.setAttribute("managers", dao.select());
-                req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
+                req.setAttribute("products", dao.select());
+                req.getRequestDispatcher("/WEB-INF/views/products.jsp").forward(req, resp);
             }
         } catch (SQLException e){
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new ServletException("Erro ao buscar produtos", e);
+        } catch (IllegalArgumentException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
         }
     }
 
@@ -62,6 +69,10 @@ public class ProductServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         String action = req.getParameter("action");
+        if (action == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
+            return;
+        }
         try {
 
             switch (action) {
@@ -69,10 +80,13 @@ public class ProductServlet extends HttpServlet {
                 case "new": add(req, resp); break;
                 case "edit": update(req, resp); break;
                 case "delete": delete(req, resp); break;
+                default: resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
 
             }
         } catch (SQLException e){
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new ServletException("Erro ao salvar produto", e);
+        } catch (IllegalArgumentException | DateTimeParseException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Confira os dados do produto");
         }
     }
 
@@ -85,9 +99,14 @@ public class ProductServlet extends HttpServlet {
         product.setQuantity(Integer.parseInt(req.getParameter("quantity")));
         product.setBatch(req.getParameter("batch"));
         product.setExpirationDate(LocalDate.parse(req.getParameter("expirationDate")));
-        product.setQuantity(Integer.parseInt(req.getParameter("quantity")));
         product.setStore_id(Integer.parseInt(req.getParameter("store_id")));
         product.setLine(req.getParameter("line"));
+        product.setBrand(req.getParameter("brand"));
+
+        validate(product);
+        if (storeDAO.foundStore(product.getStore_id()) == null) {
+            throw new IllegalArgumentException("Loja inválida");
+        }
 
         dao.insert(product);
 
@@ -101,6 +120,7 @@ public class ProductServlet extends HttpServlet {
 
         if (dao.searchById(id) == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
+            return;
         }
 
         product.setId(id);
@@ -117,6 +137,7 @@ public class ProductServlet extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
         if (dao.searchById(id) == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
+            return;
         }
 
         product.setId(id);
@@ -128,8 +149,22 @@ public class ProductServlet extends HttpServlet {
         product.setPrice(Double.parseDouble(req.getParameter("price")));
         product.setBrand(req.getParameter("brand"));
 
+        validate(product);
+
         dao.update(product);
 
         resp.sendRedirect(req.getContextPath() + "/products");
+    }
+
+    //confere os campos antes de salvar no banco
+    private void validate(Product product) {
+        if (product.getName() == null || product.getName().isBlank()
+                || product.getBatch() == null || product.getBatch().isBlank()
+                || product.getBrand() == null || product.getBrand().isBlank()
+                || product.getLine() == null || product.getLine().isBlank()
+                || !Double.isFinite(product.getPrice()) || product.getPrice() < 0
+                || product.getQuantity() < 0) {
+            throw new IllegalArgumentException("Dados inválidos");
+        }
     }
 }

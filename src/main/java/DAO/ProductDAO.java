@@ -20,14 +20,16 @@ public class ProductDAO {
             rs.getString("brand"),
             rs.getInt("store_id"),
             rs.getString("store_name"),
-            rs.getDate("expiration_date").toLocalDate(),
+            rs.getDate("expiration_date") == null ? null : rs.getDate("expiration_date").toLocalDate(),
             rs.getString("line")
         );
         return product;
     }
 
     public List<Product> select() throws SQLException {
-        String query = "SELECT id, name, batch, price, stock_quantity, store_id, email, expiration_date, line FROM product_vw;";
+        String query = "SELECT p.id, p.name, p.batch, p.price, p.stock_quantity AS quantity, " +
+                "p.brand, p.store_id, s.email AS store_name, p.expiration_date, p.line " +
+                "FROM product p LEFT JOIN store s ON s.id = p.store_id ORDER BY p.id;";
         List<Product> products = new ArrayList<>();
 
         try (Connection conn = factory.getConnection();
@@ -95,7 +97,9 @@ public class ProductDAO {
     }
 
     public Product searchById(int id) throws SQLException {
-        String query = "SELECT id, name FROM product WHERE id = ?";
+        String query = "SELECT p.id, p.name, p.batch, p.price, p.stock_quantity AS quantity, " +
+                "p.brand, p.store_id, s.email AS store_name, p.expiration_date, p.line " +
+                "FROM product p LEFT JOIN store s ON s.id = p.store_id WHERE p.id = ?";
 
         try (Connection conn = factory.getConnection();
              PreparedStatement smt = conn.prepareStatement(query)) {

@@ -9,5 +9,5 @@
     <a href="${ctx}/stores" class="${param.ativo eq 'lojas' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/loja.svg" alt="">Lojas</a>
     <a href="${ctx}/orders" class="${param.ativo eq 'pedido' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/pedido.svg" alt="">Pedidos</a>
     <a href="${ctx}/sales" class="${param.ativo eq 'promocao' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/promocao.svg" alt="">Promoções</a>
-    <a href="${ctx}/faq" class="${param.ativo eq 'faq' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/faq.svg" alt="">FAQs</a>
+    <a href="${ctx}/products" class="${param.ativo eq 'produtos' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/produto.svg" alt="">Produtos</a>
 </nav>
