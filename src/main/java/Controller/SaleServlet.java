@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.SaleDAO;
+import DAO.ProductDAO;
 import Model.Sale;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,41 +12,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.DateTimeException;
 
 @WebServlet("/sales")
 public class SaleServlet extends HttpServlet {
     private final SaleDAO saleDAO = new SaleDAO();
+    private final ProductDAO productDAO = new ProductDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        String action = req.getParameter("action");
-
         try {
-            if ("add".equals(action)) {
-                req.getRequestDispatcher("/crud-sale.jsp").forward(req, resp);
-                return;
-            }
-            if ("edit".equals(action)) {
-                int id  = Integer.parseInt(req.getParameter("id"));
-                Sale sale = saleDAO.searchById(id);
-                if (sale == null) {
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Venda não encontrada");
-                    return;
-                }
-                req.setAttribute("sale", sale);
-                req.getRequestDispatcher("/crud-sale.jsp").forward(req, resp);
-                return;
-            }
-
             req.setAttribute("itens", saleDAO.select());
+            req.setAttribute("produtos", productDAO.select());
             req.getRequestDispatcher("/WEB-INF/views/promocao.jsp").forward(req, resp);
-        } catch (NumberFormatException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
         } catch (SQLException e) {
-            throw new ServletException("Erro ao consultar vendas", e);
+            throw new ServletException("Erro ao consultar promocoes", e);
         }
     }
 
@@ -54,122 +37,71 @@ public class SaleServlet extends HttpServlet {
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
-        if (action == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação não informada");
+        if (action == null || !(action.equals("add") || action.equals("edit") || action.equals("delete"))) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acao invalida");
             return;
         }
 
         try {
+            Sale sale = new Sale();
+            if (!"add".equals(action)) {
+                int id = Integer.parseInt(req.getParameter("id"));
+                sale = saleDAO.searchById(id);
+                if (sale == null) {
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Promocao nao encontrada");
+                    return;
+                }
+            }
+
+            //pegando e conferindo os dados do formulario
+            if (!"delete".equals(action)) {
+                int productId = Integer.parseInt(req.getParameter("product-id"));
+                if (productId <= 0 || productDAO.searchById(productId) == null) {
+                    throw new IllegalArgumentException("Produto invalido");
+                }
+                sale.setProductId(productId);
+                String discount = req.getParameter("discountPercentage");
+                String until = req.getParameter("promotion-valid-until");
+                if (discount == null || until == null) {
+                    throw new IllegalArgumentException("Dados incompletos");
+                }
+                sale.setDiscountPercentage(Double.parseDouble(discount));
+                sale.setPromotionValidUntil(LocalDate.parse(until));
+                LocalDate from = "add".equals(action) ? LocalDate.now() : sale.getSugestionDate();
+                if (!Double.isFinite(sale.getDiscountPercentage()) || sale.getDiscountPercentage() <= 0
+                        || sale.getDiscountPercentage() > 100
+                        || (from != null && sale.getPromotionValidUntil().isBefore(from))) {
+                    throw new IllegalArgumentException("Desconto ou validade invalida");
+                }
+            }
+
             switch (action) {
-                case "add": add(req, resp);
-                case "edit": update(req, resp);
-                case "delete": delete(req, resp);
+                case "add":
+                    saleDAO.insert(sale);
+                    break;
+                case "edit":
+                    saleDAO.update(sale);
+                    break;
+                case "delete":
+                    saleDAO.delete(sale);
+                    break;
+                default:
+                    return;
             }
             resp.sendRedirect(req.getContextPath() + "/sales");
-        } catch (NumberFormatException | java.time.DateTimeException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dados da venda inválidos");
+        } catch (IllegalArgumentException | DateTimeException e) {
+            req.setAttribute("erro", "Informe um produto valido, desconto entre 0 e 100 e validade a partir do inicio da promocao.");
+            doGet(req, resp);
         } catch (SQLException e) {
-            throw new ServletException("Erro ao salvar venda", e);
+            if ("23503".equals(e.getSQLState())) {
+                req.setAttribute("erro", "Produto inexistente ou promocao com registros vinculados.");
+                doGet(req, resp);
+            } else if ("23514".equals(e.getSQLState())) {
+                req.setAttribute("erro", "Confira o desconto e a validade: a data final deve ser igual ou posterior ao inicio da promocao.");
+                doGet(req, resp);
+            } else {
+                throw new ServletException("Erro ao salvar promocao", e);
+            }
         }
-    }
-
-    private void add (HttpServletRequest req, HttpServletResponse resp)
-            throws SQLException, IOException {
-        Sale sale = new Sale();
-
-        String discountPercentage = req.getParameter("discountPercentage");
-        LocalDate promotionValidUntil = LocalDate.parse(req.getParameter("promotion-valid-until"));
-        int id = Integer.parseInt(req.getParameter("id"));
-
-        if (saleDAO.searchById(id) == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Promoção não encontrada");
-            return;
-        }
-
-        if (!validDate(promotionValidUntil)){
-            req.setAttribute("erro", "A data deve estar no formato dd/mm/yyyy");
-            return;
-        }
-
-        if (!validPrice(discountPercentage)){
-            req.setAttribute("erro", "O preço deve estar no formato: 00.00");
-            return;
-        }
-
-        double discount = Double.parseDouble(discountPercentage);
-
-        sale.setDiscountPercentage(discount);
-        sale.setPromotionValidUntil(promotionValidUntil);
-        sale.setProductId(id);
-
-        saleDAO.insert(sale);
-
-        resp.sendRedirect(req.getContextPath() + "/sales");
-    }
-
-    private void delete(HttpServletRequest req, HttpServletResponse resp)
-            throws SQLException, IOException {
-        Sale sale = new Sale();
-
-        int id = Integer.parseInt(req.getParameter("id"));
-
-        if (saleDAO.searchById(id) == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Promoção não encontrada");
-            return;
-        }
-
-        sale.setId(id);
-
-        saleDAO.delete(sale);
-
-        resp.sendRedirect(req.getContextPath() + "/sales");
-    }
-
-    private void update(HttpServletRequest req, HttpServletResponse resp)
-            throws SQLException, IOException {
-        Sale sale = new Sale();
-
-        int id = Integer.parseInt(req.getParameter("id"));
-        LocalDate promotionValidUntil = LocalDate.parse(req.getParameter("promotion-valid-until"));
-        String discountPercentage = req.getParameter("discountPercentage");
-
-        if (saleDAO.searchById(id) == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Promoção não encontrada");
-            return;
-        }
-
-        if (!validDate(promotionValidUntil)){
-            req.setAttribute("erro", "A data deve estar no formato dd/mm/yyyy");
-            return;
-        }
-
-        if (!validPrice(discountPercentage)){
-            req.setAttribute("erro", "O preço deve estar no formato: 00.00");
-            return;
-        }
-
-        double discount = Double.parseDouble(discountPercentage);
-
-        sale.setDiscountPercentage(discount);
-        sale.setPromotionValidUntil(promotionValidUntil);
-        sale.setProductId(id);
-
-        saleDAO.update(sale);
-
-        resp.sendRedirect(req.getContextPath() + "/sales");
-    }
-
-    private boolean validDate(LocalDate promotionValidUntil) {
-        if (promotionValidUntil == null) {
-            return false;
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String date = promotionValidUntil.format(formatter);
-        return date.matches("\\d{2}/\\d{2}/\\d{4}");
-    }
-
-    private boolean validPrice(String valor) {
-        return valor != null && valor.matches("^\\d+\\.\\d{2}$");
     }
 }
