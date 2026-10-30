@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="pt_BR"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -24,7 +26,7 @@
 
     <main>
         <h1>Pedidos</h1>
-        <c:if test="${not empty erro}"><p class="alerta" role="alert"><c:out value="${erro}"/></p></c:if>
+        <c:if test="${not empty erro}"><p class="alerta" id="erro" role="alert"><c:out value="${erro}"/></p></c:if>
         <c:choose>
             <c:when test="${empty itens}">
                 <div id="vazio">
@@ -45,7 +47,7 @@
                         <c:forEach var="item" items="${itens}">
                             <div class="linha">
                                 <span><c:out value="${item.orderDate}"/></span>
-                                <span><c:out value="${item.totalOrderPrice}"/></span>
+                                <span><fmt:formatNumber value="${item.totalOrderPrice}" type="currency" currencySymbol="R$"/></span>
                                 <span><c:out value="${item.productName}"/></span>
                                 <div class="acoes-linha">
                                     <button type="button" class="botao pequeno" popovertarget="editar-${item.id}"><img src="${ctx}/assets/icons/editar.svg" alt="">Editar</button>

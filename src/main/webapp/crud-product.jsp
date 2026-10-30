@@ -9,6 +9,7 @@
         <label for="produto-nome">Nome</label>
         <input id="produto-nome" name="name" value="<c:out value='${product.name}'/>" required>
     </div>
+    <c:if test="${empty product}">
     <div class="campo">
         <label for="produto-marca">Marca</label>
         <input id="produto-marca" name="brand" value="<c:out value='${product.brand}'/>" required>
@@ -17,6 +18,7 @@
         <label for="produto-linha">Linha</label>
         <input id="produto-linha" name="line" value="<c:out value='${product.line}'/>" required>
     </div>
+    </c:if>
     <div class="campo">
         <label for="produto-lote">Lote</label>
         <input id="produto-lote" name="batch" value="<c:out value='${product.batch}'/>" required>
@@ -33,6 +35,7 @@
         <label for="produto-validade">Validade</label>
         <input id="produto-validade" type="date" name="expirationDate" value="${product.expirationDate}" required>
     </div>
+    <c:if test="${empty product}">
     <div class="campo">
         <label for="produto-loja">Loja</label>
         <c:choose>
@@ -50,6 +53,7 @@
             </c:otherwise>
         </c:choose>
     </div>
+    </c:if>
     <div class="acoes-popup">
         <button type="button" class="botao" onclick="this.closest('dialog').close()">Cancelar</button>
         <button type="submit" class="botao primario" ${empty product and empty stores ? 'disabled' : ''}>Salvar</button>

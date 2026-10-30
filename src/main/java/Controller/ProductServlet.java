@@ -46,7 +46,6 @@ public class ProductServlet extends HttpServlet {
                     return;
                 }
 
-                req.setAttribute("stores", storeDAO.readStores());
                 req.setAttribute("product", product);
                 req.getRequestDispatcher("/crud-product.jsp").forward(req, resp);
             }
@@ -143,11 +142,9 @@ public class ProductServlet extends HttpServlet {
         product.setId(id);
         product.setName(req.getParameter("name"));
         product.setBatch(req.getParameter("batch"));
-        product.setLine(req.getParameter("line"));
         product.setExpirationDate(LocalDate.parse(req.getParameter("expirationDate")));
         product.setQuantity(Integer.parseInt(req.getParameter("quantity")));
         product.setPrice(Double.parseDouble(req.getParameter("price")));
-        product.setBrand(req.getParameter("brand"));
 
         validate(product);
 
@@ -160,8 +157,6 @@ public class ProductServlet extends HttpServlet {
     private void validate(Product product) {
         if (product.getName() == null || product.getName().isBlank()
                 || product.getBatch() == null || product.getBatch().isBlank()
-                || product.getBrand() == null || product.getBrand().isBlank()
-                || product.getLine() == null || product.getLine().isBlank()
                 || !Double.isFinite(product.getPrice()) || product.getPrice() < 0
                 || product.getQuantity() < 0) {
             throw new IllegalArgumentException("Dados inválidos");

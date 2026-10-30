@@ -77,7 +77,7 @@ public class ProductDAO {
     }
 
     public void update (Product product) throws SQLException {
-        String query = "UPDATE product SET name = ?, batch = ?,line = ?, expiration_date = ?, stock_quantity = ?,  price = ?, brand = ? WHERE id = ?;";
+        String query = "UPDATE product SET name = ?, batch = ?, expiration_date = ?, stock_quantity = ?, price = ? WHERE id = ?;";
 
         try (
                 Connection conn = factory.getConnection();
@@ -85,12 +85,10 @@ public class ProductDAO {
         ) {
             smt.setString(1, product.getName());
             smt.setString(2, product.getBatch());
-            smt.setString(3, product.getLine());
-            smt.setDate(4, Date.valueOf(product.getExpirationDate()));
-            smt.setInt(5, product.getQuantity());
-            smt.setDouble(6, product.getPrice());
-            smt.setString(7, product.getBrand());
-            smt.setInt(8, product.getId());
+            smt.setDate(3, Date.valueOf(product.getExpirationDate()));
+            smt.setInt(4, product.getQuantity());
+            smt.setDouble(5, product.getPrice());
+            smt.setInt(6, product.getId());
 
             smt.executeUpdate();
         }
