@@ -111,12 +111,6 @@ public class SaleDAO {
             PreparedStatement smt = conn.prepareStatement(query);
         ) {
             smt.setInt(1, id);
-
-            ResultSet rs = smt.executeQuery();
-
-            return rs.next() ? rsLine(rs) : null;
-        ) {
-            smt.setInt(1, id);
             try (ResultSet rs = smt.executeQuery()) {
                 return rs.next() ? rsLine(rs) : null;
             }
