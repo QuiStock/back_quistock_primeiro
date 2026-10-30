@@ -1,10 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<%--
-    TELA: Início   |   Servlet: /inicio   |   Arquivo: WEB-INF/views/inicio.jsp
-
---%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -18,8 +14,6 @@
     <title>QuiStock - Início</title>
 </head>
 <body>
-
-    <%-- Menu lateral (copiado em cada página: aqui não existe include) --%>
     <aside>
         <img src="${ctx}/assets/logo-branca.png" alt="QuiStock" id="logo">
         <jsp:include page="/WEB-INF/views/menu.jsp"><jsp:param name="ativo" value="inicio"/></jsp:include>

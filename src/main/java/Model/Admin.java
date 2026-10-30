@@ -2,6 +2,7 @@ package Model;
 
 import lombok.*;
 
+// Admin account details used by persistence and login.
 @Getter
 @Setter
 @AllArgsConstructor

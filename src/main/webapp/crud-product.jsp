@@ -1,27 +1,25 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<form class="form-admin" action="${pageContext.request.contextPath}/products" method="post">
+<form class="form-admin" action="${pageContext.request.contextPath}/products" method="post" novalidate>
     <h2 id="titulo-produto">${empty product ? 'Adicionar produto' : 'Editar produto'}</h2>
     <input type="hidden" name="action" value="${empty product ? 'new' : 'edit'}">
     <c:if test="${not empty product}"><input type="hidden" name="id" value="${product.id}"></c:if>
 
     <div class="campo">
         <label for="produto-nome">Nome</label>
-        <input id="produto-nome" name="name" value="<c:out value='${product.name}'/>" required>
+        <input id="produto-nome" name="name" maxlength="100" pattern="[A-Za-zÀ-ÿ ]+" title="Use somente letras e espaços." value="<c:out value='${product.name}'/>" required>
     </div>
-    <c:if test="${empty product}">
     <div class="campo">
         <label for="produto-marca">Marca</label>
-        <input id="produto-marca" name="brand" value="<c:out value='${product.brand}'/>" required>
+        <input id="produto-marca" name="brand" maxlength="100" pattern="[A-Za-zÀ-ÿ ]+" title="Use somente letras e espaços." value="<c:out value='${product.brand}'/>" required>
     </div>
     <div class="campo">
         <label for="produto-linha">Linha</label>
-        <input id="produto-linha" name="line" value="<c:out value='${product.line}'/>" required>
+        <input id="produto-linha" name="line" maxlength="100" pattern="[A-Za-zÀ-ÿ ]+" title="Use somente letras e espaços." value="<c:out value='${product.line}'/>" required>
     </div>
-    </c:if>
     <div class="campo">
         <label for="produto-lote">Lote</label>
-        <input id="produto-lote" name="batch" value="<c:out value='${product.batch}'/>" required>
+        <input id="produto-lote" name="batch" inputmode="numeric" maxlength="50" pattern="[0-9]{1,50}" title="Informe apenas números (até 50 dígitos)." value="<c:out value='${product.batch}'/>" required>
     </div>
     <div class="campo">
         <label for="produto-preco">Preço (R$)</label>

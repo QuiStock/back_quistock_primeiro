@@ -17,7 +17,6 @@ public class AdminServlet extends HttpServlet {
 
     private final AdminDAO dao = new AdminDAO();
 
-    //doGet to determine the path, based on action
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -27,13 +26,11 @@ public class AdminServlet extends HttpServlet {
         try {
 
             if ("new".equals(action)){
-                //empty insert forms
                 req.getRequestDispatcher("crud-admin.jsp").forward(req, resp);
 
             }
 
             else if ("edit".equals(action)){
-                //forms filled with previous admin data
                 int id = Integer.parseInt(req.getParameter("id"));
                 Admin admin = dao.searchById(id);
 
@@ -42,13 +39,11 @@ public class AdminServlet extends HttpServlet {
                     return;
                 }
 
-                //filling forms
                 req.setAttribute("admin", admin);
                 req.getRequestDispatcher("/crud-admin.jsp").forward(req, resp);
             }
 
             else {
-                //default action
                 req.setAttribute("admins", dao.select());
                 req.getRequestDispatcher("/admins.jsp").forward(req, resp);
             }
@@ -116,12 +111,26 @@ public class AdminServlet extends HttpServlet {
             return;
         }
 
-        admin.setName(req.getParameter("name"));
-        admin.setEmail(req.getParameter("email"));
-        //if the password is different, a new hash is generated
+        String name = req.getParameter("name");
+        String email = req.getParameter("email");
+        if (!validName(name)) {
+            showValidationError(req, resp, "Informe um nome válido com até 100 caracteres.");
+            return;
+        }
+        if (!validEmail(email)) {
+            showValidationError(req, resp, "Informe um email válido com até 150 caracteres.");
+            return;
+        }
+        admin.setName(name.trim());
+        admin.setEmail(email.trim());
+        // Only replace the password hash when a new password was entered.
         String newPass = req.getParameter("password");
         if (newPass != null && !newPass.isBlank() && !newPass.equals(admin.getPassword())) {
-            admin.setPassword(PasswordService.genHash(newPass));
+            if (!validPassword(newPass)) {
+                showValidationError(req, resp, "A senha deve ter de 8 a 50 caracteres: letras, números, ponto ou sublinhado.");
+                return;
+            }
+            admin.setPassword(PasswordService.genHash(newPass.trim()));
         }
 
         dao.update(admin);
@@ -131,14 +140,49 @@ public class AdminServlet extends HttpServlet {
 
     private void add (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
+        String name = req.getParameter("name");
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        if (!validName(name)) {
+            showValidationError(req, resp, "Informe um nome válido com até 100 caracteres.");
+            return;
+        }
+        if (!validEmail(email)) {
+            showValidationError(req, resp, "Informe um email válido com até 150 caracteres.");
+            return;
+        }
+        if (!validPassword(password)) {
+            showValidationError(req, resp, "A senha deve ter de 8 a 50 caracteres: letras, números, ponto ou sublinhado.");
+            return;
+        }
         Admin admin = new Admin(
-                req.getParameter("email"),
-                req.getParameter("name"),
-                PasswordService.genHash(req.getParameter("password"))
+                email.trim(),
+                name.trim(),
+                PasswordService.genHash(password.trim())
         );
 
         dao.insert(admin);
 
         resp.sendRedirect(req.getContextPath() + "/admins");
+    }
+
+    private boolean validName(String name) {
+        return name != null && name.trim().length() <= 100
+                && name.trim().matches("^[\\p{L}]+(?:[ '\\u2019-][\\p{L}]+)*$");
+    }
+
+    private boolean validEmail(String email) {
+        return email != null && email.trim().length() <= 150
+                && email.trim().matches("^[A-Za-z0-9À-ÿ._%+-]+@[A-Za-z0-9À-ÿ-]+\\.[A-Za-z0-9À-ÿ.-]+$");
+    }
+
+    private boolean validPassword(String password) {
+        return password != null && password.trim().matches("^[a-zA-Z0-9._]{8,50}$");
+    }
+
+    private void showValidationError(HttpServletRequest req, HttpServletResponse resp, String message)
+            throws ServletException, IOException {
+        req.setAttribute("erro", message);
+        doGet(req, resp);
     }
 }

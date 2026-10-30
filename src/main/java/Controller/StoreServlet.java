@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-//encaminha pra pagina de lojas
 @WebServlet("/stores")
 public class StoreServlet extends HttpServlet {
 
@@ -21,7 +20,7 @@ public class StoreServlet extends HttpServlet {
     private final RegionTypeDAO regionTypeDAO = new RegionTypeDAO();
 
     @Override
-    //manda as lojas e as regioes pro formulario
+    // Load stores and region choices for the page.
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setAttribute("storesList", storeDAO.readStores());
@@ -33,7 +32,6 @@ public class StoreServlet extends HttpServlet {
     }
 
     @Override
-    //verifica qual ação veio do forms
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
@@ -58,20 +56,27 @@ public class StoreServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
             }
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
+            if ("register".equals(action) || "edit".equals(action)) {
+                response.sendRedirect(request.getContextPath() + "/stores?erro=regiao");
+            } else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
+            }
         } catch (SQLException e) {
             throw new ServletException("Erro ao salvar loja", e);
         }
     }
 
-    //cria a loja ligada a uma regiao que existe no db
-    private void createStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void createStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         String email = request.getParameter("storeEmail");
         String password = request.getParameter("storePassword");
         String regionTypeId = request.getParameter("regionTypeId");
 
-        if (!validEmail(email) || !validPassword(password)) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email ou Senha inválidos");
+        if (!validEmail(email)) {
+            showValidationError(request, response, "email");
+            return;
+        }
+        if (!validPassword(password)) {
+            showValidationError(request, response, "senha");
             return;
         }
 
@@ -87,26 +92,23 @@ public class StoreServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/stores");
     }
 
-    //atualiza a loja e mantem a senha se o campo ficar vazio
-    private void updateStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    // Keep the current password when the field is left blank.
+    private void updateStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         int id = parseId(request.getParameter("storeId"));
         String email = request.getParameter("storeEmail");
         String regionTypeId = request.getParameter("regionTypeId");
 
-        //usa metodo pra validar email e retorna o erro
         if (!validEmail(email)) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email inválido");
+            showValidationError(request, response, "email");
             return;
         }
 
-        //define a loja e retorna erro caso esteja vazia
         Store store = storeDAO.foundStore(id);
         if (store == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Loja não encontrada");
             return;
         }
 
-        //define as colunas da loja e retorna null errors
         String password = request.getParameter("storePassword");
         store.setEmail(email.trim());
         store.setRegionTypeId(parseId(regionTypeId));
@@ -117,7 +119,7 @@ public class StoreServlet extends HttpServlet {
 
         if (password != null && !password.trim().isEmpty()) {
             if (!validPassword(password)) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Senha inválida");
+                showValidationError(request, response, "senha");
                 return;
             }
 
@@ -131,7 +133,6 @@ public class StoreServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/stores");
     }
 
-    //remove a loja e confere se o id existe
     private void deleteStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         int id = parseId(request.getParameter("storeId"));
         if (storeDAO.deleteStore(id) == 0) {
@@ -141,7 +142,7 @@ public class StoreServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/stores");
     }
 
-    //nao deixa id vazio, negativo ou texto passar
+    // Reject IDs that are missing, invalid, or nonpositive.
     private int parseId(String value) {
         int id = Integer.parseInt(value);
         if (id <= 0) {
@@ -150,7 +151,6 @@ public class StoreServlet extends HttpServlet {
         return id;
     }
 
-    //metodo regex que confere formato e tamanho do email e os caracteres pra validar
     private boolean validEmail(String email) {
         if (email == null) {
             return false;
@@ -161,7 +161,6 @@ public class StoreServlet extends HttpServlet {
         return email.trim().length() <= 320 && email.trim().matches(regex);
     }
 
-    //metodo regex que confere os caracteres pra validar a senha
     private boolean validPassword(String pass){
         if (pass == null){
             return false;
@@ -170,6 +169,12 @@ public class StoreServlet extends HttpServlet {
         String regex = "^[a-zA-Z0-9._]{8,50}$";
 
         return pass.trim().matches(regex);
+    }
+
+    private void showValidationError(HttpServletRequest request, HttpServletResponse response, String code)
+            throws ServletException, IOException {
+        request.setAttribute("erro", code);
+        doGet(request, response);
     }
 
 }

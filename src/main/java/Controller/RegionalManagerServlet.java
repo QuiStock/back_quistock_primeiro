@@ -12,14 +12,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-//encaminha pra pagina gerentes
 @WebServlet("/regionalManagers")
 public class RegionalManagerServlet extends HttpServlet{
 
     private final RegionalManagerDAO dao = new RegionalManagerDAO();
     private final RegionTypeDAO regionDAO = new RegionTypeDAO();
 
-    //doGet pra determinar o caminho baseado na action
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -28,31 +26,26 @@ public class RegionalManagerServlet extends HttpServlet{
 
         try {
 
-            //averigua qual action veio e encaminha pra tela correta
             if ("new".equals(action)){
-                //carrega as regioes no formulario
+                // Load region choices for the form.
                 req.setAttribute("regionTypes", regionDAO.select());
                 req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
-            //else if pra editar o gerente
             else if ("edit".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 RegionalManager manager = dao.searchById(id);
 
-                //caso o gerente venha vazio, retorna tela de erro
                 if (manager == null) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Manager not found");
                     return;
                 }
 
-                //manda o gerente e as regioes pro formulario
                 req.setAttribute("manager", manager);
                 req.setAttribute("regionTypes", regionDAO.select());
                 req.getRequestDispatcher("/crud-managers.jsp").forward(req, resp);
             }
 
-            //caso nao seja nenhum dos actions acima, retorna lista de gerentes
             else {
                 req.setAttribute("managers", dao.select());
                 req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
@@ -60,23 +53,21 @@ public class RegionalManagerServlet extends HttpServlet{
 
         } catch (SQLException ex) {
 
-            resp.sendError(500, ex.getMessage()); //retorna mensagem caso de erro 500
+            resp.sendError(500, ex.getMessage());
 
         }
 
     }
 
 
-    //doPost pra alterar tabela, seja criando, editando ou deletando
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
-        //traz pro teclado brasileiro
+        // Read submitted names as UTF-8.
         req.setCharacterEncoding("UTF-8");
 
         String action = req.getParameter("action"); 
 
-        //averigua qual action que é e redireciona para o servlet correto
         try {
             switch (action) {
                 case "add":
@@ -93,9 +84,12 @@ public class RegionalManagerServlet extends HttpServlet{
                     break;
             }
 
-        //retorna os erros
         } catch (NumberFormatException e){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID Inválido");
+            if ("add".equals(action) || "edit".equals(action)) {
+                showValidationError(req, resp, "Selecione uma região válida.");
+            } else {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID Inválido");
+            }
         } catch (SQLException e){
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         } catch (IOException e){
@@ -103,19 +97,22 @@ public class RegionalManagerServlet extends HttpServlet{
         }
     }
 
-    //metodo pra add gerente regional
-    private void add (HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException{
+    private void add (HttpServletRequest req, HttpServletResponse resp) throws SQLException, ServletException, IOException{
         RegionalManager manager = new RegionalManager();
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String name = req.getParameter("name");
 
-        if(!validEmail(email) || !validPassword(password)){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email ou Senha inválidos");
+        if (!validEmail(email)) {
+            showValidationError(req, resp, "Informe um email válido (até 320 caracteres).");
+            return;
+        }
+        if (!validPassword(password)) {
+            showValidationError(req, resp, "A senha deve ter de 8 a 50 caracteres: letras, números, ponto ou sublinhado.");
             return;
         }
         if(!validName(name)){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Nome inválido!");
+            showValidationError(req, resp, "Informe nome e sobrenome com letras e até 60 caracteres.");
             return;
         }
 
@@ -126,7 +123,7 @@ public class RegionalManagerServlet extends HttpServlet{
         int regionTypeId = Integer.parseInt(req.getParameter("region-type"));
 
         if (regionDAO.searchById(regionTypeId) == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Região inválida");
+            showValidationError(req, resp, "Selecione uma região válida.");
             return;
         }
 
@@ -137,14 +134,13 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
-    //metodo pra atualizar gerente regional
     private void update (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
 
         int regionTypeId = Integer.parseInt(req.getParameter("region-type"));
 
         if (regionDAO.searchById(regionTypeId) == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Região inválida");
+            showValidationError(req, resp, "Selecione uma região válida.");
             return;
         }
         int id = Integer.parseInt(req.getParameter("id"));
@@ -153,24 +149,22 @@ public class RegionalManagerServlet extends HttpServlet{
 
 
 
-        //caso o gerente tenha vazio, retorna msg de erro
         if (manager == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
             return;
         }
 
-        //define as variaveis e faz a validação
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String name = req.getParameter("name");
 
         if (!validEmail(email)) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email inválido");
+            showValidationError(req, resp, "Informe um email válido (até 320 caracteres).");
             return;
         }
 
         if (!validName(name)) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Nome inválido!");
+            showValidationError(req, resp, "Informe nome e sobrenome com letras e até 60 caracteres.");
             return;
         }
 
@@ -180,7 +174,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
         if (password != null && !password.trim().isEmpty()) {
             if (!validPassword(password)) {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Senha inválida");
+                showValidationError(req, resp, "A senha deve ter de 8 a 50 caracteres: letras, números, ponto ou sublinhado.");
                 return;
             }
 
@@ -192,7 +186,6 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
-    //metodo pra excluir gerente regional
     private void delete (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException,  IOException{
 
@@ -202,7 +195,6 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
-    //metodo regex que confere formato e tamanho do email e os caracteres pra validar
     private boolean validEmail(String email) {
         if (email == null) {
             return false;
@@ -213,7 +205,6 @@ public class RegionalManagerServlet extends HttpServlet{
         return email.trim().length() <= 320 && email.trim().matches(regex);
     }
 
-    //metodo regex que confere os caracteres pra validar a senha
     private boolean validPassword(String pass){
         if (pass == null){
             return false;
@@ -224,16 +215,26 @@ public class RegionalManagerServlet extends HttpServlet{
         return pass.trim().matches(regex);
     }
 
-    //metodo regex que confere os caracteres pra validar o nome
     private boolean validName(String name){
 
         if(name == null){
             return false;
         }
 
-        String regex = "^[a-zA-ZÀ-ÿ]+(\s+[a-zA-ZÀ-ÿ]+)+$"; // apenas letras maiusculas e minusculas com/sem acento e espaço.
+        String regex = "^[a-zA-ZÀ-ÿ]+(\s+[a-zA-ZÀ-ÿ]+)+$"; // Require at least two words in the name.
 
-        return name.trim().length() <= 60 && name.trim().matches(regex); //valida tambem a quantidade maxima de caracteres
+        return name.trim().length() <= 60 && name.trim().matches(regex);
 
+    }
+
+    private void showValidationError(HttpServletRequest req, HttpServletResponse resp, String message)
+            throws ServletException, IOException {
+        req.setAttribute("erro", message);
+        try {
+            req.setAttribute("managers", dao.select());
+            req.getRequestDispatcher("/regional-managers.jsp").forward(req, resp);
+        } catch (SQLException e) {
+            throw new ServletException("Erro ao buscar gerentes", e);
+        }
     }
 }

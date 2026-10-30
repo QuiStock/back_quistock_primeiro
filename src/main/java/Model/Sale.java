@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+// Promotion details include the product suggested for the sale.
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

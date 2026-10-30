@@ -1,6 +1,7 @@
 package Model;
 import lombok.*;
 
+// The region name is populated for store listings.
 @Getter
 @Setter
 @NoArgsConstructor

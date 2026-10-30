@@ -66,7 +66,7 @@ public class SaleDAO {
             LocalDate today = LocalDate.now();
             smt.setDate(1, Date.valueOf(today));
             smt.setDouble(2, sale.getDiscountPercentage());
-            //o banco exige a data inicial mesmo sem mostrar esse campo na tela
+            // The database requires a start date even though the form does not show one.
             smt.setDate(3, Date.valueOf(today));
             smt.setDate(4, Date.valueOf(sale.getPromotionValidUntil()));
             smt.setInt(5, sale.getProductId());

@@ -52,7 +52,8 @@ public class OrderServlet extends HttpServlet {
                 default -> resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
             }
         } catch (IllegalArgumentException e) {
-            req.setAttribute("erro", "Informe um produto e um valor total valido.");
+            req.setAttribute("erro", e instanceof NumberFormatException
+                    ? "Informe valores numéricos válidos para produto e preço total." : e.getMessage());
             doGet(req, resp);
         } catch (SQLException e) {
             if ("23503".equals(e.getSQLState())) {
@@ -69,12 +70,8 @@ public class OrderServlet extends HttpServlet {
         throws SQLException, IOException {
         Order order = new Order();
 
-        order.setProductId(Integer.parseInt(req.getParameter("product-id")));
-        String total = req.getParameter("total-order-price");
-        if (total == null) {
-            throw new IllegalArgumentException("Valor total nao informado");
-        }
-        order.setTotalOrderPrice(Double.parseDouble(total));
+        order.setProductId(readProductId(req));
+        order.setTotalOrderPrice(readTotal(req));
 
 
         validate(order);
@@ -94,11 +91,13 @@ public class OrderServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/orders");
     }
 
-    //confere os dados antes de salvar o pedido
+    // Validate the order before writing it to the database.
     private void validate(Order order) throws SQLException {
-        if (order.getProductId() <= 0 || productDAO.searchById(order.getProductId()) == null
-                || !Double.isFinite(order.getTotalOrderPrice()) || order.getTotalOrderPrice() < 0) {
-            throw new IllegalArgumentException("Dados invalidos");
+        if (order.getProductId() <= 0 || productDAO.searchById(order.getProductId()) == null) {
+            throw new IllegalArgumentException("Selecione um produto válido.");
+        }
+        if (!Double.isFinite(order.getTotalOrderPrice()) || order.getTotalOrderPrice() < 0) {
+            throw new IllegalArgumentException("Informe um preço total válido, maior ou igual a zero.");
         }
     }
 
@@ -110,14 +109,26 @@ public class OrderServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Pedido nao encontrado");
             return;
         }
-        order.setProductId(Integer.parseInt(req.getParameter("product-id")));
-        String total = req.getParameter("total-order-price");
-        if (total == null) {
-            throw new IllegalArgumentException("Valor total nao informado");
-        }
-        order.setTotalOrderPrice(Double.parseDouble(total));
+        order.setProductId(readProductId(req));
+        order.setTotalOrderPrice(readTotal(req));
         validate(order);
         dao.update(order);
         resp.sendRedirect(req.getContextPath() + "/orders");
+    }
+
+    private int readProductId(HttpServletRequest req) {
+        try {
+            return Integer.parseInt(req.getParameter("product-id"));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Selecione um produto válido.");
+        }
+    }
+
+    private double readTotal(HttpServletRequest req) {
+        try {
+            return Double.parseDouble(req.getParameter("total-order-price"));
+        } catch (NullPointerException | NumberFormatException e) {
+            throw new IllegalArgumentException("Informe um preço total válido, maior ou igual a zero.");
+        }
     }
 }

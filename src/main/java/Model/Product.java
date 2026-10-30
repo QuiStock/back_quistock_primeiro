@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+// Store details are included when products are read for display.
 @Getter
 @Setter
 @NoArgsConstructor

@@ -99,7 +99,7 @@ public class OrderDAO {
         }
     }
 
-    //atualiza o produto e o valor do pedido
+    // Update the order item and its total together.
     public void update(Order order) throws SQLException {
         String query = "update suggestion set product_id = ?, total_order_price = ? where id = ? and suggestion_type = 'order';";
         try (Connection conn = factory.getConnection();

@@ -1,9 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<%--
-    TELA: Região   |   Servlet: /regioes   |   Arquivo: WEB-INF/views/regioes.jsp
---%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -17,8 +14,6 @@
     <title>QuiStock - Região</title>
 </head>
 <body>
-
-    <%-- Menu lateral (copiado em cada página: aqui não existe include) --%>
     <aside>
         <img src="${ctx}/assets/logo-branca.png" alt="QuiStock" id="logo">
         <jsp:include page="/WEB-INF/views/menu.jsp"><jsp:param name="ativo" value="regioes"/></jsp:include>
@@ -27,29 +22,19 @@
     <main>
         <h1>Região</h1>
 
-        <%-- Mensagem de erro: o Servlet guarda o código na sessão e ele aparece só uma vez.
-             O CSS (#erro) faz a mensagem sumir sozinha depois de 4 segundos. --%>
         <c:if test="${not empty erro}">
             <p class="alerta" id="erro" role="alert">
-                <c:choose>
-                    <c:when test="${erro eq 'vazio'}">Preencha todos os campos antes de salvar.</c:when>
-                    <c:when test="${erro eq 'tamanho'}">Algum campo ultrapassou o tamanho permitido.</c:when>
-                    <c:otherwise>Apenas são permitidas letras e hífens no nome da região.</c:otherwise>
-                </c:choose>
+                <c:out value="${erro}"/>
             </p>
         </c:if>
 
         <c:choose>
-
-            <%-- Sem registros: tela "Área vazia" --%>
             <c:when test="${empty itens}">
                 <div id="vazio">
                     <h2>Área vazia</h2>
                     <button type="button" class="botao verde" popovertarget="popup-adicionar">Adicionar região</button>
                 </div>
             </c:when>
-
-            <%-- Com registros: botão Adicionar (fora da lista) + cabeçalho + linhas --%>
             <c:otherwise>
                 <div id="lista">
 
@@ -67,7 +52,6 @@
                             <div class="linha">
                                 <span><c:out value="${item.nome}"/></span>
 
-                                <%-- Botões desta linha: abrem os popups "editar-ID" e "remover-ID" --%>
                                 <div class="acoes-linha">
                                     <button type="button" class="botao pequeno" popovertarget="editar-${item.id}"><img src="${ctx}/assets/icons/editar.svg" alt="">Editar</button>
                                     <button type="button" class="botao pequeno perigo" popovertarget="remover-${item.id}"><img src="${ctx}/assets/icons/remover.svg" alt="">Remover</button>
@@ -82,9 +66,8 @@
     </main>
 
 
-    <%-- ================= POPUP: ADICIONAR (formulário vazio) ================= --%>
     <div id="popup-adicionar" class="popup" popover>
-        <form method="post" action="${ctx}/regioes" autocomplete="off">
+        <form method="post" action="${ctx}/regioes" autocomplete="off" novalidate>
             <h2>Adicionar região</h2>
             <input type="hidden" name="acao" value="salvar">
             <input type="hidden" name="id" value="">
@@ -101,12 +84,9 @@
     </div>
 
 
-    <%-- ============ POPUPS DE CADA LINHA (um par Editar + Remover por registro) ============ --%>
     <c:forEach var="item" items="${itens}">
-
-        <%-- EDITAR: o formulário já vem preenchido com os dados deste registro --%>
         <div id="editar-${item.id}" class="popup" popover>
-            <form method="post" action="${ctx}/regioes" autocomplete="off">
+            <form method="post" action="${ctx}/regioes" autocomplete="off" novalidate>
                 <h2>Editar região</h2>
                 <input type="hidden" name="acao" value="salvar">
                 <input type="hidden" name="id" value="${item.id}">
@@ -121,8 +101,6 @@
                 </div>
             </form>
         </div>
-
-        <%-- REMOVER: pede confirmação mostrando o nome do registro --%>
         <div id="remover-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/regioes">
                 <h2>Remover</h2>

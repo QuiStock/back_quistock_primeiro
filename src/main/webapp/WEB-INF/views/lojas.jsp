@@ -22,14 +22,17 @@
     <main>
         <h1>Lojas</h1>
 
-        <c:if test="${param.erro eq 'duplicado'}">
-            <p class="alerta" id="erro" role="alert">Esse email já está cadastrado.</p>
-        </c:if>
-        <c:if test="${param.erro eq 'vinculo'}">
-            <p class="alerta" id="erro" role="alert">Esta loja possui registros vinculados.</p>
-        </c:if>
-        <c:if test="${param.erro eq 'regiao'}">
-            <p class="alerta" id="erro" role="alert">Selecione uma região válida.</p>
+        <c:if test="${not empty erro or not empty param.erro}">
+            <p class="alerta" id="erro" role="alert">
+                <c:choose>
+                    <c:when test="${erro eq 'email' or param.erro eq 'email'}">Informe um email válido (até 320 caracteres).</c:when>
+                    <c:when test="${erro eq 'senha' or param.erro eq 'senha'}">A senha deve ter de 8 a 50 caracteres: letras, números, ponto ou sublinhado.</c:when>
+                    <c:when test="${param.erro eq 'duplicado'}">Esse email já está cadastrado.</c:when>
+                    <c:when test="${param.erro eq 'vinculo'}">Esta loja possui registros vinculados.</c:when>
+                    <c:when test="${param.erro eq 'regiao'}">Selecione uma região válida.</c:when>
+                    <c:otherwise>Não foi possível concluir a operação. Tente novamente.</c:otherwise>
+                </c:choose>
+            </p>
         </c:if>
 
         <c:choose>
@@ -45,7 +48,6 @@
                         <button type="button" class="botao" popovertarget="popup-adicionar"><img src="${ctx}/assets/icons/adicionar.svg" alt="">Adicionar</button>
                     </div>
 
-                    <%-- mostra os dados da loja sem mandar a senha pro navegador --%>
                     <div id="tabela" style="--colunas: 4">
                         <div id="cabecalho">
                             <h3>Email</h3>
@@ -72,7 +74,7 @@
     </main>
 
     <div id="popup-adicionar" class="popup" popover>
-        <form method="post" action="${ctx}/stores" autocomplete="off">
+        <form method="post" action="${ctx}/stores" autocomplete="off" novalidate>
             <h2>Adicionar loja</h2>
             <input type="hidden" name="action" value="register">
 
@@ -84,8 +86,6 @@
                 <label for="add-senha">Senha</label>
                 <input id="add-senha" type="password" name="storePassword" required>
             </div>
-
-            <%-- manda o id da regiao escolhida pro servlet --%>
             <div class="campo">
                 <label for="add-regiao">Região</label>
                 <select id="add-regiao" name="regionTypeId" required>
@@ -105,7 +105,7 @@
 
     <c:forEach var="item" items="${storesList}">
         <div id="editar-${item.id}" class="popup" popover>
-            <form method="post" action="${ctx}/stores" autocomplete="off">
+            <form method="post" action="${ctx}/stores" autocomplete="off" novalidate>
                 <h2>Editar loja</h2>
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="storeId" value="${item.id}">

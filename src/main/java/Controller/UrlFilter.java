@@ -13,7 +13,7 @@ import java.util.Set;
 @WebFilter("/*")
 public class UrlFilter implements Filter {
 
-    //Allowed pages for each login
+    // Public routes and routes reserved for admins.
     private static final Set<String> general = Set.of("/", "/index.jsp", "/login", "/logout");
     private static final Set<String> only_admin = Set.of(
             "/home-admin.jsp", "/admins", "/crud-admin.jsp",
@@ -29,29 +29,27 @@ public class UrlFilter implements Filter {
 
         String path  = req.getServletPath();
 
-        //libera os arquivos visuais mesmo antes do login
+        // Static assets must load before login too.
         if (path.startsWith("/css/") || path.startsWith("/assets/") || path.startsWith("/script/")) {
             filter.doFilter(request, response);
             return;
         }
 
-        //verify paths from general profiles
         if (general.contains(path)) {
             filter.doFilter(request, response);
             return;
         }
 
-        //checks existent session, keeps null if null, otherwise, receives logged user
+        // Do not create a session just to check access.
         HttpSession session = req.getSession(false);
         LoggedUser user = session == null ? null : (LoggedUser) session.getAttribute("loggedUser");
 
-        //if user is null, sends back to login page
         if (user == null) {
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
             return;
         }
 
-        //if a non admin user tries to change url to an admin only page, it sends a forbidden error
+        // Block admin routes for other users.
         if (only_admin.contains(path) && !"ADMIN".equals(user.getType())) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Página não permitida");
             return;

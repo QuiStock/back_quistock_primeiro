@@ -61,7 +61,7 @@
         </c:choose>
     </main>
     <div id="popup-adicionar" class="popup" popover>
-        <form method="post" action="${ctx}/orders">
+        <form method="post" action="${ctx}/orders" novalidate>
             <h2>Adicionar pedido</h2>
             <input type="hidden" name="action" value="add">
             <div class="campo">
@@ -86,7 +86,7 @@
     </div>
     <c:forEach var="item" items="${itens}">
         <div id="editar-${item.id}" class="popup" popover>
-            <form method="post" action="${ctx}/orders">
+            <form method="post" action="${ctx}/orders" novalidate>
                 <h2>Editar pedido</h2>
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="${item.id}">

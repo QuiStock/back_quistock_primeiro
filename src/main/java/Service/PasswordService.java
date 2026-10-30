@@ -6,7 +6,7 @@ public class PasswordService {
 
     private static final int cost = 12;
 
-    //generates the password to
+    // Hash passwords before storing them.
     public static String genHash(String pass) {
         return BCrypt.withDefaults().hashToString(cost, pass.toCharArray());
     }

@@ -30,17 +30,15 @@ public class ProductServlet extends HttpServlet {
         try {
 
             if ("new".equals(action)){
-                //carrega as lojas no formulario
+                // Load stores for the product form.
                 req.setAttribute("stores", storeDAO.readStores());
                 req.getRequestDispatcher("/crud-product.jsp").forward(req, resp);
             }
 
-            //carrega o produto pra editar
             else if ("edit".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Product product = dao.searchById(id);
 
-                //retorna erro se o produto nao existir
                 if (product == null) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
                     return;
@@ -50,7 +48,6 @@ public class ProductServlet extends HttpServlet {
                 req.getRequestDispatcher("/crud-product.jsp").forward(req, resp);
             }
 
-            //mostra a lista de produtos
             else {
                 req.setAttribute("products", dao.select());
                 req.getRequestDispatcher("/WEB-INF/views/products.jsp").forward(req, resp);
@@ -85,7 +82,16 @@ public class ProductServlet extends HttpServlet {
         } catch (SQLException e){
             throw new ServletException("Erro ao salvar produto", e);
         } catch (IllegalArgumentException | DateTimeParseException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Confira os dados do produto");
+            req.setAttribute("erro", e instanceof DateTimeParseException
+                    ? "Informe uma data de validade válida."
+                    : e instanceof NumberFormatException
+                    ? "Informe preço, quantidade e loja válidos." : e.getMessage());
+            try {
+                req.setAttribute("products", dao.select());
+                req.getRequestDispatcher("/WEB-INF/views/products.jsp").forward(req, resp);
+            } catch (SQLException ex) {
+                throw new ServletException("Erro ao buscar produtos", ex);
+            }
         }
     }
 
@@ -94,11 +100,11 @@ public class ProductServlet extends HttpServlet {
         Product  product = new Product();
 
         product.setName(req.getParameter("name"));
-        product.setPrice(Double.parseDouble(req.getParameter("price")));
-        product.setQuantity(Integer.parseInt(req.getParameter("quantity")));
+        product.setPrice(Double.parseDouble(requiredParameter(req, "price")));
+        product.setQuantity(Integer.parseInt(requiredParameter(req, "quantity")));
         product.setBatch(req.getParameter("batch"));
-        product.setExpirationDate(LocalDate.parse(req.getParameter("expirationDate")));
-        product.setStore_id(Integer.parseInt(req.getParameter("store_id")));
+        product.setExpirationDate(LocalDate.parse(requiredParameter(req, "expirationDate")));
+        product.setStore_id(Integer.parseInt(requiredParameter(req, "store_id")));
         product.setLine(req.getParameter("line"));
         product.setBrand(req.getParameter("brand"));
 
@@ -142,24 +148,52 @@ public class ProductServlet extends HttpServlet {
         product.setId(id);
         product.setName(req.getParameter("name"));
         product.setBatch(req.getParameter("batch"));
-        product.setExpirationDate(LocalDate.parse(req.getParameter("expirationDate")));
-        product.setQuantity(Integer.parseInt(req.getParameter("quantity")));
-        product.setPrice(Double.parseDouble(req.getParameter("price")));
+        product.setBrand(req.getParameter("brand"));
+        product.setLine(req.getParameter("line"));
+        product.setExpirationDate(LocalDate.parse(requiredParameter(req, "expirationDate")));
+        product.setQuantity(Integer.parseInt(requiredParameter(req, "quantity")));
+        product.setPrice(Double.parseDouble(requiredParameter(req, "price")));
 
         validate(product);
+        validateText(product.getBrand(), "Marca");
+        validateText(product.getLine(), "Linha");
 
         dao.update(product);
 
         resp.sendRedirect(req.getContextPath() + "/products");
     }
 
-    //confere os campos antes de salvar no banco
+    // Check required fields before saving the product.
     private void validate(Product product) {
-        if (product.getName() == null || product.getName().isBlank()
-                || product.getBatch() == null || product.getBatch().isBlank()
-                || !Double.isFinite(product.getPrice()) || product.getPrice() < 0
-                || product.getQuantity() < 0) {
-            throw new IllegalArgumentException("Dados inválidos");
+        validateAlphaText(product.getName(), "Nome");
+        validateText(product.getBrand(), "Marca");
+        validateText(product.getLine(), "Linha");
+        if (product.getBatch() == null || !product.getBatch().matches("^[0-9]{1,50}$")) {
+            throw new IllegalArgumentException("Lote inválido: informe apenas números (até 50 dígitos).");
         }
+        if (!Double.isFinite(product.getPrice()) || product.getPrice() < 0) {
+            throw new IllegalArgumentException("Informe um preço válido maior ou igual a zero.");
+        }
+        if (product.getQuantity() < 0) {
+            throw new IllegalArgumentException("Informe uma quantidade válida maior ou igual a zero.");
+        }
+    }
+
+    private void validateText(String value, String field) {
+        validateAlphaText(value, field);
+    }
+
+    private void validateAlphaText(String value, String field) {
+        if (value == null || !value.trim().matches("^[\\p{L}]+(?: +[\\p{L}]+)*$")) {
+            throw new IllegalArgumentException(field + " inválido: use somente letras e espaços.");
+        }
+    }
+
+    private String requiredParameter(HttpServletRequest req, String name) {
+        String value = req.getParameter(name);
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Preencha todos os campos antes de salvar.");
+        }
+        return value;
     }
 }

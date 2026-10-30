@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+// Product details travel with the order for display.
 @Getter
 @Setter
 @NoArgsConstructor

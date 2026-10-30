@@ -15,7 +15,6 @@
             --lavana: #AF36DF;
             --petroleo: #11061F;
 
-            /* cores variaveis */
             --limao-claro: #D7F6B1;
             --verde-escuro: #659529;
             --fundo: #FAF5FB;
@@ -81,7 +80,6 @@
             transform: scale(0.98);
         }
 
-        /* Responsividade para telas menores que a tela web */
         @media (max-width: 1024px) {
             body {
                 height: auto;

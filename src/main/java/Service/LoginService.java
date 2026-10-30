@@ -23,6 +23,7 @@ public class LoginService {
 
         RegionalManager manager = daoMan.searchByEmail(email);
         if (manager != null && PasswordService.verify(password, manager.getPassword())) {
+            // Upgrade legacy passwords after a successful login.
             if (PasswordService.needsMigration(manager.getPassword())) {
                 manager.setPassword(PasswordService.genHash(password));
                 daoMan.update(manager);
@@ -48,6 +49,7 @@ public class LoginService {
 
         Admin admin = daoAdm.searchByEmail(email);
         if (admin != null && PasswordService.verify(password, admin.getPassword())) {
+            // Apply the same migration to admin accounts.
             if (PasswordService.needsMigration(admin.getPassword())) {
                 admin.setPassword(PasswordService.genHash(password));
                 daoAdm.update(admin);

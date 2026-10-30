@@ -1,8 +1,4 @@
-/* =====================================================================
-   QuiStock - estilo único, usado por TODAS as telas.
-   Parte do AdminAr.css (mesmas variáveis e mesma estrutura:
-   aside + nav.links + main + #lista + #botoes + #cabecalho).
-   ===================================================================== */
+/* Shared styles for QuiStock pages. */
 
 :root {
     --branco: #fbf4ff;
@@ -16,7 +12,7 @@
     --branco-usavel: #FEFCFF;
     --titulo-roxo: #760ead;
 
-    /* variáveis acrescentadas para as novas telas */
+    /* Colors shared by the newer pages. */
     --verde-texto: #485a32;
     --cinza-linha: #efefef;
     --vermelho: #A61B1B;
@@ -41,7 +37,7 @@ body {
     min-height: 100vh;
 }
 
-/* ---------- menu lateral ---------- */
+/* Sidebar */
 
 aside {
     width: 100%;
@@ -92,7 +88,7 @@ a {
     color: var(--branco-usavel);
 }
 
-/* ---------- área principal ---------- */
+/* Main content */
 
 main {
     display: flex;
@@ -117,7 +113,7 @@ main h1 {
     font-size: 0.9rem;
 }
 
-/* A mensagem de erro do servidor some sozinha depois de 4 s (só CSS, sem JavaScript) */
+/* Hide server errors after four seconds. */
 #erro {
     animation: sumir 0.4s ease 4s forwards;
 }
@@ -132,7 +128,7 @@ main h1 {
     }
 }
 
-/* ---------- botões (padrão único) ---------- */
+/* Buttons */
 
 .botao {
     display: inline-flex;
@@ -203,7 +199,7 @@ main h1 {
     color: var(--violeta);
 }
 
-/* versão menor, usada dentro de cada linha da lista (Editar / Remover) */
+/* Compact buttons for row actions */
 .botao.pequeno {
     min-width: 0;
     height: 32px;
@@ -217,7 +213,7 @@ main h1 {
     height: 15px;
 }
 
-/* ---------- lista (cabeçalho + linhas) ---------- */
+/* List layout */
 
 #lista {
     display: flex;
@@ -232,9 +228,7 @@ main h1 {
     margin-bottom: 20px;
 }
 
-/* Cabeçalho e linhas ficam DENTRO do mesmo bloco (flex em coluna),
-   então todos têm a mesma largura e ficam alinhados.
-   --largura-acoes = largura da última coluna ("Ações"), igual no cabeçalho e nas linhas. */
+/* Share the action column width between the header and rows */
 #tabela {
     --largura-acoes: 200px;
     display: flex;
@@ -256,7 +250,7 @@ main h1 {
 
 .tabela-produtos #cabecalho,
 .tabela-produtos .linha {
-    grid-template-columns: minmax(80px, 0.8fr) minmax(160px, 2fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(110px, 1fr) 200px;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) 200px;
     min-width: 900px;
     flex-shrink: 0;
     padding: 12px 24px;
@@ -310,7 +304,7 @@ main h1 {
 #cabecalho,
 .linha {
     display: grid;
-    /* colunas de dados (dividem o espaço) + 1 coluna fixa de Ações no fim */
+    /* Flexible data columns with a fixed action column. */
     grid-template-columns: repeat(var(--colunas, 2), minmax(0, 1fr)) var(--largura-acoes);
     align-items: center;
     column-gap: 16px;
@@ -344,14 +338,12 @@ main h1 {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
-/* grupo com os botões Editar e Remover de cada linha */
 .acoes-linha {
     display: flex;
     gap: 8px;
 }
 
-/* ---------- "Área vazia" ---------- */
+/* Empty state */
 
 #vazio {
     flex: 1;
@@ -372,7 +364,7 @@ main h1 {
     height: 12%;
 }
 
-/* ---------- tela de Início ---------- */
+/* Home page */
 
 main.centralizado {
     align-items: center;
@@ -401,9 +393,7 @@ main.centralizado {
     height: 16%;
 }
 
-/* ---------- popup (adicionar / editar / remover) ----------
-   Elementos com class="popup" e o atributo HTML "popover": o navegador abre e fecha
-   (botões com popovertarget). NÃO definir "display" aqui, senão o popup fica sempre aberto. */
+/* Popovers use browser visibility; setting display here would keep them open. */
 
 .popup {
     margin: auto;

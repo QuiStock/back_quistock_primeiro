@@ -15,6 +15,7 @@ public class InicioServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Show the signed-in users name on the home page.
         LoggedUser user = (LoggedUser) request.getSession().getAttribute("loggedUser");
         request.setAttribute("nome", user.getName());
         request.getRequestDispatcher("/WEB-INF/views/inicio.jsp").forward(request, response);

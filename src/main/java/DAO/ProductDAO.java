@@ -10,6 +10,7 @@ public class ProductDAO {
 
     private final ConnectionFactory factory = new ConnectionFactory();
 
+    // Keep a missing expiration date as null in the model.
     private Product rsLine(ResultSet rs) throws SQLException {
         Product product = new Product(
             rs.getInt("id"),
@@ -77,7 +78,7 @@ public class ProductDAO {
     }
 
     public void update (Product product) throws SQLException {
-        String query = "UPDATE product SET name = ?, batch = ?, expiration_date = ?, stock_quantity = ?, price = ? WHERE id = ?;";
+        String query = "UPDATE product SET name = ?, batch = ?, brand = ?, line = ?, expiration_date = ?, stock_quantity = ?, price = ? WHERE id = ?;";
 
         try (
                 Connection conn = factory.getConnection();
@@ -85,10 +86,12 @@ public class ProductDAO {
         ) {
             smt.setString(1, product.getName());
             smt.setString(2, product.getBatch());
-            smt.setDate(3, Date.valueOf(product.getExpirationDate()));
-            smt.setInt(4, product.getQuantity());
-            smt.setDouble(5, product.getPrice());
-            smt.setInt(6, product.getId());
+            smt.setString(3, product.getBrand());
+            smt.setString(4, product.getLine());
+            smt.setDate(5, Date.valueOf(product.getExpirationDate()));
+            smt.setInt(6, product.getQuantity());
+            smt.setDouble(7, product.getPrice());
+            smt.setInt(8, product.getId());
 
             smt.executeUpdate();
         }

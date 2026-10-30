@@ -5,17 +5,17 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-//Classe que cria as conexões
+// Creates database connections from the configured environment.
 public class ConnectionFactory {
 
-    //Ler informações do .env
+    // Load local settings when available.
     private final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
     private final String url =  dotenv.get("url");
     private final String user = dotenv.get("user");
     private final String password = dotenv.get("password");
 
-    //retornar Connection, lança exceção para ser tratada por outra classe
+    // Let callers handle connection failures.
     public Connection getConnection() throws SQLException {
 
         System.out.println("user.dir = " + System.getProperty("user.dir"));

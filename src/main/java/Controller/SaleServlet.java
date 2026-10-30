@@ -53,25 +53,22 @@ public class SaleServlet extends HttpServlet {
                 }
             }
 
-            //pegando e conferindo os dados do formulario
+            // Validate form values before creating the sale.
             if (!"delete".equals(action)) {
-                int productId = Integer.parseInt(req.getParameter("product-id"));
+                int productId = readProductId(req);
                 if (productId <= 0 || productDAO.searchById(productId) == null) {
-                    throw new IllegalArgumentException("Produto invalido");
+                    throw new IllegalArgumentException("Selecione um produto válido.");
                 }
                 sale.setProductId(productId);
-                String discount = req.getParameter("discountPercentage");
-                String until = req.getParameter("promotion-valid-until");
-                if (discount == null || until == null) {
-                    throw new IllegalArgumentException("Dados incompletos");
-                }
-                sale.setDiscountPercentage(Double.parseDouble(discount));
-                sale.setPromotionValidUntil(LocalDate.parse(until));
+                sale.setDiscountPercentage(readDiscount(req));
+                sale.setPromotionValidUntil(readValidUntil(req));
                 LocalDate from = "add".equals(action) ? LocalDate.now() : sale.getSugestionDate();
                 if (!Double.isFinite(sale.getDiscountPercentage()) || sale.getDiscountPercentage() <= 0
-                        || sale.getDiscountPercentage() > 100
-                        || (from != null && sale.getPromotionValidUntil().isBefore(from))) {
-                    throw new IllegalArgumentException("Desconto ou validade invalida");
+                        || sale.getDiscountPercentage() > 100) {
+                    throw new IllegalArgumentException("Informe um desconto válido, maior que zero e até 100%.");
+                }
+                if (from != null && sale.getPromotionValidUntil().isBefore(from)) {
+                    throw new IllegalArgumentException("A validade deve ser igual ou posterior ao início da promoção.");
                 }
             }
 
@@ -90,7 +87,8 @@ public class SaleServlet extends HttpServlet {
             }
             resp.sendRedirect(req.getContextPath() + "/sales");
         } catch (IllegalArgumentException | DateTimeException e) {
-            req.setAttribute("erro", "Informe um produto valido, desconto entre 0 e 100 e validade a partir do inicio da promocao.");
+            req.setAttribute("erro", e instanceof DateTimeException || e instanceof NumberFormatException
+                    ? "Confira os dados da promoção." : e.getMessage());
             doGet(req, resp);
         } catch (SQLException e) {
             if ("23503".equals(e.getSQLState())) {
@@ -102,6 +100,30 @@ public class SaleServlet extends HttpServlet {
             } else {
                 throw new ServletException("Erro ao salvar promocao", e);
             }
+        }
+    }
+
+    private int readProductId(HttpServletRequest req) {
+        try {
+            return Integer.parseInt(req.getParameter("product-id"));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Selecione um produto válido.");
+        }
+    }
+
+    private double readDiscount(HttpServletRequest req) {
+        try {
+            return Double.parseDouble(req.getParameter("discountPercentage"));
+        } catch (NullPointerException | NumberFormatException e) {
+            throw new IllegalArgumentException("Informe um desconto válido, maior que zero e até 100%.");
+        }
+    }
+
+    private LocalDate readValidUntil(HttpServletRequest req) {
+        try {
+            return LocalDate.parse(req.getParameter("promotion-valid-until"));
+        } catch (NullPointerException | DateTimeException e) {
+            throw new IllegalArgumentException("Informe uma data de validade válida.");
         }
     }
 }

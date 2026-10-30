@@ -24,6 +24,7 @@
 
     <main>
         <h1>Gerentes regionais</h1>
+        <c:if test="${not empty erro}"><p class="alerta" id="erro" role="alert"><c:out value="${erro}"/></p></c:if>
         <c:choose>
             <c:when test="${empty managers}">
                 <div id="vazio">
@@ -92,7 +93,6 @@
             }
         }
 
-        // fecha ao clicar fora (no fundo escuro)
         modal.addEventListener('click', function (e) {
             if (e.target === modal) modal.close();
         });

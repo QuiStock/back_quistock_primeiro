@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<form class="form-admin" action="${pageContext.request.contextPath}/regionalManagers" method="post">
+<form class="form-admin" action="${pageContext.request.contextPath}/regionalManagers" method="post" novalidate>
     <h2>${empty manager ? 'Adicionar gerente' : 'Editar gerente'}</h2>
 
     <input type="hidden" value="${manager.id}" name="id">

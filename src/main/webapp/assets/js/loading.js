@@ -7,7 +7,7 @@
             return loading;
         }
 
-        //cria a tela de carregamento caso a pagina nao tenha colocado o html
+        // Add the overlay when the page does not include it.
         loading = document.createElement("div");
         loading.id = "loading";
         loading.className = "loading hidden";
@@ -18,7 +18,7 @@
         return loading;
     }
 
-    //mostra o carregamento enquanto a proxima acao acontece
+    // Show the overlay while navigation is in progress.
     window.mostrarLoading = function () {
         const loading = criarLoading();
 
@@ -26,7 +26,7 @@
         loading.setAttribute("aria-hidden", "false");
     };
 
-    //esconde o carregamento quando a pagina termina de abrir
+    // Hide it once the page is ready.
     window.esconderLoading = function () {
         const loading = document.getElementById("loading");
 
@@ -41,12 +41,12 @@
     document.addEventListener("DOMContentLoaded", function () {
         criarLoading();
 
-        //mostra o carregamento em qualquer formulario de crud enviado
+        // Show the overlay after a valid CRUD form is submitted.
         document.addEventListener("submit", function (event) {
             if (!event.defaultPrevented) {
                 const modal = event.target.closest("dialog[open], [popover]:popover-open");
 
-                //fecha o modal depois que o formulario passou pela validacao
+                // Close the modal before showing the overlay.
                 if (modal) {
                     if (modal.matches("dialog")) {
                         modal.close();
@@ -59,7 +59,7 @@
             }
         });
 
-        //mostra o carregamento quando for trocar de tela
+        // Show the overlay when leaving the page.
         document.addEventListener("click", function (event) {
             const link = event.target.closest("a");
 
@@ -86,7 +86,7 @@
         });
     });
 
-    //esconde o loading quando o navegador termina de voltar ou abrir a pagina
+    // Clear the overlay after back or forward navigation.
     window.addEventListener("pageshow", window.esconderLoading);
     window.addEventListener("load", window.esconderLoading);
 })();

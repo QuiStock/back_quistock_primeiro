@@ -24,7 +24,7 @@
 
     <main>
         <h1>Promoções</h1>
-        <c:if test="${not empty erro}"><p class="alerta" role="alert"><c:out value="${erro}"/></p></c:if>
+        <c:if test="${not empty erro}"><p class="alerta" id="erro" role="alert"><c:out value="${erro}"/></p></c:if>
         <c:choose>
             <c:when test="${empty itens}">
                 <div id="vazio">
@@ -61,7 +61,7 @@
         </c:choose>
     </main>
     <div id="popup-adicionar" class="popup" popover>
-        <form method="post" action="${ctx}/sales">
+        <form method="post" action="${ctx}/sales" novalidate>
             <h2>Adicionar promoção</h2>
             <input type="hidden" name="action" value="add">
             <div class="campo">
@@ -90,7 +90,7 @@
     </div>
     <c:forEach var="item" items="${itens}">
         <div id="editar-${item.id}" class="popup" popover>
-            <form method="post" action="${ctx}/sales">
+            <form method="post" action="${ctx}/sales" novalidate>
                 <h2>Editar promoção</h2>
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="${item.id}">

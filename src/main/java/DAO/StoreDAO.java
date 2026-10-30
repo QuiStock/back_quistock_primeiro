@@ -13,22 +13,19 @@ public class StoreDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    //Metodo pra imprimir todas as lojas
     public List<Store> readStores() throws SQLException {
 
         List<Store> stores = new ArrayList<>();
 
-        //nao precisa trazer a senha pra listagem
+        // The list only needs public store details.
         String sql = "SELECT s.id, s.email, s.region_type_id, r.name AS region_name " +
                 "FROM store s JOIN region_type r ON r.id = s.region_type_id ORDER BY s.id";
 
 
-        //try pra listar tudo de todas as lojas
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql);
              ResultSet result = sttmt.executeQuery()) {
 
-            //laço pra repetir sempre q tiver loja na fila
             while (result.next()) {
                 Store store = new Store();
                 store.setId(result.getInt("id"));
@@ -41,12 +38,10 @@ public class StoreDAO {
         return stores;
     }
 
-    //metodo pra criar uma loja nova
     public void createStore(Store store) throws SQLException {
 
         String sql = "INSERT INTO store (email, password, region_type_id) VALUES (?, ?, ?)";
 
-        //try pra adicionar informaçoes na nova loja
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)){
 
@@ -58,19 +53,16 @@ public class StoreDAO {
     }
 
 
-    //metodo pra encontrar a loja que deseja alterar
     public Store foundStore(int id) throws SQLException {
 
         String sql = "SELECT s.id, s.email, s.password, s.region_type_id, r.name AS region_name " +
                 "FROM store s JOIN region_type r ON r.id = s.region_type_id WHERE s.id = ?";
 
-        //try pra conectar com o banco e executar a query
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement sttmt = conn.prepareStatement(sql)) {
 
             sttmt.setInt(1, id);
 
-            //try pra retornar a loja do id especificadox
             try (ResultSet result = sttmt.executeQuery()) {
                 if (result.next()) {
                     Store store = new Store();
@@ -82,11 +74,10 @@ public class StoreDAO {
                     return store;
                 }
             }
-            return null; //se nao encontrar nenhuma loja com esse id retorna null
+            return null;
         }
     }
 
-    //metodo pra atualizar a loja que encontrou no metodo passado
     public int updateStore(Store store) throws SQLException{
 
         String sql = "UPDATE store SET email = ?, password = ?, region_type_id = ? WHERE id = ?";
@@ -102,7 +93,6 @@ public class StoreDAO {
         }
     }
 
-    //metodo pra excluir loja do banco de acordo com o id
     public int deleteStore(int id) throws SQLException {
 
         String sql = "DELETE FROM store WHERE id = ?";

@@ -8,7 +8,7 @@ import lombok.*;
 public class RegionType {
     private int id;
     private String name;
-    //nome que o jsp usa pra mostrar a regiao
+    // The JSP uses this property name for region labels.
     public String getNome() {
         return name;
     }

@@ -1,9 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<%--
-    TELA: Gerentes   |   Servlet: /gerentes   |   Arquivo: WEB-INF/views/gerentes.jsp
---%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -17,8 +14,6 @@
     <title>QuiStock - Gerentes</title>
 </head>
 <body>
-
-    <%-- Menu lateral (copiado em cada página: aqui não existe include) --%>
     <aside>
         <img src="${ctx}/assets/logo-branca.png" alt="QuiStock" id="logo">
         <jsp:include page="/WEB-INF/views/menu.jsp"><jsp:param name="ativo" value="gerentes"/></jsp:include>
@@ -27,8 +22,6 @@
     <main>
         <h1>Gerentes</h1>
 
-        <%-- Mensagem de erro: o Servlet guarda o código na sessão e ele aparece só uma vez.
-             O CSS (#erro) faz a mensagem sumir sozinha depois de 4 segundos. --%>
         <c:if test="${not empty erro}">
             <p class="alerta" id="erro" role="alert">
                 <c:choose>
@@ -42,16 +35,12 @@
         </c:if>
 
         <c:choose>
-
-            <%-- Sem registros: tela "Área vazia" --%>
             <c:when test="${empty itens}">
                 <div id="vazio">
                     <h2>Área vazia</h2>
                     <button type="button" class="botao verde" popovertarget="popup-adicionar">Adicionar gerente</button>
                 </div>
             </c:when>
-
-            <%-- Com registros: botão Adicionar (fora da lista) + cabeçalho + linhas --%>
             <c:otherwise>
                 <div id="lista">
 
@@ -71,7 +60,6 @@
                                 <span><c:out value="${item.nome}"/></span>
                                 <span><c:out value="${item.email}"/></span>
 
-                                <%-- Botões desta linha: abrem os popups "editar-ID" e "remover-ID" --%>
                                 <div class="acoes-linha">
                                     <button type="button" class="botao pequeno" popovertarget="editar-${item.id}"><img src="${ctx}/assets/icons/editar.svg" alt="">Editar</button>
                                     <button type="button" class="botao pequeno perigo" popovertarget="remover-${item.id}"><img src="${ctx}/assets/icons/remover.svg" alt="">Remover</button>
@@ -86,7 +74,6 @@
     </main>
 
 
-    <%-- ================= POPUP: ADICIONAR (formulário vazio) ================= --%>
     <div id="popup-adicionar" class="popup" popover>
         <form method="post" action="${ctx}/gerentes" autocomplete="off">
             <h2>Adicionar gerente</h2>
@@ -110,10 +97,7 @@
     </div>
 
 
-    <%-- ============ POPUPS DE CADA LINHA (um par Editar + Remover por registro) ============ --%>
     <c:forEach var="item" items="${itens}">
-
-        <%-- EDITAR: o formulário já vem preenchido com os dados deste registro --%>
         <div id="editar-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/gerentes" autocomplete="off">
                 <h2>Editar gerente</h2>
@@ -135,8 +119,6 @@
                 </div>
             </form>
         </div>
-
-        <%-- REMOVER: pede confirmação mostrando o nome do registro --%>
         <div id="remover-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/gerentes">
                 <h2>Remover</h2>
