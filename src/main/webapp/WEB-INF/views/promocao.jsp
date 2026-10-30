@@ -65,8 +65,14 @@
             <h2>Adicionar promoção</h2>
             <input type="hidden" name="action" value="add">
             <div class="campo">
-                <label for="add-product">ID do produto</label>
-                <input id="add-product" type="number" name="product-id" min="1" step="1" required>
+                <label for="add-product">Produto</label>
+                <select id="add-product" name="product-id" required>
+                    <option value="">Selecione um produto</option>
+                    <c:forEach var="produto" items="${produtos}">
+                        <option value="${produto.id}"><c:out value="${produto.name}"/></option>
+                    </c:forEach>
+                </select>
+                <c:if test="${empty produtos}"><p role="status">Nenhum produto cadastrado.</p></c:if>
             </div>
             <div class="campo">
                 <label for="popup-adicionar-discountPercentage">Desconto (%)</label>
@@ -89,6 +95,16 @@
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="${item.id}">
 
+                <div class="campo">
+                    <label for="editar-${item.id}-product">Produto</label>
+                    <select id="editar-${item.id}-product" name="product-id" required>
+                        <option value="">Selecione um produto</option>
+                        <c:forEach var="produto" items="${produtos}">
+                            <option value="${produto.id}" <c:if test="${produto.id eq item.productId}">selected</c:if>><c:out value="${produto.name}"/></option>
+                        </c:forEach>
+                    </select>
+                    <c:if test="${empty produtos}"><p role="status">Nenhum produto cadastrado.</p></c:if>
+                </div>
                 <div class="campo">
                     <label for="editar-${item.id}-discountPercentage">Desconto (%)</label>
                     <input id="editar-${item.id}-discountPercentage" type="number" name="discountPercentage" min="0.01" max="100" step="0.01" required value="<c:out value='${item.discountPercentage}'/>">

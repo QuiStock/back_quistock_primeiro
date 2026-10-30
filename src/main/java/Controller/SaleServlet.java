@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.SaleDAO;
+import DAO.ProductDAO;
 import Model.Sale;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,6 +17,7 @@ import java.time.DateTimeException;
 @WebServlet("/sales")
 public class SaleServlet extends HttpServlet {
     private final SaleDAO saleDAO = new SaleDAO();
+    private final ProductDAO productDAO = new ProductDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -23,6 +25,7 @@ public class SaleServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         try {
             req.setAttribute("itens", saleDAO.select());
+            req.setAttribute("produtos", productDAO.select());
             req.getRequestDispatcher("/WEB-INF/views/promocao.jsp").forward(req, resp);
         } catch (SQLException e) {
             throw new ServletException("Erro ao consultar promocoes", e);
@@ -52,6 +55,11 @@ public class SaleServlet extends HttpServlet {
 
             //pegando e conferindo os dados do formulario
             if (!"delete".equals(action)) {
+                int productId = Integer.parseInt(req.getParameter("product-id"));
+                if (productId <= 0 || productDAO.searchById(productId) == null) {
+                    throw new IllegalArgumentException("Produto invalido");
+                }
+                sale.setProductId(productId);
                 String discount = req.getParameter("discountPercentage");
                 String until = req.getParameter("promotion-valid-until");
                 if (discount == null || until == null) {
@@ -69,11 +77,6 @@ public class SaleServlet extends HttpServlet {
 
             switch (action) {
                 case "add":
-                    int productId = Integer.parseInt(req.getParameter("product-id"));
-                    if (productId <= 0) {
-                        throw new IllegalArgumentException("Produto invalido");
-                    }
-                    sale.setProductId(productId);
                     saleDAO.insert(sale);
                     break;
                 case "edit":

@@ -63,8 +63,14 @@
             <h2>Adicionar pedido</h2>
             <input type="hidden" name="action" value="add">
             <div class="campo">
-                <label for="popup-adicionar-product-name">Produto</label>
-                <input id="popup-adicionar-product-name" type="text" name="product-name" maxlength="255" required>
+                <label for="add-product">Produto</label>
+                <select id="add-product" name="product-id" required>
+                    <option value="">Selecione um produto</option>
+                    <c:forEach var="produto" items="${produtos}">
+                        <option value="${produto.id}"><c:out value="${produto.name}"/></option>
+                    </c:forEach>
+                </select>
+                <c:if test="${empty produtos}"><p role="status">Nenhum produto cadastrado.</p></c:if>
             </div>
             <div class="campo">
                 <label for="popup-adicionar-total-order-price">Preço total</label>
@@ -83,8 +89,14 @@
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="${item.id}">
                 <div class="campo">
-                    <label for="editar-${item.id}-product-name">Produto</label>
-                    <input id="editar-${item.id}-product-name" type="text" name="product-name" maxlength="255" required value="<c:out value='${item.productName}'/>">
+                    <label for="editar-${item.id}-product">Produto</label>
+                    <select id="editar-${item.id}-product" name="product-id" required>
+                        <option value="">Selecione um produto</option>
+                        <c:forEach var="produto" items="${produtos}">
+                            <option value="${produto.id}" <c:if test="${produto.id eq item.productId}">selected</c:if>><c:out value="${produto.name}"/></option>
+                        </c:forEach>
+                    </select>
+                    <c:if test="${empty produtos}"><p role="status">Nenhum produto cadastrado.</p></c:if>
                 </div>
                 <div class="campo">
                     <label for="editar-${item.id}-total-order-price">Preço total</label>

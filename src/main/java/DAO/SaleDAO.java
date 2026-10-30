@@ -24,13 +24,14 @@ public class SaleDAO {
         sale.setPromotionValidUntil(validUntil == null ? null : validUntil.toLocalDate());
         sale.setDiscountPercentage(rs.getDouble("discount_percentage"));
         sale.setProductName(rs.getString("product_name"));
+        sale.setProductId(rs.getInt("product_id"));
         return sale;
 
     }
 
     public List<Sale> select() throws SQLException {
         String query = """
-                        SELECT id, suggestion_type, suggestion_date, discount_percentage, promotion_valid_until, product_name FROM suggestions_vw WHERE suggestion_type = 'promotion';
+                        SELECT id, suggestion_type, suggestion_date, discount_percentage, promotion_valid_until, product_name, product_id FROM suggestions_vw WHERE suggestion_type = 'promotion';
                         """;
         List<Sale> list = new ArrayList<>();
 
@@ -82,7 +83,7 @@ public class SaleDAO {
     }
 
     public void update (Sale sale) throws SQLException {
-        String query = "update  suggestion set discount_percentage = ?, promotion_valid_until = ? where id = ? and suggestion_type = 'promotion';";
+        String query = "update suggestion set discount_percentage = ?, promotion_valid_until = ?, product_id = ? where id = ? and suggestion_type = 'promotion';";
 
         try (
                 Connection conn = factory.getConnection();
@@ -90,7 +91,8 @@ public class SaleDAO {
         )  {
             smt.setDouble(1, sale.getDiscountPercentage());
             smt.setDate(2, Date.valueOf(sale.getPromotionValidUntil()));
-            smt.setInt(3, sale.getId());
+            smt.setInt(3, sale.getProductId());
+            smt.setInt(4, sale.getId());
             smt.executeUpdate();
         }
     }
