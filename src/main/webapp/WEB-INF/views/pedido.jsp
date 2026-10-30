@@ -23,25 +23,92 @@
     </aside>
 
     <main>
-        <h1>Pedido</h1>
-        <div id="lista">
-            <div id="tabela" class="tabela-consulta tabela-pedido">
-                <div id="cabecalho">
-                    <h3>Data</h3>
-                    <h3>Preço Total</h3>
-                    <h3>Produto</h3>
+        <h1>Pedidos</h1>
+        <c:if test="${not empty erro}"><p class="alerta" role="alert"><c:out value="${erro}"/></p></c:if>
+        <c:choose>
+            <c:when test="${empty itens}">
+                <div id="vazio">
+                    <h2>Área vazia</h2>
+                    <button type="button" class="botao verde" popovertarget="popup-adicionar">Adicionar pedido</button>
                 </div>
-                <c:forEach var="item" items="${itens}">
-                    <div class="linha">
-                        <span><c:out value="${item.data}"/></span>
-                        <span><c:out value="${item.precoPedido}"/></span>
-                        <span><c:out value="${item.produto}"/></span>
+            </c:when>
+            <c:otherwise>
+                <div id="lista">
+                    <div id="botoes"><button type="button" class="botao" popovertarget="popup-adicionar"><img src="${ctx}/assets/icons/adicionar.svg" alt="">Adicionar</button></div>
+                    <div id="tabela" class="tabela-pedido" style="--colunas: 3; overflow-x: auto">
+                        <div id="cabecalho">
+                            <h3>Data</h3>
+                            <h3>Preço total</h3>
+                            <h3>Produto</h3>
+                            <h3>Ações</h3>
+                        </div>
+                        <c:forEach var="item" items="${itens}">
+                            <div class="linha">
+                                <span><c:out value="${item.orderDate}"/></span>
+                                <span><c:out value="${item.totalOrderPrice}"/></span>
+                                <span><c:out value="${item.productName}"/></span>
+                                <div class="acoes-linha">
+                                    <button type="button" class="botao pequeno" popovertarget="editar-${item.id}"><img src="${ctx}/assets/icons/editar.svg" alt="">Editar</button>
+                                    <button type="button" class="botao pequeno perigo" popovertarget="remover-${item.id}"><img src="${ctx}/assets/icons/remover.svg" alt="">Remover</button>
+                                </div>
+                            </div>
+                        </c:forEach>
                     </div>
-                </c:forEach>
-            </div>
-            <c:if test="${empty itens}"><p class="mensagem-vazia">Nenhum pedido cadastrado.</p></c:if>
-        </div>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </main>
+    <div id="popup-adicionar" class="popup" popover>
+        <form method="post" action="${ctx}/orders">
+            <h2>Adicionar pedido</h2>
+            <input type="hidden" name="action" value="add">
+            <div class="campo">
+                <label for="popup-adicionar-product-name">Produto</label>
+                <input id="popup-adicionar-product-name" type="text" name="product-name" maxlength="255" required>
+            </div>
+            <div class="campo">
+                <label for="popup-adicionar-total-order-price">Preço total</label>
+                <input id="popup-adicionar-total-order-price" type="number" name="total-order-price" min="0" step="0.01" required>
+            </div>
+            <div class="acoes-popup">
+                <button type="button" class="botao" popovertarget="popup-adicionar" popovertargetaction="hide">Cancelar</button>
+                <button type="submit" class="botao primario">Salvar</button>
+            </div>
+        </form>
+    </div>
+    <c:forEach var="item" items="${itens}">
+        <div id="editar-${item.id}" class="popup" popover>
+            <form method="post" action="${ctx}/orders">
+                <h2>Editar pedido</h2>
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="id" value="${item.id}">
+                <div class="campo">
+                    <label for="editar-${item.id}-product-name">Produto</label>
+                    <input id="editar-${item.id}-product-name" type="text" name="product-name" maxlength="255" required value="<c:out value='${item.productName}'/>">
+                </div>
+                <div class="campo">
+                    <label for="editar-${item.id}-total-order-price">Preço total</label>
+                    <input id="editar-${item.id}-total-order-price" type="number" name="total-order-price" min="0" step="0.01" required value="<c:out value='${item.totalOrderPrice}'/>">
+                </div>
+                <div class="acoes-popup">
+                    <button type="button" class="botao" popovertarget="editar-${item.id}" popovertargetaction="hide">Cancelar</button>
+                    <button type="submit" class="botao primario">Salvar</button>
+                </div>
+            </form>
+        </div>
+        <div id="remover-${item.id}" class="popup" popover>
+            <form method="post" action="${ctx}/orders">
+                <h2>Remover pedido</h2>
+                <p>Deseja realmente remover pedido de <strong><c:out value="${item.productName}"/></strong>?</p>
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" value="${item.id}">
+                <div class="acoes-popup">
+                    <button type="button" class="botao" popovertarget="remover-${item.id}" popovertargetaction="hide">Cancelar</button>
+                    <button type="submit" class="botao perigo-solido">Remover</button>
+                </div>
+            </form>
+        </div>
+    </c:forEach>
     <script src="${ctx}/assets/js/loading.js"></script>
 </body>
 </html>
