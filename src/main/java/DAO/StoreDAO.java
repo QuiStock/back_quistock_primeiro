@@ -13,6 +13,7 @@ public class StoreDAO {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
+    // Handles read, Stores
     public List<Store> readStores() throws SQLException {
 
         List<Store> stores = new ArrayList<>();
@@ -38,6 +39,7 @@ public class StoreDAO {
         return stores;
     }
 
+    // Handles create, Store
     public void createStore(Store store) throws SQLException {
 
         String sql = "INSERT INTO store (email, password, region_type_id) VALUES (?, ?, ?)";
@@ -53,6 +55,7 @@ public class StoreDAO {
     }
 
 
+    // Handles found, Store
     public Store foundStore(int id) throws SQLException {
 
         String sql = "SELECT s.id, s.email, s.password, s.region_type_id, r.name AS region_name " +
@@ -78,6 +81,7 @@ public class StoreDAO {
         }
     }
 
+    // Handles update, Store
     public int updateStore(Store store) throws SQLException{
 
         String sql = "UPDATE store SET email = ?, password = ?, region_type_id = ? WHERE id = ?";
@@ -93,6 +97,7 @@ public class StoreDAO {
         }
     }
 
+    // Handles delete, Store
     public int deleteStore(int id) throws SQLException {
 
         String sql = "DELETE FROM store WHERE id = ?";

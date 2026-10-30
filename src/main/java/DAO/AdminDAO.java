@@ -14,6 +14,7 @@ import java.util.List;
 public class AdminDAO {
     ConnectionFactory factory = new ConnectionFactory();
 
+    // Handles insert
     public void insert (Admin admin) throws SQLException {
 
         String query = "insert into super_admin (email, password, name) values(?, ?, ?); ";
@@ -65,14 +66,19 @@ public class AdminDAO {
         }
     }
 
+    // Handles search, By, Email
     public Admin searchByEmail(String email) throws SQLException {
+        // Applying the method logic, using the provided values
         return searchBy("where email = ?", stmt -> stmt.setString(1, email));
     }
 
+    // Handles search, By, Id
     public Admin searchById(int id) throws SQLException {
+        // Applying the method logic, using the provided values
         return searchBy("where id = ?", stmt -> stmt.setInt(1, id));
     }
 
+    // Handles update
     public void update (Admin admin) throws SQLException {
 
         String query = "update super_admin set email = ?, password = ?, name = ? where id = ?;";
@@ -92,6 +98,7 @@ public class AdminDAO {
         }
     }
 
+    // Handles delete
     public void delete(Admin admin) throws SQLException{
 
         String query = "delete from super_admin where id = ?;";
@@ -108,6 +115,7 @@ public class AdminDAO {
         }
     }
 
+    // Handles select
     public List<Admin> select() throws SQLException{
 
         String query = "select * from super_admin;";

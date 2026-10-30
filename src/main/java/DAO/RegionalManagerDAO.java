@@ -33,6 +33,7 @@ public class RegionalManagerDAO {
         return manager;
     }
 
+    // Handles select
     public List<RegionalManager> select() throws SQLException {
 
         List<RegionalManager> regionalManagers = new ArrayList<>();
@@ -49,6 +50,7 @@ public class RegionalManagerDAO {
         return regionalManagers;
     }
 
+    // Handles insert
     public void insert(RegionalManager regionalManager) throws SQLException {
 
         String sql = "INSERT INTO regional_manager (name, email, password, region_type_id) VALUES ( ?, ?, ?, ?)";
@@ -72,7 +74,9 @@ public class RegionalManagerDAO {
         void bind(PreparedStatement stmt) throws SQLException;
     }
 
+    // Handles search, By, Id
     public RegionalManager searchById(int id) throws SQLException {
+        // Applying the method logic, using the provided values
         return searchBy("where rm.id = ?", stmt -> stmt.setInt(1, id));
     }
 
@@ -91,10 +95,13 @@ public class RegionalManagerDAO {
 
     }
 
+    // Handles search, By, Email
     public RegionalManager searchByEmail(String email) throws SQLException {
+        // Applying the method logic, using the provided values
         return searchBy("WHERE rm.email = ?",  stmt -> stmt.setString(1, email));
     }
 
+    // Handles update
     public int update(RegionalManager regionalManager) throws SQLException{
 
         String sql = "UPDATE regional_manager SET name = ?, email = ?, password = ?, region_type_id = ? WHERE id = ?";
@@ -114,6 +121,7 @@ public class RegionalManagerDAO {
 
     }
 
+    // Handles delete
     public int delete(int id) throws SQLException {
 
         String sql = "DELETE FROM regional_manager WHERE id = ?";

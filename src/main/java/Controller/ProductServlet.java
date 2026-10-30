@@ -21,8 +21,10 @@ public class ProductServlet extends HttpServlet {
     private final StoreDAO storeDAO = new StoreDAO();
 
     @Override
+    // Handles do, Get
     protected void doGet(HttpServletRequest req,  HttpServletResponse resp)
             throws ServletException, IOException {
+        // Applying the method logic, using the provided values
         req.setCharacterEncoding("UTF-8");
 
         String action = req.getParameter("action");
@@ -60,8 +62,10 @@ public class ProductServlet extends HttpServlet {
     }
 
     @Override
+    // Handles do, Post
     protected void doPost(HttpServletRequest req,  HttpServletResponse resp)
             throws ServletException, IOException {
+        // Applying the method logic, using the provided values
         req.setCharacterEncoding("UTF-8");
 
         String action = req.getParameter("action");
@@ -95,8 +99,10 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
+    // Handles add
     private void add(HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, IOException {
+        // Applying the method logic, using the provided values
         Product  product = new Product();
 
         product.setName(req.getParameter("name"));
@@ -118,8 +124,10 @@ public class ProductServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/products");
     }
 
+    // Handles delete
     private void delete(HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, IOException {
+        // Applying the method logic, using the provided values
         Product product = new Product();
         int id = Integer.parseInt(req.getParameter("id"));
 
@@ -135,8 +143,10 @@ public class ProductServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/products");
     }
 
+    // Handles update
     private void update (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, IOException{
+        // Applying the method logic, using the provided values
         Product product = new Product();
 
         int id = Integer.parseInt(req.getParameter("id"));
@@ -179,17 +189,23 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
+    // Handles validate, Text
     private void validateText(String value, String field) {
+        // Applying the method logic, using the provided values
         validateAlphaText(value, field);
     }
 
+    // Handles validate, Alpha, Text
     private void validateAlphaText(String value, String field) {
+        // Applying the method logic, using the provided values
         if (value == null || !value.trim().matches("^[\\p{L}]+(?: +[\\p{L}]+)*$")) {
             throw new IllegalArgumentException(field + " inválido: use somente letras e espaços.");
         }
     }
 
+    // Handles required, Parameter
     private String requiredParameter(HttpServletRequest req, String name) {
+        // Applying the method logic, using the provided values
         String value = req.getParameter(name);
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("Preencha todos os campos antes de salvar.");

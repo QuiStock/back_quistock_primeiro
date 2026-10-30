@@ -11,7 +11,9 @@ public class OrderDAO {
 
     private final ConnectionFactory factory = new ConnectionFactory();
 
+    // Handles rs, Line
     private Order rsLine(ResultSet rs) throws SQLException {
+        // Applying the method logic, using the provided values
         Date suggestionDate = rs.getDate("suggestion_date");
         Date orderDate = rs.getDate("order_date");
         return new Order(
@@ -25,7 +27,9 @@ public class OrderDAO {
         );
     }
 
+    // Handles select
     public List<Order> select() throws SQLException {
+        // Applying the method logic, using the provided values
         String query = """
                 select s.id, s.suggestion_type, s.suggestion_date, s.order_date,
                        s.total_order_price, p.name as product_name, s.product_id
@@ -48,7 +52,9 @@ public class OrderDAO {
         return orders;
     }
 
+    // Handles insert
     public void insert(Order order) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = """
                 insert into suggestion(suggestion_type, suggestion_date, order_date, total_order_price, product_id)
                 values ('order', ?, ?, ?, ?)
@@ -66,7 +72,9 @@ public class OrderDAO {
         }
     }
 
+    // Handles delete
     public void delete(Order order) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "delete from suggestion where id = ? and suggestion_type = 'order';";
 
         try (
@@ -79,7 +87,9 @@ public class OrderDAO {
         }
     }
 
+    // Handles search, By, Id
     public Order searchById(int id) throws SQLException{
+        // Applying the method logic, using the provided values
         String query = """
                 select s.id, s.suggestion_type, s.suggestion_date, s.order_date,
                        s.total_order_price, p.name as product_name, s.product_id

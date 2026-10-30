@@ -32,7 +32,9 @@ public class StoreServlet extends HttpServlet {
     }
 
     @Override
+    // Handles do, Post
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Applying the method logic, using the provided values
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
@@ -66,7 +68,9 @@ public class StoreServlet extends HttpServlet {
         }
     }
 
+    // Handles create, Store
     private void createStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        // Applying the method logic, using the provided values
         String email = request.getParameter("storeEmail");
         String password = request.getParameter("storePassword");
         String regionTypeId = request.getParameter("regionTypeId");
@@ -133,7 +137,9 @@ public class StoreServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/stores");
     }
 
+    // Handles delete, Store
     private void deleteStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        // Applying the method logic, using the provided values
         int id = parseId(request.getParameter("storeId"));
         if (storeDAO.deleteStore(id) == 0) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Loja não encontrada");
@@ -151,7 +157,9 @@ public class StoreServlet extends HttpServlet {
         return id;
     }
 
+    // Handles valid, Email
     private boolean validEmail(String email) {
+        // Applying the method logic, using the provided values
         if (email == null) {
             return false;
         }
@@ -161,7 +169,9 @@ public class StoreServlet extends HttpServlet {
         return email.trim().length() <= 320 && email.trim().matches(regex);
     }
 
+    // Handles valid, Password
     private boolean validPassword(String pass){
+        // Applying the method logic, using the provided values
         if (pass == null){
             return false;
         }
@@ -171,8 +181,10 @@ public class StoreServlet extends HttpServlet {
         return pass.trim().matches(regex);
     }
 
+    // Handles show, Validation, Error
     private void showValidationError(HttpServletRequest request, HttpServletResponse response, String code)
             throws ServletException, IOException {
+        // Applying the method logic, using the provided values
         request.setAttribute("erro", code);
         doGet(request, response);
     }

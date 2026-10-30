@@ -25,6 +25,7 @@ public class LoginServlet extends HttpServlet {
 
     // Send each successful login to the right page.
     @Override
+    // Handles do, Post
     protected void doPost(
             HttpServletRequest req,
             HttpServletResponse resp

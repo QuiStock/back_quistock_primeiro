@@ -18,6 +18,7 @@ public class AdminServlet extends HttpServlet {
     private final AdminDAO dao = new AdminDAO();
 
     @Override
+    // Handles do, Get
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -57,6 +58,7 @@ public class AdminServlet extends HttpServlet {
     }
 
     @Override
+    // Handles do, Post
     protected void doPost(
             HttpServletRequest req,
             HttpServletResponse resp
@@ -89,6 +91,7 @@ public class AdminServlet extends HttpServlet {
 
     }
 
+    // Handles delete
     private void delete (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException,  IOException{
 
@@ -100,6 +103,7 @@ public class AdminServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admins");
     }
 
+    // Handles update
     private void update (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
 
@@ -138,8 +142,10 @@ public class AdminServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admins");
     }
 
+    // Handles add
     private void add (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
+        // Applying the method logic, using the provided values
         String name = req.getParameter("name");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
@@ -166,22 +172,30 @@ public class AdminServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admins");
     }
 
+    // Handles valid, Name
     private boolean validName(String name) {
+        // Applying the method logic, using the provided values
         return name != null && name.trim().length() <= 100
                 && name.trim().matches("^[\\p{L}]+(?:[ '\\u2019-][\\p{L}]+)*$");
     }
 
+    // Handles valid, Email
     private boolean validEmail(String email) {
+        // Applying the method logic, using the provided values
         return email != null && email.trim().length() <= 150
                 && email.trim().matches("^[A-Za-z0-9À-ÿ._%+-]+@[A-Za-z0-9À-ÿ-]+\\.[A-Za-z0-9À-ÿ.-]+$");
     }
 
+    // Handles valid, Password
     private boolean validPassword(String password) {
+        // Applying the method logic, using the provided values
         return password != null && password.trim().matches("^[a-zA-Z0-9._]{8,50}$");
     }
 
+    // Handles show, Validation, Error
     private void showValidationError(HttpServletRequest req, HttpServletResponse resp, String message)
             throws ServletException, IOException {
+        // Applying the method logic, using the provided values
         req.setAttribute("erro", message);
         doGet(req, resp);
     }

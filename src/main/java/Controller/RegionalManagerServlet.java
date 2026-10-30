@@ -19,6 +19,7 @@ public class RegionalManagerServlet extends HttpServlet{
     private final RegionTypeDAO regionDAO = new RegionTypeDAO();
 
     @Override
+    // Handles do, Get
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -61,6 +62,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
 
     @Override
+    // Handles do, Post
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         // Read submitted names as UTF-8.
@@ -97,7 +99,9 @@ public class RegionalManagerServlet extends HttpServlet{
         }
     }
 
+    // Handles add
     private void add (HttpServletRequest req, HttpServletResponse resp) throws SQLException, ServletException, IOException{
+        // Applying the method logic, using the provided values
         RegionalManager manager = new RegionalManager();
         String email = req.getParameter("email");
         String password = req.getParameter("password");
@@ -134,6 +138,7 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
+    // Handles update
     private void update (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
 
@@ -186,6 +191,7 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
+    // Handles delete
     private void delete (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException,  IOException{
 
@@ -195,7 +201,9 @@ public class RegionalManagerServlet extends HttpServlet{
         resp.sendRedirect(req.getContextPath() + "/regionalManagers");
     }
 
+    // Handles valid, Email
     private boolean validEmail(String email) {
+        // Applying the method logic, using the provided values
         if (email == null) {
             return false;
         }
@@ -205,7 +213,9 @@ public class RegionalManagerServlet extends HttpServlet{
         return email.trim().length() <= 320 && email.trim().matches(regex);
     }
 
+    // Handles valid, Password
     private boolean validPassword(String pass){
+        // Applying the method logic, using the provided values
         if (pass == null){
             return false;
         }
@@ -215,6 +225,7 @@ public class RegionalManagerServlet extends HttpServlet{
         return pass.trim().matches(regex);
     }
 
+    // Handles valid, Name
     private boolean validName(String name){
 
         if(name == null){
@@ -227,8 +238,10 @@ public class RegionalManagerServlet extends HttpServlet{
 
     }
 
+    // Handles show, Validation, Error
     private void showValidationError(HttpServletRequest req, HttpServletResponse resp, String message)
             throws ServletException, IOException {
+        // Applying the method logic, using the provided values
         req.setAttribute("erro", message);
         try {
             req.setAttribute("managers", dao.select());

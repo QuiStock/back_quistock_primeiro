@@ -27,7 +27,9 @@ public class ProductDAO {
         return product;
     }
 
+    // Handles select
     public List<Product> select() throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "SELECT p.id, p.name, p.batch, p.price, p.stock_quantity AS quantity, " +
                 "p.brand, p.store_id, s.email AS store_name, p.expiration_date, p.line " +
                 "FROM product p LEFT JOIN store s ON s.id = p.store_id ORDER BY p.id;";
@@ -44,7 +46,9 @@ public class ProductDAO {
         return products;
     }
 
+    // Handles insert
     public void insert(Product product) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "INSERT INTO product(batch, name, price, expiration_date, brand, line, stock_quantity, store_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (
@@ -64,7 +68,9 @@ public class ProductDAO {
         }
     }
 
+    // Handles delete
     public void delete (Product product) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "DELETE FROM product WHERE id = ?;";
 
         try (
@@ -77,7 +83,9 @@ public class ProductDAO {
         }
     }
 
+    // Handles update
     public void update (Product product) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "UPDATE product SET name = ?, batch = ?, brand = ?, line = ?, expiration_date = ?, stock_quantity = ?, price = ? WHERE id = ?;";
 
         try (
@@ -97,7 +105,9 @@ public class ProductDAO {
         }
     }
 
+    // Handles search, By, Id
     public Product searchById(int id) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "SELECT p.id, p.name, p.batch, p.price, p.stock_quantity AS quantity, " +
                 "p.brand, p.store_id, s.email AS store_name, p.expiration_date, p.line " +
                 "FROM product p LEFT JOIN store s ON s.id = p.store_id WHERE p.id = ?";

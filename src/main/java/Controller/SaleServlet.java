@@ -20,8 +20,10 @@ public class SaleServlet extends HttpServlet {
     private final ProductDAO productDAO = new ProductDAO();
 
     @Override
+    // Handles do, Get
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        // Applying the method logic, using the provided values
         req.setCharacterEncoding("UTF-8");
         try {
             req.setAttribute("itens", saleDAO.select());
@@ -33,8 +35,10 @@ public class SaleServlet extends HttpServlet {
     }
 
     @Override
+    // Handles do, Post
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        // Applying the method logic, using the provided values
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
         if (action == null || !(action.equals("add") || action.equals("edit") || action.equals("delete"))) {
@@ -103,7 +107,9 @@ public class SaleServlet extends HttpServlet {
         }
     }
 
+    // Handles read, Product, Id
     private int readProductId(HttpServletRequest req) {
+        // Applying the method logic, using the provided values
         try {
             return Integer.parseInt(req.getParameter("product-id"));
         } catch (NumberFormatException e) {
@@ -111,7 +117,9 @@ public class SaleServlet extends HttpServlet {
         }
     }
 
+    // Handles read, Discount
     private double readDiscount(HttpServletRequest req) {
+        // Applying the method logic, using the provided values
         try {
             return Double.parseDouble(req.getParameter("discountPercentage"));
         } catch (NullPointerException | NumberFormatException e) {
@@ -119,7 +127,9 @@ public class SaleServlet extends HttpServlet {
         }
     }
 
+    // Handles read, Valid, Until
     private LocalDate readValidUntil(HttpServletRequest req) {
+        // Applying the method logic, using the provided values
         try {
             return LocalDate.parse(req.getParameter("promotion-valid-until"));
         } catch (NullPointerException | DateTimeException e) {

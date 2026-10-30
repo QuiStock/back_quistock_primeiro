@@ -13,6 +13,7 @@ public class SaleDAO {
 
     private final ConnectionFactory factory = new ConnectionFactory();
 
+    // Handles rs, Line
     public Sale rsLine(ResultSet rs) throws SQLException {
 
         Sale sale = new Sale();
@@ -29,13 +30,17 @@ public class SaleDAO {
 
     }
 
+    // Handles get, Local, Date
     private LocalDate getLocalDate(ResultSet rs, String column)
             throws SQLException {
+        // Applying the method logic, using the provided values
         Date date = rs.getDate(column);
         return date == null ? null : date.toLocalDate();
     }
 
+    // Handles select
     public List<Sale> select() throws SQLException {
+        // Applying the method logic, using the provided values
         String query = """
                         SELECT id, suggestion_type, suggestion_date, discount_percentage, promotion_valid_until, product_name, product_id FROM suggestions_vw WHERE suggestion_type = 'promotion';
                         """;
@@ -54,7 +59,9 @@ public class SaleDAO {
         return list;
     }
 
+    // Handles insert
     public void insert(Sale sale) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = """
                     insert into suggestion (suggestion_type, suggestion_date, discount_percentage, promotion_valid_from, promotion_valid_until, product_id) values ('promotion', ?, ?, ?, ?, ?);
                 """;
@@ -75,7 +82,9 @@ public class SaleDAO {
         }
     }
 
+    // Handles delete
     public void delete(Sale sale) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "delete from suggestion where id = ? and suggestion_type = 'promotion';";
 
         try (
@@ -88,7 +97,9 @@ public class SaleDAO {
         }
     }
 
+    // Handles update
     public void update (Sale sale) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "update suggestion set discount_percentage = ?, promotion_valid_until = ?, product_id = ? where id = ? and suggestion_type = 'promotion';";
 
         try (
@@ -103,7 +114,9 @@ public class SaleDAO {
         }
     }
 
+    // Handles search, By, Id
     public Sale searchById(int id) throws SQLException {
+        // Applying the method logic, using the provided values
         String query = "select * from suggestions_vw where id = ? and suggestion_type = 'promotion';";
 
         try (

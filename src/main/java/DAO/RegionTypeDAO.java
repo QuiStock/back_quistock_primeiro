@@ -23,6 +23,7 @@ public class RegionTypeDAO {
 
     }
 
+    // Handles select
     public List<RegionType> select() throws SQLException {
 
         List<RegionType> regionTypes = new ArrayList<>();
@@ -44,6 +45,7 @@ public class RegionTypeDAO {
         return regionTypes;
     }
 
+    // Handles create, Region, Type
     public void createRegionType(RegionType regionType) throws SQLException {
 
         // Region types are stored independently from stores.
@@ -57,6 +59,7 @@ public class RegionTypeDAO {
         }
     }
 
+    // Handles search, By, Id
     public RegionType searchById(int id) throws SQLException {
 
         String sql = "SELECT id, name FROM region_type WHERE id = ?";
@@ -72,6 +75,7 @@ public class RegionTypeDAO {
         }
     }
 
+    // Handles update, Region, Type
     public int updateRegionType(RegionType regionType) throws SQLException{
 
         String sql = "UPDATE region_type SET name = ? WHERE id = ?";
@@ -85,6 +89,7 @@ public class RegionTypeDAO {
         }
     }
 
+    // Handles delete, Region, Type
     public int deleteRegionType(int id) throws SQLException {
 
         String sql = "DELETE FROM region_type WHERE id = ?";

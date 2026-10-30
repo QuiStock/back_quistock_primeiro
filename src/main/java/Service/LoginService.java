@@ -19,6 +19,7 @@ public class LoginService {
     private AdminDAO daoAdm = new AdminDAO();
     private RegionalManagerDAO daoMan = new RegionalManagerDAO();
 
+    // Handles validate, Login
     public LoginResult validateLogin(String email, String password) throws SQLException, ClassNotFoundException {
 
         RegionalManager manager = daoMan.searchByEmail(email);

@@ -21,6 +21,7 @@ public class UrlFilter implements Filter {
             "/regionTypes", "/regioes", "/stores");
 
     @Override
+    // Handles do, Filter
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filter)
             throws ServletException, IOException {
 
