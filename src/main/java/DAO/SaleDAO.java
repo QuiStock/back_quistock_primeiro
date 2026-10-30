@@ -1,6 +1,6 @@
 package DAO;
 
-import Model.Promotion;
+import Model.Sale;
 import lombok.NoArgsConstructor;
 
 import java.sql.*;
@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-public class PromotionDAO {
+public class SaleDAO {
 
     private final ConnectionFactory factory = new ConnectionFactory();
 
-    public Promotion rsLine(ResultSet rs) throws SQLException {
+    public Sale rsLine(ResultSet rs) throws SQLException {
 
-        return new Promotion(
+        return new Sale(
             rs.getInt("id"),
             rs.getString("suggestion_type"),
             rs.getDate("suggestion_date").toLocalDate(),
@@ -27,12 +27,12 @@ public class PromotionDAO {
 
     }
 
-    public List<Promotion> select() throws SQLException {
+    public List<Sale> select() throws SQLException {
         String query = """
                         SELECT id, suggestion_type, suggestion_date, discount_percentage, promotion_valid_from,
                         promotion_valid_until, product_name FROM suggestions_vw;
                         """;
-        List<Promotion> list = new ArrayList<>();
+        List<Sale> list = new ArrayList<>();
 
         try (
                 Connection conn = factory.getConnection();
@@ -47,10 +47,10 @@ public class PromotionDAO {
         return list;
     }
 
-    public void insert(Promotion promotion) throws SQLException {
+    public void insert(Sale sale) throws SQLException {
         String query = """
                     insert into suggestion (suggestion_type, suggestion_date, discount_percentage, 
-                    promotion_valid_from, promotion_valid_until, product_id) values ('promotion', ?, ?, ?, ?, ?);
+                    promotion_valid_from, promotion_valid_until, product_id) values ('sale', ?, ?, ?, ?, ?);
                 """;
 
         try (
@@ -58,45 +58,44 @@ public class PromotionDAO {
             PreparedStatement smt = conn.prepareStatement(query);
         ) {
             smt.setDate(1, Date.valueOf(LocalDate.now()));
-            smt.setDouble(2, promotion.getDiscountPercentage());
+            smt.setDouble(2, sale.getDiscountPercentage());
             smt.setDate(3, Date.valueOf(LocalDate.now()));
-            smt.setDate(4, Date.valueOf(promotion.getPromotionValidFrom()));
-            smt.setDate(5, Date.valueOf(promotion.getPromotionValidUntil()));
-            smt.setString(6, promotion.getProductName());
+            smt.setDate(5, Date.valueOf(sale.getPromotionValidUntil()));
+            smt.setInt(6, sale.getProductId());
 
             smt.executeUpdate();
         }
     }
 
-    public void delete(Promotion promotion) throws SQLException {
+    public void delete(Sale sale) throws SQLException {
         String query = "delete from suggestion where id = ?;";
 
         try (
             Connection conn = factory.getConnection();
             PreparedStatement smt = conn.prepareStatement(query);
         ) {
-            smt.setInt(1, promotion.getId());
+            smt.setInt(1, sale.getId());
 
             smt.executeUpdate();
         }
     }
 
-    public void update (Promotion promotion) throws SQLException {
+    public void update (Sale sale) throws SQLException {
         String query = "update  suggestion set discount_percentage = ?, promotion_valid_until = ? where id = ?;";
 
         try (
                 Connection conn = factory.getConnection();
                 PreparedStatement smt = conn.prepareStatement(query);
         )  {
-            smt.setDouble(1, promotion.getDiscountPercentage());
-            smt.setDate(2, Date.valueOf(promotion.getPromotionValidUntil()));
-            smt.setInt(3, promotion.getId());
+            smt.setDouble(1, sale.getDiscountPercentage());
+            smt.setDate(2, Date.valueOf(sale.getPromotionValidUntil()));
+            smt.setInt(3, sale.getId());
 
             smt.executeUpdate();
         }
     }
 
-    public Promotion searchById(int id) throws SQLException {
+    public Sale searchById(int id) throws SQLException {
         String query = "select * from suggestions_vw where id = ?;";
 
         try (
