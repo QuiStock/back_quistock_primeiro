@@ -11,6 +11,7 @@ public class Product {
     private String name;
     private double price;
     private int quantity;
+    private String brand;
     private int store_id;
-    private int store_Name;
+    private String store_Name;
 }
