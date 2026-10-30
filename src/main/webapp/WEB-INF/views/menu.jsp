@@ -7,6 +7,7 @@
     <a href="${ctx}/regionalManagers" class="${param.ativo eq 'gerentes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/gerente.svg" alt="">Gerentes</a>
     <a href="${ctx}/regioes" class="${param.ativo eq 'regioes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/regiao.svg" alt="">Regiões</a>
     <a href="${ctx}/stores" class="${param.ativo eq 'lojas' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/loja.svg" alt="">Lojas</a>
-    <a href="${ctx}/faq" class="${param.ativo eq 'faq' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/faq.svg" alt="">FAQ</a>
-    <a href="${ctx}/anotacoes" class="${param.ativo eq 'anotacoes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/anotacoes.svg" alt="">Anotações</a>
+    <a href="${ctx}/pedido.jsp" class="${param.ativo eq 'pedido' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/pedido.svg" alt="">Pedidos</a>
+    <a href="${ctx}/promocao.jsp" class="${param.ativo eq 'promocao' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/promocao.svg" alt="">Promoções</a>
+    <a href="${ctx}/faq" class="${param.ativo eq 'faq' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/faq.svg" alt="">FAQs</a>
 </nav>

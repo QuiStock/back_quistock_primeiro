@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Gerentes regionais</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/quistock.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css?v=2">
 </head>
 <body>
     <div id="loading" class="loading hidden" aria-hidden="true">

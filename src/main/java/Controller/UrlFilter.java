@@ -29,6 +29,12 @@ public class UrlFilter implements Filter {
 
         String path  = req.getServletPath();
 
+        //libera os arquivos visuais mesmo antes do login
+        if (path.startsWith("/css/") || path.startsWith("/assets/") || path.startsWith("/script/")) {
+            filter.doFilter(request, response);
+            return;
+        }
+
         //verify paths from general profiles
         if (general.contains(path)) {
             filter.doFilter(request, response);

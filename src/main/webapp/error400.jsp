@@ -159,6 +159,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css?v=2">
 </head>
 <body>
 
@@ -169,5 +170,6 @@
 <button>Voltar</button>
 
 <script src="../script/error404.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(250, 245, 251, 0.78);
+    background-color: rgba(241, 223, 246, 0.82);
 }
 
 .loading.hidden {
@@ -15,7 +15,6 @@
 .chaotic-orbit {
     --uib-size: 25px;
     --uib-speed: 1.5s;
-    --uib-color: black;
     position: relative;
     display: flex;
     align-items: center;
@@ -32,7 +31,7 @@
     height: 60%;
     width: 60%;
     border-radius: 50%;
-    background-color: var(--uib-color);
+    background-color: #AF36DF;
     will-change: transform;
     flex-shrink: 0;
 }
@@ -42,6 +41,7 @@
 }
 
 .chaotic-orbit::after {
+    background-color: #89B751;
     animation: orbit var(--uib-speed) linear calc(var(--uib-speed) / -2) infinite;
 }
 

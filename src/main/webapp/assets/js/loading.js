@@ -44,6 +44,17 @@
         //mostra o carregamento em qualquer formulario de crud enviado
         document.addEventListener("submit", function (event) {
             if (!event.defaultPrevented) {
+                const modal = event.target.closest("dialog[open], [popover]:popover-open");
+
+                //fecha o modal depois que o formulario passou pela validacao
+                if (modal) {
+                    if (modal.matches("dialog")) {
+                        modal.close();
+                    } else {
+                        modal.hidePopover();
+                    }
+                }
+
                 window.mostrarLoading();
             }
         });
@@ -52,13 +63,22 @@
         document.addEventListener("click", function (event) {
             const link = event.target.closest("a");
 
-            if (!link || event.defaultPrevented || link.hasAttribute("data-modal")) {
+            if (!link || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || link.hasAttribute("data-modal") || link.hasAttribute("download")) {
                 return;
             }
 
             const href = link.getAttribute("href");
 
-            if (!href || href.startsWith("#") || href.startsWith("javascript:") || link.target === "_blank") {
+            if (!href || link.target && link.target !== "_self") {
+                return;
+            }
+
+            const destino = new URL(link.href, window.location.href);
+            if (destino.protocol !== "http:" && destino.protocol !== "https:") {
+                return;
+            }
+            if (destino.href === window.location.href ||
+                destino.pathname === window.location.pathname && destino.search === window.location.search && destino.hash) {
                 return;
             }
 
