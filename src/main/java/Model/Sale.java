@@ -13,7 +13,6 @@ public class Sale {
     private String sugestionType;
     private LocalDate sugestionDate;
     private double discountPercentage;
-    private LocalDate promotionValidFrom;
     private LocalDate promotionValidUntil;
     private String productName;
     private int ProductId;
@@ -22,14 +21,12 @@ public class Sale {
             String sugestionType,
             LocalDate sugestionDate,
             double discountPercentage,
-            LocalDate promotionValidFrom,
             LocalDate promotionValidUntil,
             String productName
             ){
         this.sugestionType = sugestionType;
         this.sugestionDate = sugestionDate;
         this.discountPercentage = discountPercentage;
-        this.promotionValidFrom = promotionValidFrom;
         this.promotionValidUntil = promotionValidUntil;
         this.productName = productName;
     }
