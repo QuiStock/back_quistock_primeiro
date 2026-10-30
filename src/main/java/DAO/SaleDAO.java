@@ -18,13 +18,20 @@ public class SaleDAO {
         return new Sale(
             rs.getInt("id"),
             rs.getString("suggestion_type"),
-            rs.getDate("suggestion_date").toLocalDate(),
+            getLocalDate(rs, "suggestion_date"),
             rs.getDouble("discount_percentage"),
             rs.getDate("promotion_valid_from").toLocalDate(),
             rs.getDate("promotion_valid_until").toLocalDate(),
-            rs.getString("product_name")
+            rs.getString("product_name"),
+            rs.getInt("product_id")
         );
 
+    }
+
+    private LocalDate getLocalDate(ResultSet rs, String column)
+            throws SQLException {
+        Date date = rs.getDate(column);
+        return date == null ? null : date.toLocalDate();
     }
 
     public List<Sale> select() throws SQLException {
@@ -60,8 +67,8 @@ public class SaleDAO {
             smt.setDate(1, Date.valueOf(LocalDate.now()));
             smt.setDouble(2, sale.getDiscountPercentage());
             smt.setDate(3, Date.valueOf(LocalDate.now()));
-            smt.setDate(5, Date.valueOf(sale.getPromotionValidUntil()));
-            smt.setInt(6, sale.getProductId());
+            smt.setDate(4, Date.valueOf(sale.getPromotionValidUntil()));
+            smt.setInt(5, sale.getProductId());
 
             smt.executeUpdate();
         }
@@ -101,8 +108,11 @@ public class SaleDAO {
         try (
             Connection conn = factory.getConnection();
             PreparedStatement smt = conn.prepareStatement(query);
-            ResultSet rs = smt.executeQuery();
         ) {
+            smt.setInt(1, id);
+
+            ResultSet rs = smt.executeQuery();
+
             return rs.next() ? rsLine(rs) : null;
         }
     }
