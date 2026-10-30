@@ -89,4 +89,16 @@ public class OrderDAO {
             }
         }
     }
+
+    //atualiza o produto e o valor do pedido
+    public void update(Order order) throws SQLException {
+        String query = "update suggestion set product_name = ?, total_order_price = ? where id = ? and suggestion_type = 'order';";
+        try (Connection conn = factory.getConnection();
+             PreparedStatement smt = conn.prepareStatement(query)) {
+            smt.setString(1, order.getProductName());
+            smt.setDouble(2, order.getTotalOrderPrice());
+            smt.setInt(3, order.getId());
+            smt.executeUpdate();
+        }
+    }
 }
