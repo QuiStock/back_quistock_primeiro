@@ -72,4 +72,16 @@ public class OrderDAO {
             smt.executeUpdate();
         }
     }
+
+    public Order searchById(int id) throws SQLException{
+        String query = "select * from suggestion where id = ?;";
+
+        try (
+                Connection conn = factory.getConnection();
+                PreparedStatement smt = conn.prepareStatement(query);
+                ResultSet rs = smt.executeQuery();
+        ) {
+            return rsLine(rs);
+        }
+    }
 }
