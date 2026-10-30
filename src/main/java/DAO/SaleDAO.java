@@ -29,6 +29,12 @@ public class SaleDAO {
 
     }
 
+    private LocalDate getLocalDate(ResultSet rs, String column)
+            throws SQLException {
+        Date date = rs.getDate(column);
+        return date == null ? null : date.toLocalDate();
+    }
+
     public List<Sale> select() throws SQLException {
         String query = """
                         SELECT id, suggestion_type, suggestion_date, discount_percentage, promotion_valid_until, product_name, product_id FROM suggestions_vw WHERE suggestion_type = 'promotion';
