@@ -15,7 +15,7 @@
         <input id="gerente-email" type="email" name="email" value="${manager.email}" required>
     </div>
     <div class="campo">
-        <label for="gerente-senha">${empty manager ? 'Senha' : 'Nova senha (vazio mantém a atual)'}</label>
+        <label for="gerente-senha">${empty manager ? 'Senha' : 'Nova senha (deixe em branco para manter a atual)'}</label>
         <input id="gerente-senha" type="password" name="password" ${empty manager ? 'required' : ''}>
     </div>
 

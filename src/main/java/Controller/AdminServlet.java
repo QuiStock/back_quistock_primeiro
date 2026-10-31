@@ -36,7 +36,7 @@ public class AdminServlet extends HttpServlet {
                 Admin admin = dao.searchById(id);
 
                 if (admin == null) {
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin not found");
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Administrador não encontrado");
                     return;
                 }
 
@@ -69,7 +69,7 @@ public class AdminServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if(action == null){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
             return;
         }
 
@@ -82,7 +82,7 @@ public class AdminServlet extends HttpServlet {
 
             }
         } catch (NumberFormatException e){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID Inválido");
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
         } catch (SQLException e){
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         } catch (IOException e){
@@ -111,7 +111,7 @@ public class AdminServlet extends HttpServlet {
         Admin admin = dao.searchById(id);
 
         if (admin == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Administrador não encontrado");
             return;
         }
 

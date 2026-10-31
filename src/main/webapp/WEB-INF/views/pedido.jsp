@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/landing-assets/asa-roxa.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,7 +114,7 @@
         <div id="remover-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/orders">
                 <h2>Remover pedido</h2>
-                <p>Deseja realmente remover pedido de <strong><c:out value="${item.productName}"/></strong>?</p>
+                <p>Deseja realmente remover o pedido de <strong><c:out value="${item.productName}"/></strong>?</p>
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" value="${item.id}">
                 <div class="acoes-popup">

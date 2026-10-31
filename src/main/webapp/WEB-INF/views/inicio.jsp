@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/landing-assets/asa-roxa.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,10 +21,17 @@
     </aside>
 
     <main class="centralizado">
-        <h2 class="boas-vindas">Bem vindo(a), <c:out value="${nome}"/></h2>
+        <h2 class="boas-vindas">Boas-vindas, <c:out value="${nome}"/></h2>
 
         <div id="acoes-inicio">
-            <a class="botao verde" href="${ctx}/admins">Ver administradores</a>
+            <c:choose>
+                <c:when test="${sessionScope.loggedUser.type eq 'MANAGER'}">
+                    <a class="botao verde" href="${ctx}/regioes">Ver regiões</a>
+                </c:when>
+                <c:otherwise>
+                    <a class="botao verde" href="${ctx}/admins">Ver administradores</a>
+                </c:otherwise>
+            </c:choose>
             <a class="botao contorno" href="${ctx}/">Voltar para a landing</a>
         </div>
     </main>

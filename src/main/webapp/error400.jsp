@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/landing-assets/asa-roxa.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>408</title>
-    <link rel="stylesheet" href="../css/error400.css">
+    <title>400</title>
 
     <style>
         :root {
@@ -161,13 +161,12 @@
 </head>
 <body>
 
-<img src="../assets/error-assets/400.svg" alt="400">
+<img src="${pageContext.request.contextPath}/landing-assets/error-assets/400.svg" alt="400">
 
-<p>Bad request</p>
+<p>Não foi possível processar a solicitação.</p>
 
-<button>Voltar</button>
+<form action="${pageContext.request.contextPath}${empty sessionScope.loggedUser ? '/' : '/inicio'}" method="get"><button type="submit">Voltar ao início</button></form>
 
-<script src="../script/error404.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>
 </body>
 </html>

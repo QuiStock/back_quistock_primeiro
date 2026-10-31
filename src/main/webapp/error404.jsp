@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/landing-assets/asa-roxa.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404</title>
@@ -279,7 +280,7 @@
             <h1>X</h1>
         </div>
 
-        <p>PAGE NOT FOUND</p>
+        <p>NÃO ENCONTRADA</p>
     </div>
 
     <h1>4</h1>
@@ -288,9 +289,8 @@
 
 <p>Desculpe, não foi possível encontrar esta página.</p>
 
-<button>Voltar</button>
+<form action="${pageContext.request.contextPath}${empty sessionScope.loggedUser ? '/' : '/inicio'}" method="get"><button type="submit">Voltar ao início</button></form>
 
-<script src="../script/error404.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/loading.js"></script>
 </body>
 </html>

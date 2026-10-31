@@ -42,7 +42,7 @@ public class SaleServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
         if (action == null || !(action.equals("add") || action.equals("edit") || action.equals("delete"))) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acao invalida");
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
             return;
         }
 
@@ -52,7 +52,7 @@ public class SaleServlet extends HttpServlet {
                 int id = Integer.parseInt(req.getParameter("id"));
                 sale = saleDAO.searchById(id);
                 if (sale == null) {
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Promocao nao encontrada");
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Promoção não encontrada");
                     return;
                 }
             }
@@ -96,10 +96,10 @@ public class SaleServlet extends HttpServlet {
             doGet(req, resp);
         } catch (SQLException e) {
             if ("23503".equals(e.getSQLState())) {
-                req.setAttribute("erro", "Produto inexistente ou promocao com registros vinculados.");
+                req.setAttribute("erro", "Produto inexistente ou promoção com registros vinculados.");
                 doGet(req, resp);
             } else if ("23514".equals(e.getSQLState())) {
-                req.setAttribute("erro", "Confira o desconto e a validade: a data final deve ser igual ou posterior ao inicio da promocao.");
+                req.setAttribute("erro", "Confira o desconto e a validade: a data final deve ser igual ou posterior ao início da promoção.");
                 doGet(req, resp);
             } else {
                 throw new ServletException("Erro ao salvar promocao", e);

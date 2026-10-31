@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
 
             if (!login.isSuccess()) {
                 req.setAttribute("error", "Email ou senha inválidos");
-                req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                req.getRequestDispatcher("/login.jsp").forward(req, resp);
                 return;
             }
 

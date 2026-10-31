@@ -38,7 +38,7 @@ public class RegionalManagerServlet extends HttpServlet{
                 RegionalManager manager = dao.searchById(id);
 
                 if (manager == null) {
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Manager not found");
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Gerente não encontrado");
                     return;
                 }
 
@@ -90,7 +90,7 @@ public class RegionalManagerServlet extends HttpServlet{
             if ("add".equals(action) || "edit".equals(action)) {
                 showValidationError(req, resp, "Selecione uma região válida.");
             } else {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID Inválido");
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
             }
         } catch (SQLException e){
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
@@ -155,7 +155,7 @@ public class RegionalManagerServlet extends HttpServlet{
 
 
         if (manager == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Admin não encontrado");
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Gerente não encontrado");
             return;
         }
 

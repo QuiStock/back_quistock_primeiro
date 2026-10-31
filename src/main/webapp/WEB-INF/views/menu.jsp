@@ -3,9 +3,11 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <nav class="links">
     <a href="${ctx}/inicio" class="${param.ativo eq 'inicio' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/inicio.svg" alt="">Início</a>
+    <c:if test="${sessionScope.loggedUser.type eq 'ADMIN'}">
     <a href="${ctx}/admins" class="${param.ativo eq 'admins' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/admin.svg" alt="">Admins</a>
     <a href="${ctx}/regionalManagers" class="${param.ativo eq 'gerentes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/gerente.svg" alt="">Gerentes</a>
-    <a href="${ctx}/regioes" class="${param.ativo eq 'regioes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/regiao.svg" alt="">Regiões</a>
+    </c:if>
+    <a href="${ctx}/regioes" class="${param.ativo eq 'regioes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/regiao.svg" alt=""><c:choose><c:when test="${sessionScope.loggedUser.type eq 'MANAGER'}">Ver Regiões</c:when><c:otherwise>Regiões</c:otherwise></c:choose></a>
     <a href="${ctx}/stores" class="${param.ativo eq 'lojas' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/loja.svg" alt="">Lojas</a>
     <a href="${ctx}/orders" class="${param.ativo eq 'pedido' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/pedido.svg" alt="">Pedidos</a>
     <a href="${ctx}/sales" class="${param.ativo eq 'promocao' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/promocao.svg" alt="">Promoções</a>

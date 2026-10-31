@@ -42,7 +42,7 @@ public class ProductServlet extends HttpServlet {
                 Product product = dao.searchById(id);
 
                 if (product == null) {
-                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Produto não encontrado");
                     return;
                 }
 
@@ -132,7 +132,7 @@ public class ProductServlet extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
 
         if (dao.searchById(id) == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Produto não encontrado");
             return;
         }
 
@@ -151,7 +151,7 @@ public class ProductServlet extends HttpServlet {
 
         int id = Integer.parseInt(req.getParameter("id"));
         if (dao.searchById(id) == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Product not found");
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Produto não encontrado");
             return;
         }
 
@@ -199,7 +199,7 @@ public class ProductServlet extends HttpServlet {
     private void validateAlphaText(String value, String field) {
         // Applying the method logic, using the provided values
         if (value == null || !value.trim().matches("^[\\p{L}]+(?: +[\\p{L}]+)*$")) {
-            throw new IllegalArgumentException(field + " inválido: use somente letras e espaços.");
+            throw new IllegalArgumentException("Campo " + field + " inválido: use somente letras e espaços.");
         }
     }
 

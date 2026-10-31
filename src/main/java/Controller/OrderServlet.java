@@ -124,7 +124,7 @@ public class OrderServlet extends HttpServlet {
         Order order = dao.searchById(id);
         // Return an error when the order does not exist
         if (order == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Pedido nao encontrado");
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Pedido não encontrado");
             return;
         }
         // Assign and validate the submitted values

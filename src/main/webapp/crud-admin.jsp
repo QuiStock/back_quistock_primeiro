@@ -14,7 +14,7 @@
         <input id="admin-email" type="email" name="email" maxlength="150" value="${admin.email}" required>
     </div>
     <div class="campo">
-        <label for="admin-senha">${empty admin ? 'Senha' : 'Nova senha (vazio mantém a atual)'}</label>
+        <label for="admin-senha">${empty admin ? 'Senha' : 'Nova senha (deixe em branco para manter a atual)'}</label>
         <input id="admin-senha" type="password" name="password" ${empty admin ? 'required' : ''}>
     </div>
 
