@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/landing.css">
+    <link rel="stylesheet" href="css/loading.css">
+    <title>QuiStock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="landing-assets/asa-roxa.svg">
+</head>
+<body>
+    <header>
+        <a href="#hero">
+            <img src="landing-assets/logo.svg" alt="logo">
+        </a>
+        
+        <nav>
+            <a href="#hero">Início</a>
+            <a href="#beneficios">Benefícios</a>
+            <a href="#plataforma">Plataforma</a>
+            <a href="#quem-somos">Quem Somos</a>
+            <a href="#contato">Contato</a>
+        </nav>
+
+        <button type="button" class="cta_button1" data-loading-navigation onclick="location.href=&quot;login.jsp&quot;">
+            Login
+        </button>
+    </header>
+
+    <main>
+
+        <section id="hero">
+
+            <div style="background-image: url(landing-assets/imagem-hero.png);">
+                <h1>
+                    O estoque no ritmo das suas vendas.
+                </h1>
+
+                <p>
+                    Elimine o desperdício de alimentos com monitoramento em tempo real. Nossa solução se integra ao ERP e dispara promoções automáticas na hora certa para acelerar suas vendas.
+                </p>
+
+                <button data-loading-external onclick="window.location.href='mailto:quistockinterdisciplinar@gmail.com';">
+                    Entrar em contato
+                </button>
+            </div>
+
+        </section>
+
+        <section id="beneficios">
+
+            <h1>
+                Monitore seu fluxo em tempo real e reaja <span>antes do desperdício acontecer</span>
+            </h1>
+
+            <div>
+
+                <div id="box-1" class="box">
+                    <img src="landing-assets/beneficios-assets/asa-logo.svg" alt="asa-logo">
+                </div>
+
+                <div id="box-2" class="box" >
+                    
+                    <div>
+                        <h3>
+                            Facilidade de uso
+                        </h3>
+
+                        <p>
+                            O QuiStock foi feito pensando na rotina do funcionário, oferecendo uma plataforma intuitiva e amigável.
+                        </p>
+                    </div>
+
+                    <img src="landing-assets/beneficios-assets/celular.png" alt="app">
+
+                </div>
+
+                <div id="box-3" class="box">
+
+                    <div>
+                        <h3>
+                            Alertas ativos
+                        </h3>
+                        <p>
+                            Nossa plataforma oferece alertas ativos que te ajudam a rastrear o estoque em tempo real.
+                        </p>
+                    </div>
+
+                    <div id="notificacoes">
+                        <img src="landing-assets/beneficios-assets/produto.svg" alt="produto">
+                        <img src="landing-assets/beneficios-assets/notif.svg" alt="notificação">
+                        <img src="landing-assets/beneficios-assets/notif-1.svg" alt="notificação">
+                        <img src="landing-assets/beneficios-assets/notif-2.svg" alt="notificação">
+                    </div>
+
+                </div>
+
+                <div id="box-4" class="box">
+                    <h3>
+                        Integração com o SAP
+                    </h3>
+                    <p>Nosso sistema utiliza o ERP para captar informações sobre a loja, garantindo assertividade nas decisões.</p>
+                </div>
+
+                <div id="box-5" class="box">
+                    <h3>
+                        Predizendo o futuro da sua loja.
+                    </h3>
+                    <img src="landing-assets/beneficios-assets/fefo.png" alt="fefo">
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="plataforma">
+
+            <div>
+                <h1>
+                    Plataforma
+                </h1>
+                <h3>
+                    Conheça mais sobre a nossa plataforma, seus fluxos e como trabalhamos para evitar o seu prejuízo.
+                </h3>
+            </div>
+
+            <div id = "slide_plataforma">
+                <div class="cards_plataforma" id = "c1">
+                    <h3><span>1 </span>Informações do ERP coletadas e armazenadas.</h3>
+                </div>
+
+                <div class="cards_plataforma" id = "c2">
+                    <h3><span>2 </span>Identificamos um produto perto de sua data de validade.</h3>
+                </div>
+
+                <div class="cards_plataforma" id = "c3">
+                    <h3><span>3 </span>Enviamos um alerta ao funcionário.</h3>
+                </div>
+
+                <div class="cards_plataforma" id = "c4">
+                    <h3><span>4 </span>O funcionário requisita uma aplicação de promoção.</h3>
+                </div>
+
+                <div class="cards_plataforma" id = "c5">
+                    <h3><span>5 </span>Com a aprovação do gerente, a promoção é registrada.</h3>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="quem-somos">
+
+            <h1>
+                Nossa equipe
+            </h1>
+
+            <div class="container">
+
+                <div class="greeting-card">
+                    <a href="https://www.instagram.com/quistockk/" target="_blank">
+                        <img src="landing-assets/equipe-assets/instagram-branco.svg" alt="Instagram">
+                    </a>
+
+                    <p>
+                        Somos desenvolvedores do Ensino Médio Técnico do Instituto JEF. Unimos inovação e rigor técnico para resolver problemas reais. Nos destacamos pela visão analítica, pelo design de uma interface simples para as equipes e pelo compromisso em gerar economia real para o comerciante através de um código limpo e eficiente.
+                    </p>
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        BACK-END
+                    </p>
+
+                    <p class="nome">
+                        Bruno Pagan
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        FULL STACK
+                    </p>
+
+                    <p class="nome">
+                        Henry Rodrigues
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        DADOS
+                    </p>
+
+                    <p class="nome">
+                        Nathália Humpel
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        FRONT-END
+                    </p>
+
+                    <p class="nome">
+                        Pedro Morais
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        DADOS | FRONT-END
+                    </p>
+
+                    <p class="nome">
+                        Hikaru Iwashita
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        DADOS | UX/UI
+                    </p>
+
+                    <p class="nome">
+                        Beatriz Frisina
+                    </p>
+
+                </div>
+
+                <div class="card">
+                    <img src="" alt="">
+
+                    <p class="area">
+                        DADOS | IA
+                    </p>
+
+                    <p class="nome">
+                        Enzo Christowam
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        FRONT MOBILE | UX/UI
+                    </p>
+
+                    <p class="nome">
+                        Isabella Candido
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        BACK-END | INFRA
+                    </p>
+
+                    <p class="nome">
+                        Lucas Kluska
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        FRONT WEB
+                    </p>
+
+                    <p class="nome">
+                        Luigi Biondo
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <p class="area">
+                        BACK-END
+                    </p>
+
+                    <p class="nome">
+                        Rodrigo Bolgheroni
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="contato">
+            <div id = "area_contato">
+
+                <h1>Se interessou?</h1>
+
+                <h3>Entre em contato conosco e obtenha mais informações sobre como todos os procedimentos são feitos.</h3>
+
+                <button class = "cta_button" data-loading-external onclick="window.location.href='mailto:quistockinterdisciplinar@gmail.com';">
+                    Entre em contato
+                </button>
+                
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+
+        <div id = "footer_sec">
+
+            <img src="landing-assets/logo.svg" alt="">
+            
+            <div id = "links">
+
+                <nav>
+
+                    <label>Explore</label>
+                    <a href="#hero">Início</a>
+                    <a href="#beneficios">Benefícios</a>
+                    <a href="#plataforma">Plataforma</a>
+                    <a href="#quem-somos">Quem somos</a>
+
+                </nav>
+
+                <nav>
+
+                    <label>Legal</label>
+                    <a href="#footer_sec">Política de privacidade</a>
+                    <a href="#footer_sec">Termos de uso</a>
+                    <a href="#footer_sec">Cookies</a>
+
+                </nav>
+
+                <nav id = "a_contatos">
+
+                    <label>Contatos</label>
+
+                    <a href="mailto: quistockinterdisciplinar@gmail.com">quistockinterdisciplinar@gmail.com</a>
+                    <a href="https://www.instagram.com/quistockk/">@quistockk</a\>
+                    <a href="#footer_sec">+55 11 97223-1068</a>
+                    
+                </nav>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <p id = "quistock_footer">QUISTOCK 2026 - Todos os direitos reservados</p>
+    
+    </footer>
+
+    <script src="script/script.js"></script>
+    <script src="assets/js/loading.js"></script>
+    <script src="script/public-loading.js"></script>
+</body>
+</html>

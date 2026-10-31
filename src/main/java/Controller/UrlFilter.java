@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.MappingMatch;
 
 import java.io.IOException;
 import java.util.Set;
@@ -14,11 +15,10 @@ import java.util.Set;
 public class UrlFilter implements Filter {
 
     // Public routes and routes reserved for admins.
-    private static final Set<String> general = Set.of("/", "/index.jsp", "/login", "/logout");
+    private static final Set<String> general = Set.of("/", "/index.html", "/index.jsp", "/login.jsp", "/login", "/logout");
     private static final Set<String> only_admin = Set.of(
             "/home-admin.jsp", "/admins", "/crud-admin.jsp",
-            "/regionalManagers", "/regional-managers.jsp", "/crud-managers.jsp",
-            "/regionTypes", "/regioes", "/stores");
+            "/regionalManagers", "/regional-managers.jsp", "/crud-managers.jsp");
 
     @Override
     // Handles do, Filter
@@ -31,7 +31,7 @@ public class UrlFilter implements Filter {
         String path  = req.getServletPath();
 
         // Static assets must load before login too.
-        if (path.startsWith("/css/") || path.startsWith("/assets/") || path.startsWith("/script/")) {
+        if (path.startsWith("/css/") || path.startsWith("/assets/") || path.startsWith("/landing-assets/") || path.startsWith("/script/")) {
             filter.doFilter(request, response);
             return;
         }
@@ -41,12 +41,19 @@ public class UrlFilter implements Filter {
             return;
         }
 
+        // Let unknown URLs reach the 404 page even without a logged-in user.
+        if (req.getHttpServletMapping().getMappingMatch() == MappingMatch.DEFAULT
+                && req.getServletContext().getResource(path) == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         // Do not create a session just to check access.
         HttpSession session = req.getSession(false);
         LoggedUser user = session == null ? null : (LoggedUser) session.getAttribute("loggedUser");
 
         if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
             return;
         }
 

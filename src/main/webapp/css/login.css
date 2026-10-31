@@ -1,0 +1,610 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Lexend:wght@100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --branco: #E7CEEB;
+    --violeta: #7F3AEF;
+    --limao: #89B751;
+    --lavana: #AF36DF;
+    --petroleo: #11061F;
+
+    /* cores variaveis */
+    --limao-claro: #D7F6B1;
+    --verde-escuro: #659529;
+    --fundo: #FAF5FB;
+    --branco2: #FEFCFF;
+}
+
+* {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    background-color: var(--fundo);
+    overflow-x: hidden;
+
+    display: flex;
+    align-items: center;
+
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+input {
+    border: none;
+    border-bottom: 2px solid grey;
+    background: transparent;
+
+    padding-bottom: 0.7rem;
+    padding-left: 0.5rem;
+
+    font-size: clamp(1rem, .75vw + .5rem, 2rem);
+
+    transition: 50ms;
+}
+
+input::placeholder {
+    color: grey;
+    transition: 50ms;
+}
+
+input:focus{
+    outline: none;
+    border-bottom: 2px solid var(--violeta);
+}
+
+input:focus::placeholder {
+    color: var(--violeta);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: #000000 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+#container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+
+    width: 100%;
+    height: 100dvh;
+
+    margin: 0 0 0 10%;
+}
+
+#left-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-left: -8rem;
+    width: 53%;
+}
+#left{
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    width: 70%;
+}
+
+#left button {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border: 2px solid transparent;
+    border-radius: 15px;
+    background: linear-gradient(to right, var(--violeta), var(--lavana));
+    height: clamp(3.5rem, 4vw, 10rem);
+    font-size: clamp(.5rem, 1.5vw + .5rem, 1.3rem);
+    color: var(--branco2);
+    background: linear-gradient(to right, var(--violeta), var(--lavana));
+    border: none;
+    cursor: pointer;
+}
+
+#left button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to left, var(--violeta), var(--lavana));
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+}
+
+#left button:hover::before {
+    opacity: 1;
+}
+
+#left h1{
+    color: var(--violeta);
+    font-weight: 600;
+    font-size: 2.7rem;
+}
+
+#low {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.8rem;
+
+    margin-left: 0;
+    margin-top: 2rem;
+}
+
+#low p{
+    font-size: clamp(1rem, .5vw + .5rem, 1rem);
+    margin-top: -0.3em;
+}
+
+#low a img {
+    transition: 200ms;
+}
+
+#low a:nth-child(2) img {
+    height: clamp(1.5vh, 3vh, 3vh);
+}
+
+#low a:nth-child(3) img {
+    height: clamp(1.2vh, 2.7vh, 2.7vh);
+}
+
+#low a img:hover {
+    transform: scale(1.05);
+}
+
+#low a img:active {
+    transform: scale(0.9);
+}
+
+#right{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    border: 2px solid var(--violeta);
+    border-radius: 25px;
+
+    text-align: end;
+    color: white;
+
+    background-color: var(--violeta);
+
+    height: 92%;
+    width: 49%;
+
+    margin-left: 3rem;
+}
+#right h1{
+    font-size: 2.5em;
+    font-weight: 500;
+    margin-top: .5em;
+}
+#right img{
+    width: 9.5em;
+}
+#box{
+    margin: 30px 40px 0px 0px;
+}
+#interacao{
+    width: min(23rem, 60%);
+    align-self: flex-start;
+
+    margin-left: 2.8rem;
+    margin-top: auto;
+    margin-bottom: 7.5rem;
+    color: black;
+
+    text-align: center;
+    opacity: 0;
+}
+#botoes{
+    display: flex;
+    flex-direction: row;
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 0.65rem;
+    margin-left: 0;
+    box-sizing: border-box;
+}
+.escolha {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 42px;
+    border: 2px solid var(--limao-claro);
+    background: var(--limao-claro);
+    border-radius: 8px;
+    color: var(--petroleo);
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.4rem 0.4rem;
+    box-sizing: border-box;
+    transition: background-color 200ms, transform 100ms;
+}
+.escolha:hover{
+    cursor: pointer;
+    background: #c7ef95;
+    border-color: #c7ef95;
+}
+.escolha:active{
+    transform: scale(0.97);
+}
+#box2{
+    width: 100%;
+    min-height: 3.4rem;
+    border: 2px solid rgb(245, 245, 245);
+    border-radius: 22px 22px 4px 22px;
+
+    background-color: rgb(245, 245, 245);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+    font-size: 1.15rem;
+    box-sizing: border-box;
+}
+#box2 p{
+    margin: 0;
+    text-align: center;
+    font-weight: 500;
+    color: var(--petroleo);
+}
+.fefox{
+    position: fixed;
+    width: 17rem;
+
+    right: 0;
+    bottom: -4.5rem;
+    animation: fefoEntrando 0.5s ease forwards;
+    pointer-events: none;
+}
+
+.fefox.fefoSaindo,
+.fefoSaindo {
+    animation: fefoSaindo 0.5s ease forwards !important;
+}
+
+
+
+/* animações */
+@keyframes fefoEntrando{
+    from{
+         right: -20rem; 
+    }
+    to{
+        right: 0; 
+    }
+}
+
+@keyframes fefoSaindo{
+    from{
+        right: 0;
+    }
+    to{
+        right: -20rem;
+    }
+}
+
+@keyframes fefoEntrandoMobile{
+    from{
+        right: -15rem;
+    }
+    to{
+        right: 0;
+    }
+}
+
+@keyframes fefoSaindoMobile{
+    from{
+        right: 0;
+    }
+    to{
+        right: -15rem;
+    }
+}
+
+@keyframes fadein{
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+.fadein {
+    animation: fadein 1s ease forwards;
+}
+
+@keyframes fadeout {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+.fadeout {
+    animation: fadeout 0.5s ease forwards;
+}
+
+
+@media screen and (max-width: 1000px){
+
+    body {
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: auto;
+        padding: 3rem 0;
+    }
+
+    #container{
+        flex-direction: column;
+        height: auto;
+        width: 90%;
+        margin: 0 auto;
+        gap: 3rem;
+        position: relative;
+    }
+
+    #left-wrapper{
+        margin-left: 0;
+        width: 100%;
+    }
+    #left{
+        width: 90%;
+        margin: 0 auto;
+        gap: 2.5rem;
+    }
+    #left h1{
+        font-size: 2.2rem;
+        text-align: center;
+    }
+
+    #right{
+        width: 100%;
+        margin-left: 0;
+        height: auto;
+        min-height: 25rem;
+        padding-bottom: 2.5rem;
+        position: relative;
+    }
+    #right h1{
+        font-size: 1.9em;
+    }
+
+    #interacao{
+        margin-top: 3em;
+        margin-left: 2rem;
+        margin-bottom: 6rem;
+        width: 58%;
+    }
+    #box2{
+        width: 100%;
+        font-size: 1.1rem;
+    }
+    #botoes{
+        margin-left: 0;
+        width: 100%;
+        display: flex;
+        gap: 0.6rem;
+    }
+    .escolha{
+        flex: 1 1 0;
+        min-width: 0;
+        font-size: 0.85rem;
+    }
+
+    .fefox{
+        position: absolute;
+        top: auto;
+        right: 0;
+        bottom: -3.8rem;
+        width: clamp(11rem, 24vw, 15rem);
+        animation: fefoEntrando 0.5s ease forwards;
+        pointer-events: none;
+    }
+    .fefox.fefoSaindo,
+    .fefoSaindo {
+        animation: fefoSaindo 0.5s ease forwards !important;
+    }
+}
+
+
+
+@media screen and (max-width: 480px){
+
+    #container{
+        width: 92%;
+        gap: 2.5rem;
+    }
+
+    #left{
+        width: 95%;
+        gap: 2rem;
+    }
+
+    #left h1{
+        font-size: 1.8rem;
+    }
+    input{
+        font-size: 1rem;
+    }
+    #left button{
+        height: 3.8rem;
+        font-size: 1.1rem;
+    }
+
+    #low{
+        margin-top: 1.5rem;
+        justify-content: center;
+    }
+
+    #right{
+        border-radius: 20px;
+        min-height: 24rem;
+        padding-bottom: 2rem;
+        position: relative;
+    }
+
+    #box{
+        margin: 25px 20px 0px 20px;
+    }
+    #right img{
+        width: 7.5em;
+    }
+    #right h1{
+        font-size: 1.4em;
+    }
+    #right p{
+        font-size: 0.85em;
+        line-height: 1.4;
+    }
+
+    #interacao{
+        margin-top: 2rem;
+        margin-left: 1.2rem;
+        margin-bottom: 4.8rem;
+        width: 58%;
+    }
+
+    #box2{
+        width: 100%;
+        height: auto;
+        min-height: 2.8em;
+        padding: 0.6em 0.6em;
+        font-size: clamp(0.75rem, 3vw, 0.92rem);
+        border-radius: 18px 18px 4px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #botoes{
+        display: flex;
+        flex-direction: row;
+        gap: 0.45rem;
+        width: 100%;
+        margin-top: 0.5rem;
+        margin-left: 0;
+    }
+    .escolha{
+        flex: 1 1 0;
+        min-width: 0;
+        height: 36px;
+        padding: 0.35rem 0.2rem;
+        font-size: clamp(0.65rem, 2.4vw, 0.78rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border-radius: 8px;
+    }
+
+    .fefox{
+        position: absolute;
+        top: auto;
+        right: 0;
+        bottom: -3rem;
+        width: clamp(7.5rem, 36vw, 10rem);
+        animation: fefoEntrandoMobile 0.5s ease forwards;
+        pointer-events: none;
+    }
+    .fefox.fefoSaindo,
+    .fefoSaindo {
+        animation: fefoSaindoMobile 0.5s ease forwards !important;
+    }
+}
+
+@media screen and (max-width: 360px){
+    #interacao{
+        width: 56%;
+        margin-left: 0.8rem;
+        margin-bottom: 4.2rem;
+    }
+    #box2{
+        font-size: 0.8rem;
+        padding: 0.5em 0.4em;
+    }
+    #botoes{
+        gap: 0.35rem;
+    }
+    .escolha{
+        font-size: 0.65rem;
+        padding: 0.25rem 0.15rem;
+        height: 34px;
+    }
+    .fefox{
+        width: 7.2rem;
+        bottom: -2.4rem;
+    }
+}
+
+.login-error { color: #b42318; margin-top: 1rem; font-size: 0.9rem; }
+
+/* O Fefo entra e sai suavemente sem alterar a posição do layout. */
+.fefox {
+    animation: fefoAparecer 650ms cubic-bezier(.2, .8, .2, 1) both !important;
+    transform-origin: bottom right;
+}
+
+.fefox.fefoSaindo {
+    animation: fefoDespedir 500ms ease-in both !important;
+}
+
+#interacao.fadein {
+    animation: conversaAparecer 350ms ease-out both;
+}
+
+#interacao.fadeout {
+    animation: conversaSumir 250ms ease-in both;
+    pointer-events: none;
+}
+
+@keyframes fefoAparecer {
+    from { opacity: 0; transform: translate(70%, 18%) rotate(8deg); }
+    to { opacity: 1; transform: translate(0, 0) rotate(0); }
+}
+
+@keyframes fefoDespedir {
+    from { opacity: 1; transform: translate(0, 0) rotate(0); }
+    to { opacity: 0; transform: translate(70%, 18%) rotate(8deg); }
+}
+
+@keyframes conversaAparecer {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes conversaSumir {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fefox, .fefox.fefoSaindo, #interacao.fadein, #interacao.fadeout {
+        animation-duration: 1ms !important;
+    }
+}
