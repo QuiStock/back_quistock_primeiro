@@ -56,6 +56,14 @@ Novas senhas cadastradas pela aplicação são armazenadas com **bcrypt**. As op
 
 As versões das dependências estão definidas no [`pom.xml`](pom.xml).
 
+## Entrega do 1º ano
+
+- **Apresentação pública:** [landing page no GitHub Pages](https://quistock.github.io/back_quistock_primeiro/).
+- **Requisitos e evidências:** [conferência por disciplina](docs/entregas-primeiro-ano.md).
+- Para atualizar a cópia estática após alterar a landing da aplicação, execute `powershell -File scripts/export-landing.ps1` na raiz e versione o `index.html` gerado.
+
+O Pages publica a apresentação. O login e os CRUDs precisam da aplicação Java e do banco descritos abaixo.
+
 ## Como executar
 
 ### 1. Prepare o ambiente
