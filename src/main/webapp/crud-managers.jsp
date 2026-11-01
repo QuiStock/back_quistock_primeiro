@@ -11,7 +11,7 @@
         <input id="gerente-nome" type="text" name="name" value="${manager.name}" required>
     </div>
     <div class="campo">
-        <label for="gerente-email">Email</label>
+        <label for="gerente-email">E-mail</label>
         <input id="gerente-email" type="email" name="email" value="${manager.email}" required>
     </div>
     <div class="campo">

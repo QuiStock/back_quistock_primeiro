@@ -32,7 +32,7 @@
                     <a class="botao verde" href="${ctx}/admins">Ver administradores</a>
                 </c:otherwise>
             </c:choose>
-            <a class="botao contorno" href="${ctx}/">Voltar para a landing</a>
+            <a class="botao contorno" href="${ctx}/">Voltar para a página inicial</a>
         </div>
     </main>
 

@@ -41,7 +41,7 @@
                     <div id="tabela" class="tabela-tres-colunas">
                         <div id="cabecalho">
                             <h3>Nome</h3>
-                            <h3>Email</h3>
+                            <h3>E-mail</h3>
                             <h3>Região</h3>
                             <h3>Ações</h3>
                         </div>

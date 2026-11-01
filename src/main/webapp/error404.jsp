@@ -280,7 +280,7 @@
             <h1>X</h1>
         </div>
 
-        <p>NÃO ENCONTRADA</p>
+        <p>PÁGINA NÃO ENCONTRADA</p>
     </div>
 
     <h1>4</h1>

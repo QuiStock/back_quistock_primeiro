@@ -64,7 +64,7 @@ public class SaleDAO {
 
     public void insert(Sale sale) throws SQLException {
         String query = """
-                    insert into suggestion (suggestion_type, suggestion_date, discount_percentage, promotion_valid_from, promotion_valid_until, product_id) values ('promotion', ?, ?, ?, ?, ?);
+                    insert into suggestion (suggestion_type, suggestion_date, discount_percentage, promotion_valid_from, promotion_valid_until, product_id, store_id) values ('promotion', ?, ?, ?, ?, ?, (select store_id from product where id = ?));
                 """;
 
         try (
@@ -78,6 +78,7 @@ public class SaleDAO {
             smt.setDate(3, Date.valueOf(today));
             smt.setDate(4, Date.valueOf(sale.getPromotionValidUntil()));
             smt.setInt(5, sale.getProductId());
+            smt.setInt(6, sale.getProductId());
 
             smt.executeUpdate();
         }
@@ -97,7 +98,7 @@ public class SaleDAO {
     }
 
     public void update (Sale sale) throws SQLException {
-        String query = "update suggestion set discount_percentage = ?, promotion_valid_until = ?, product_id = ? where id = ? and suggestion_type = 'promotion';";
+        String query = "update suggestion set discount_percentage = ?, promotion_valid_until = ?, product_id = ?, store_id = (select store_id from product where id = ?) where id = ? and suggestion_type = 'promotion';";
 
         try (
                 Connection conn = factory.getConnection();
@@ -106,7 +107,8 @@ public class SaleDAO {
             smt.setDouble(1, sale.getDiscountPercentage());
             smt.setDate(2, Date.valueOf(sale.getPromotionValidUntil()));
             smt.setInt(3, sale.getProductId());
-            smt.setInt(4, sale.getId());
+            smt.setInt(4, sale.getProductId());
+            smt.setInt(5, sale.getId());
             smt.executeUpdate();
         }
     }

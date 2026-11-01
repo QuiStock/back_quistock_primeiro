@@ -26,9 +26,9 @@
         <c:if test="${not empty erro or not empty param.erro}">
             <p class="alerta" id="erro" role="alert">
                 <c:choose>
-                    <c:when test="${erro eq 'email' or param.erro eq 'email'}">Informe um email válido (até 320 caracteres).</c:when>
+                    <c:when test="${erro eq 'email' or param.erro eq 'email'}">Informe um e-mail válido (até 320 caracteres).</c:when>
                     <c:when test="${erro eq 'senha' or param.erro eq 'senha'}">A senha deve ter de 8 a 50 caracteres: letras, números, ponto ou sublinhado.</c:when>
-                    <c:when test="${param.erro eq 'duplicado'}">Esse email já está cadastrado.</c:when>
+                    <c:when test="${param.erro eq 'duplicado'}">Esse e-mail já está cadastrado.</c:when>
                     <c:when test="${param.erro eq 'vinculo'}">Esta loja possui registros vinculados.</c:when>
                     <c:when test="${param.erro eq 'regiao'}">Selecione uma região válida.</c:when>
                     <c:otherwise>Não foi possível concluir a operação. Tente novamente.</c:otherwise>
@@ -51,7 +51,7 @@
 
                     <div id="tabela" style="--colunas: 4">
                         <div id="cabecalho">
-                            <h3>Email</h3>
+                            <h3>E-mail</h3>
                             <h3>Senha</h3>
                             <h3>Região</h3>
                             <h3>Ações</h3>
@@ -80,7 +80,7 @@
             <input type="hidden" name="action" value="register">
 
             <div class="campo">
-                <label for="add-email">Email</label>
+                <label for="add-email">E-mail</label>
                 <input id="add-email" type="email" name="storeEmail" maxlength="320" required autofocus>
             </div>
             <div class="campo">
@@ -112,7 +112,7 @@
                 <input type="hidden" name="storeId" value="${item.id}">
 
                 <div class="campo">
-                    <label for="editar-${item.id}-email">Email</label>
+                    <label for="editar-${item.id}-email">E-mail</label>
                     <input id="editar-${item.id}-email" type="email" name="storeEmail" maxlength="320" required value="<c:out value='${item.email}'/>">
                 </div>
                 <div class="campo">

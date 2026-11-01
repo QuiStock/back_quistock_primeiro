@@ -103,7 +103,7 @@ public class RegionalManagerServlet extends HttpServlet{
         String name = req.getParameter("name");
 
         if (!validEmail(email)) {
-            showValidationError(req, resp, "Informe um email válido (até 320 caracteres).");
+            showValidationError(req, resp, "Informe um e-mail válido (até 320 caracteres).");
             return;
         }
         if (!validPassword(password)) {
@@ -158,7 +158,7 @@ public class RegionalManagerServlet extends HttpServlet{
         String name = req.getParameter("name");
 
         if (!validEmail(email)) {
-            showValidationError(req, resp, "Informe um email válido (até 320 caracteres).");
+            showValidationError(req, resp, "Informe um e-mail válido (até 320 caracteres).");
             return;
         }
 

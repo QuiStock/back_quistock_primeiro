@@ -10,7 +10,7 @@
         <input id="admin-nome" type="text" name="name" maxlength="100" value="${admin.name}" required>
     </div>
     <div class="campo">
-        <label for="admin-email">Email</label>
+        <label for="admin-email">E-mail</label>
         <input id="admin-email" type="email" name="email" maxlength="150" value="${admin.email}" required>
     </div>
     <div class="campo">

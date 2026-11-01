@@ -2,7 +2,7 @@
 <html>
 <head>
     <link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/landing-assets/asa-roxa.svg">
-    <title>Title</title>
+    <title>QuiStock - Início</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/quistock.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/loading.css?v=2">
 </head>

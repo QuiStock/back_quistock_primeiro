@@ -59,8 +59,8 @@ public class OrderDAO {
 
     public void insert(Order order) throws SQLException {
         String query = """
-                insert into suggestion(suggestion_type, suggestion_date, order_date, total_order_price, product_id)
-                values ('order', ?, ?, ?, ?)
+                insert into suggestion(suggestion_type, suggestion_date, order_date, total_order_price, product_id, store_id)
+                values ('order', ?, ?, ?, ?, (select store_id from product where id = ?))
         """;
         try (
                 Connection conn = factory.getConnection();
@@ -70,6 +70,7 @@ public class OrderDAO {
             smt.setDate(2, Date.valueOf(LocalDate.now()));
             smt.setDouble(3, order.getTotalOrderPrice());
             smt.setInt(4, order.getProductId());
+            smt.setInt(5, order.getProductId());
 
             smt.executeUpdate();
         }
@@ -109,12 +110,13 @@ public class OrderDAO {
     }
 
     public void update(Order order) throws SQLException {
-        String query = "update suggestion set product_id = ?, total_order_price = ? where id = ? and suggestion_type = 'order';";
+        String query = "update suggestion set product_id = ?, total_order_price = ?, store_id = (select store_id from product where id = ?) where id = ? and suggestion_type = 'order';";
         try (Connection conn = factory.getConnection();
              PreparedStatement smt = conn.prepareStatement(query)) {
             smt.setInt(1, order.getProductId());
             smt.setDouble(2, order.getTotalOrderPrice());
-            smt.setInt(3, order.getId());
+            smt.setInt(3, order.getProductId());
+            smt.setInt(4, order.getId());
             smt.executeUpdate();
         }
     }

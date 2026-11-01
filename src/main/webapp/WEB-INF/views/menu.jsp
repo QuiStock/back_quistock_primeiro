@@ -4,7 +4,7 @@
 <nav class="links">
     <a href="${ctx}/inicio" class="${param.ativo eq 'inicio' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/inicio.svg" alt="">Início</a>
     <c:if test="${sessionScope.loggedUser.type eq 'ADMIN'}">
-    <a href="${ctx}/admins" class="${param.ativo eq 'admins' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/admin.svg" alt="">Admins</a>
+    <a href="${ctx}/admins" class="${param.ativo eq 'admins' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/admin.svg" alt="">Administradores</a>
     <a href="${ctx}/regionalManagers" class="${param.ativo eq 'gerentes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/gerente.svg" alt="">Gerentes</a>
     </c:if>
     <a href="${ctx}/regioes" class="${param.ativo eq 'regioes' ? 'ativo' : ''}"><img src="${ctx}/assets/icons/regiao.svg" alt=""><c:choose><c:when test="${sessionScope.loggedUser.type eq 'MANAGER'}">Ver Regiões</c:when><c:otherwise>Regiões</c:otherwise></c:choose></a>

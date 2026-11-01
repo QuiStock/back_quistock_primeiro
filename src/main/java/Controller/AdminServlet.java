@@ -119,7 +119,7 @@ public class AdminServlet extends HttpServlet {
             return;
         }
         if (!validEmail(email)) {
-            showValidationError(req, resp, "Informe um email válido com até 150 caracteres.");
+            showValidationError(req, resp, "Informe um e-mail válido com até 150 caracteres.");
             return;
         }
         admin.setName(name.trim());
@@ -149,7 +149,7 @@ public class AdminServlet extends HttpServlet {
             return;
         }
         if (!validEmail(email)) {
-            showValidationError(req, resp, "Informe um email válido com até 150 caracteres.");
+            showValidationError(req, resp, "Informe um e-mail válido com até 150 caracteres.");
             return;
         }
         if (!validPassword(password)) {

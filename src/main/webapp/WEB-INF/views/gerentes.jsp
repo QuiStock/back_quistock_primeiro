@@ -28,8 +28,8 @@
                 <c:choose>
                     <c:when test="${erro eq 'vazio'}">Preencha todos os campos antes de salvar.</c:when>
                     <c:when test="${erro eq 'tamanho'}">Algum campo ultrapassou o tamanho permitido.</c:when>
-                    <c:when test="${erro eq 'email'}">Informe um email válido.</c:when>
-                    <c:when test="${erro eq 'duplicado'}">Esse email já está cadastrado.</c:when>
+                    <c:when test="${erro eq 'email'}">Informe um e-mail válido.</c:when>
+                    <c:when test="${erro eq 'duplicado'}">Esse e-mail já está cadastrado.</c:when>
                     <c:otherwise>Não foi possível concluir a operação. Tente novamente.</c:otherwise>
                 </c:choose>
             </p>
@@ -52,7 +52,7 @@
                     <div id="tabela">
                         <div id="cabecalho">
                             <h3>Nome</h3>
-                            <h3>Email</h3>
+                            <h3>E-mail</h3>
                             <h3>Ações</h3>
                         </div>
 
@@ -86,7 +86,7 @@
                 <input id="add-nome" type="text" name="nome" maxlength="100" required autofocus>
             </div>
             <div class="campo">
-                <label for="add-email">Email</label>
+                <label for="add-email">E-mail</label>
                 <input id="add-email" type="email" name="email" maxlength="150" required>
             </div>
 
@@ -110,7 +110,7 @@
                     <input id="editar-${item.id}-nome" type="text" name="nome" maxlength="100" required autofocus value="<c:out value='${item.nome}'/>">
                 </div>
                 <div class="campo">
-                    <label for="editar-${item.id}-email">Email</label>
+                    <label for="editar-${item.id}-email">E-mail</label>
                     <input id="editar-${item.id}-email" type="email" name="email" maxlength="150" required value="<c:out value='${item.email}'/>">
                 </div>
 

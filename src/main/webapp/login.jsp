@@ -16,7 +16,7 @@
         <div id="left-wrapper">
             <form action="${pageContext.request.contextPath}/login" method="POST" id="left">
                 <h1>Login</h1>
-                <input type="email" id="emailAdmin" placeholder="Email" name="email" required>
+                <input type="email" id="emailAdmin" placeholder="E-mail" name="email" required>
                 <input type="password" id="senhaAdmin" placeholder="Senha" name="password" required>
                 <button type="submit">Entrar</button>
                 <c:if test="${not empty error}"><p class="login-error" role="alert"><c:out value="${error}" /></p></c:if>
@@ -28,7 +28,7 @@
                         <img src="landing-assets/login-assets/instagram-preto.svg" alt="Instagram">
                     </a>
                     <a href="mailto:quistockinterdisciplinar@gmail.com" target="_blank">
-                        <img src="landing-assets/login-assets/email.svg" alt="Email">
+                        <img src="landing-assets/login-assets/email.svg" alt="E-mail">
                     </a>
                 </div>
         </div>
