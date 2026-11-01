@@ -11,9 +11,8 @@ public class OrderDAO {
 
     private final ConnectionFactory factory = new ConnectionFactory();
 
-    // Handles rs, Line
+    //Gets a line from resultset
     private Order rsLine(ResultSet rs) throws SQLException {
-        // Applying the method logic, using the provided values
         Date suggestionDate = rs.getDate("suggestion_date");
         Date orderDate = rs.getDate("order_date");
         return new Order(
@@ -27,34 +26,38 @@ public class OrderDAO {
         );
     }
 
-    // Handles select
-    public List<Order> select() throws SQLException {
-        // Applying the method logic, using the provided values
+    // regionTypeId == null: all regions(admin), otherwise, just orders from that region
+    public List<Order> select(Integer regionTypeId) throws SQLException {
         String query = """
                 select s.id, s.suggestion_type, s.suggestion_date, s.order_date,
                        s.total_order_price, p.name as product_name, s.product_id
                 from suggestion s
                 join product p on p.id = s.product_id
-                where s.suggestion_type = 'order';
-                """;
+                left join store st on st.id = p.store_id
+                where s.suggestion_type = 'order'
+                """
+                + (regionTypeId == null ? "" : " and st.region_type_id = ?")
+                + ";";
         List<Order> orders = new ArrayList<>();
 
         try (
                 Connection conn = factory.getConnection();
                 PreparedStatement smt = conn.prepareStatement(query);
-                ResultSet rs = smt.executeQuery();
         ) {
-            while (rs.next()) {
-                orders.add(rsLine(rs));
+            if (regionTypeId != null) {
+                smt.setInt(1, regionTypeId);
+            }
+            try (ResultSet rs = smt.executeQuery()) {
+                while (rs.next()) {
+                    orders.add(rsLine(rs));
+                }
             }
         }
 
         return orders;
     }
 
-    // Handles insert
     public void insert(Order order) throws SQLException {
-        // Applying the method logic, using the provided values
         String query = """
                 insert into suggestion(suggestion_type, suggestion_date, order_date, total_order_price, product_id)
                 values ('order', ?, ?, ?, ?)
@@ -72,9 +75,7 @@ public class OrderDAO {
         }
     }
 
-    // Handles delete
     public void delete(Order order) throws SQLException {
-        // Applying the method logic, using the provided values
         String query = "delete from suggestion where id = ? and suggestion_type = 'order';";
 
         try (
@@ -87,9 +88,7 @@ public class OrderDAO {
         }
     }
 
-    // Handles search, By, Id
     public Order searchById(int id) throws SQLException{
-        // Applying the method logic, using the provided values
         String query = """
                 select s.id, s.suggestion_type, s.suggestion_date, s.order_date,
                        s.total_order_price, p.name as product_name, s.product_id
@@ -109,7 +108,6 @@ public class OrderDAO {
         }
     }
 
-    // Update the order item and its total together.
     public void update(Order order) throws SQLException {
         String query = "update suggestion set product_id = ?, total_order_price = ? where id = ? and suggestion_type = 'order';";
         try (Connection conn = factory.getConnection();

@@ -2,7 +2,9 @@ package Controller;
 
 import DAO.SaleDAO;
 import DAO.ProductDAO;
+import Model.LoggedUser;
 import Model.Sale;
+import Service.AccessService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,15 +21,15 @@ public class SaleServlet extends HttpServlet {
     private final SaleDAO saleDAO = new SaleDAO();
     private final ProductDAO productDAO = new ProductDAO();
 
+    //only show information that belongs the logged user
     @Override
-    // Handles do, Get
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // Applying the method logic, using the provided values
         req.setCharacterEncoding("UTF-8");
         try {
-            req.setAttribute("itens", saleDAO.select());
-            req.setAttribute("produtos", productDAO.select());
+            Integer scope = AccessService.scope(AccessService.currentUser(req));
+            req.setAttribute("itens", saleDAO.select(scope));
+            req.setAttribute("produtos", productDAO.select(scope));
             req.getRequestDispatcher("/WEB-INF/views/promocao.jsp").forward(req, resp);
         } catch (SQLException e) {
             throw new ServletException("Erro ao consultar promocoes", e);
@@ -35,12 +37,11 @@ public class SaleServlet extends HttpServlet {
     }
 
     @Override
-    // Handles do, Post
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // Applying the method logic, using the provided values
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
+        LoggedUser user = AccessService.currentUser(req);
         if (action == null || !(action.equals("add") || action.equals("edit") || action.equals("delete"))) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
             return;
@@ -51,16 +52,16 @@ public class SaleServlet extends HttpServlet {
             if (!"add".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 sale = saleDAO.searchById(id);
-                if (sale == null) {
+                if (sale == null || !AccessService.canAccessProduct(user, sale.getProductId())) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Promoção não encontrada");
                     return;
                 }
             }
 
-            // Validate form values before creating the sale.
+            //validate form values before creating the sale
             if (!"delete".equals(action)) {
                 int productId = readProductId(req);
-                if (productId <= 0 || productDAO.searchById(productId) == null) {
+                if (productId <= 0 || !AccessService.canAccessProduct(user, productId)) {
                     throw new IllegalArgumentException("Selecione um produto válido.");
                 }
                 sale.setProductId(productId);
@@ -77,27 +78,24 @@ public class SaleServlet extends HttpServlet {
             }
 
             switch (action) {
-                case "add":
-                    saleDAO.insert(sale);
-                    break;
-                case "edit":
-                    saleDAO.update(sale);
-                    break;
-                case "delete":
-                    saleDAO.delete(sale);
-                    break;
-                default:
-                    return;
+
+                case "add": saleDAO.insert(sale); break;
+                case "edit": saleDAO.update(sale); break;
+                case "delete": saleDAO.delete(sale); break;
+                default: return;
+
             }
             resp.sendRedirect(req.getContextPath() + "/sales");
+          //checks expiration date, and discount value
         } catch (IllegalArgumentException | DateTimeException e) {
-            req.setAttribute("erro", e instanceof DateTimeException || e instanceof NumberFormatException
-                    ? "Confira os dados da promoção." : e.getMessage());
+            req.setAttribute("erro", e instanceof DateTimeException || e instanceof NumberFormatException ? "Confira os dados da promoção." : e.getMessage());
             doGet(req, resp);
         } catch (SQLException e) {
+            //foreign key violation, product doesn't exist
             if ("23503".equals(e.getSQLState())) {
                 req.setAttribute("erro", "Produto inexistente ou promoção com registros vinculados.");
                 doGet(req, resp);
+              //check restriction from db, expiration date is invalid
             } else if ("23514".equals(e.getSQLState())) {
                 req.setAttribute("erro", "Confira o desconto e a validade: a data final deve ser igual ou posterior ao início da promoção.");
                 doGet(req, resp);
@@ -107,9 +105,8 @@ public class SaleServlet extends HttpServlet {
         }
     }
 
-    // Handles read, Product, Id
+
     private int readProductId(HttpServletRequest req) {
-        // Applying the method logic, using the provided values
         try {
             return Integer.parseInt(req.getParameter("product-id"));
         } catch (NumberFormatException e) {
@@ -117,9 +114,7 @@ public class SaleServlet extends HttpServlet {
         }
     }
 
-    // Handles read, Discount
     private double readDiscount(HttpServletRequest req) {
-        // Applying the method logic, using the provided values
         try {
             return Double.parseDouble(req.getParameter("discountPercentage"));
         } catch (NullPointerException | NumberFormatException e) {
@@ -127,9 +122,7 @@ public class SaleServlet extends HttpServlet {
         }
     }
 
-    // Handles read, Valid, Until
     private LocalDate readValidUntil(HttpServletRequest req) {
-        // Applying the method logic, using the provided values
         try {
             return LocalDate.parse(req.getParameter("promotion-valid-until"));
         } catch (NullPointerException | DateTimeException e) {

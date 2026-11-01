@@ -9,19 +9,46 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.MappingMatch;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 @WebFilter("/*")
 public class UrlFilter implements Filter {
 
-    // Public routes and routes reserved for admins.
+    // Public routes (no login needed).
     private static final Set<String> general = Set.of("/", "/index.html", "/index.jsp", "/login.jsp", "/login", "/logout");
-    private static final Set<String> only_admin = Set.of(
-            "/home-admin.jsp", "/admins", "/crud-admin.jsp",
-            "/regionalManagers", "/regional-managers.jsp", "/crud-managers.jsp");
+
+    //who can read (GET) and who can write (POST)
+    private record Rule(Set<String> read, Set<String> write) {}
+
+    //private routes, need login, each with its own rules
+    private static final Set<String> ADMIN = Set.of("ADMIN");
+    private static final Set<String> ALL   = Set.of("ADMIN", "MANAGER");
+
+    //setting the access rules for each page
+    //any other path will be blocked
+    private static final Map<String, Rule> RULES = Map.ofEntries(
+            Map.entry("/inicio",                new Rule(ALL,   ALL)),
+            Map.entry("/admins",                new Rule(ADMIN, ADMIN)),
+            Map.entry("/regionalManagers",      new Rule(ADMIN, ADMIN)),
+            Map.entry("/regioes",               new Rule(ALL,   ADMIN)),
+            Map.entry("/regionTypes",           new Rule(ALL,   ADMIN)),
+            Map.entry("/stores",                new Rule(ALL,   ADMIN)),
+            Map.entry("/products",              new Rule(ALL,   ALL)),
+            Map.entry("/orders",                new Rule(ALL,   ALL)),
+            Map.entry("/sales",                 new Rule(ALL,   ALL)),
+            Map.entry("/home-admin.jsp",        new Rule(ADMIN, ADMIN)),
+            Map.entry("/admins.jsp",            new Rule(ADMIN, ADMIN)),
+            Map.entry("/crud-admin.jsp",        new Rule(ADMIN, ADMIN)),
+            Map.entry("/regional-managers.jsp", new Rule(ADMIN, ADMIN)),
+            Map.entry("/crud-managers.jsp",     new Rule(ADMIN, ADMIN)),
+            Map.entry("/crud-product.jsp",      new Rule(ALL,   ALL)),
+            Map.entry("/pedido.jsp",            new Rule(ALL,   ALL)),
+            Map.entry("/promocao.jsp",          new Rule(ALL,   ALL))
+    );
 
     @Override
-    // Handles do, Filter
+    //filtering method
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filter)
             throws ServletException, IOException {
 
@@ -30,7 +57,7 @@ public class UrlFilter implements Filter {
 
         String path  = req.getServletPath();
 
-        // Static assets must load before login too.
+        //static assets must load before login
         if (path.startsWith("/css/") || path.startsWith("/assets/") || path.startsWith("/landing-assets/") || path.startsWith("/script/")) {
             filter.doFilter(request, response);
             return;
@@ -41,14 +68,14 @@ public class UrlFilter implements Filter {
             return;
         }
 
-        // Let unknown URLs reach the 404 page even without a logged-in user.
+        //let unknown URL reach the 404 page even without a logged-in user
         if (req.getHttpServletMapping().getMappingMatch() == MappingMatch.DEFAULT
                 && req.getServletContext().getResource(path) == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        // Do not create a session just to check access.
+        //requires existent session to check
         HttpSession session = req.getSession(false);
         LoggedUser user = session == null ? null : (LoggedUser) session.getAttribute("loggedUser");
 
@@ -57,8 +84,13 @@ public class UrlFilter implements Filter {
             return;
         }
 
-        // Block admin routes for other users.
-        if (only_admin.contains(path) && !"ADMIN".equals(user.getType())) {
+        //role checking
+        Rule rule = RULES.get(path);
+        String method = req.getMethod();
+        boolean leitura = "GET".equals(method) || "HEAD".equals(method);
+
+        //checks session, blocks access if tries entering a not allowed page
+        if (rule == null || !(leitura ? rule.read() : rule.write()).contains(user.getType())) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Página não permitida");
             return;
         }

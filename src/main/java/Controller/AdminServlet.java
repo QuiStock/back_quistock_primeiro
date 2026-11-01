@@ -58,7 +58,6 @@ public class AdminServlet extends HttpServlet {
     }
 
     @Override
-    // Handles do, Post
     protected void doPost(
             HttpServletRequest req,
             HttpServletResponse resp
@@ -91,7 +90,6 @@ public class AdminServlet extends HttpServlet {
 
     }
 
-    // Handles delete
     private void delete (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException,  IOException{
 
@@ -103,7 +101,6 @@ public class AdminServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admins");
     }
 
-    // Handles update
     private void update (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
 
@@ -127,7 +124,7 @@ public class AdminServlet extends HttpServlet {
         }
         admin.setName(name.trim());
         admin.setEmail(email.trim());
-        // Only replace the password hash when a new password was entered.
+        //only replace the password hash when a new password was entered
         String newPass = req.getParameter("password");
         if (newPass != null && !newPass.isBlank() && !newPass.equals(admin.getPassword())) {
             if (!validPassword(newPass)) {
@@ -142,10 +139,8 @@ public class AdminServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admins");
     }
 
-    // Handles add
     private void add (HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, ServletException, IOException{
-        // Applying the method logic, using the provided values
         String name = req.getParameter("name");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
@@ -172,30 +167,27 @@ public class AdminServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admins");
     }
 
-    // Handles valid, Name
+    //regex method, accepts letters and apostrofes, and hifen, limits to 100 characters
     private boolean validName(String name) {
-        // Applying the method logic, using the provided values
         return name != null && name.trim().length() <= 100
                 && name.trim().matches("^[\\p{L}]+(?:[ '\\u2019-][\\p{L}]+)*$");
     }
 
-    // Handles valid, Email
+    //regex method, accepts nearly any digits, requires an @ and a dot at the end, limits to 150 characters
     private boolean validEmail(String email) {
-        // Applying the method logic, using the provided values
         return email != null && email.trim().length() <= 150
                 && email.trim().matches("^[A-Za-z0-9À-ÿ._%+-]+@[A-Za-z0-9À-ÿ-]+\\.[A-Za-z0-9À-ÿ.-]+$");
     }
 
-    // Handles valid, Password
+    //regex method, allows 50 characters, letters and numbers, dots and underlines
     private boolean validPassword(String password) {
         // Applying the method logic, using the provided values
         return password != null && password.trim().matches("^[a-zA-Z0-9._]{8,50}$");
     }
 
-    // Handles show, Validation, Error
+    //handles show, Validation, Error
     private void showValidationError(HttpServletRequest req, HttpServletResponse resp, String message)
             throws ServletException, IOException {
-        // Applying the method logic, using the provided values
         req.setAttribute("erro", message);
         doGet(req, resp);
     }
