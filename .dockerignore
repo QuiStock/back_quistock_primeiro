@@ -1,0 +1,35 @@
+# Local build output and caches
+target/
+build/
+dist/
+.mvn/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Git metadata and local tooling
+.git/
+.github/
+.codex/
+.agents/
+graphify-out/
+
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Documentation and static GitHub Pages copy (not part of the WAR build)
+docs/
+README*
+LICENSE*
+index.html
