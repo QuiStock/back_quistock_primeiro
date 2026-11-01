@@ -20,5 +20,5 @@ public class Product {
     private String store_Name;
     private LocalDate expirationDate;
     private String line;
-    private int regionTypeId;
+    private Integer regionTypeId;
 }

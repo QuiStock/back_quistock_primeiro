@@ -13,8 +13,6 @@ public final class AccessService {
 
     private static final ProductDAO productDAO = new ProductDAO();
 
-    private AccessService() {}
-
     //loggedUser from session, fails if user = null
     public static LoggedUser currentUser(HttpServletRequest req) {
         HttpSession session = req.getSession(false);

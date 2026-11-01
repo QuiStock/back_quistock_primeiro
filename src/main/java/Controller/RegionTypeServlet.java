@@ -17,9 +17,8 @@ public class RegionTypeServlet extends HttpServlet{
 
     private RegionTypeDAO regionTypeDAO = new RegionTypeDAO();
 
-    // Handles do, Get
+    //loads regyin types
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        // Applying the method logic, using the provided values
         String action = request.getParameter("action");
         if (action == null) action = "regionTypesList";
 
@@ -29,10 +28,8 @@ public class RegionTypeServlet extends HttpServlet{
         }
     }
 
-    // Handles do, Post
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        // Read submitted names as UTF-8.
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("acao");
@@ -62,9 +59,7 @@ public class RegionTypeServlet extends HttpServlet{
         }
     }
 
-    // Handles read, Region, Types
     private void readRegionTypes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        // Applying the method logic, using the provided values
         try {
             List<RegionType> regionTypesList = regionTypeDAO.select();
 
@@ -77,9 +72,7 @@ public class RegionTypeServlet extends HttpServlet{
         }
     }
 
-    // Handles create, Region, Type
     private void createRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        // Applying the method logic, using the provided values
         String name = request.getParameter("nome");
         if (name == null) name = request.getParameter("regionTypeName");
 
@@ -101,9 +94,7 @@ public class RegionTypeServlet extends HttpServlet{
         }
     }
 
-    // Handles update, Region, Type
     private void updateRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        // Applying the method logic, using the provided values
         RegionType regionType = new RegionType();
 
         String name = request.getParameter("nome");
@@ -132,9 +123,7 @@ public class RegionTypeServlet extends HttpServlet{
     }
 
 
-    // Handles delete, Region, Type
     private void deleteRegionType(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        // Applying the method logic, using the provided values
         String idValue = request.getParameter("id");
         if (idValue == null) idValue = request.getParameter("regionTypeId");
         int id = Integer.parseInt(idValue);
@@ -148,7 +137,7 @@ public class RegionTypeServlet extends HttpServlet{
         }
     }
 
-    // Handles nome, Validado
+    //handles nome, Validado
     private boolean nomeValidado(String name){
 
         if (name == null){
@@ -157,7 +146,7 @@ public class RegionTypeServlet extends HttpServlet{
 
         name = name.trim();
 
-        // Allow letters with internal spaces, apostrophes, or hyphens.
+        //allow letters with internal spaces, apostrophes, or hyphens.
         String regex = "^[\\p{L}]+(?:[ '\\u2019-][\\p{L}]+)*$";
 
         return name.trim().length() <=100 && name.matches(regex);

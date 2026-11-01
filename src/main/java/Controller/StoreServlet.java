@@ -20,7 +20,7 @@ public class StoreServlet extends HttpServlet {
     private final RegionTypeDAO regionTypeDAO = new RegionTypeDAO();
 
     @Override
-    // Load stores and region choices for the page.
+    //load stores and region choices for the page
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setAttribute("storesList", storeDAO.readStores());
@@ -32,9 +32,7 @@ public class StoreServlet extends HttpServlet {
     }
 
     @Override
-    // Handles do, Post
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Applying the method logic, using the provided values
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
@@ -45,17 +43,12 @@ public class StoreServlet extends HttpServlet {
 
         try {
             switch (action) {
-                case "register":
-                    createStore(request, response);
-                    break;
-                case "edit":
-                    updateStore(request, response);
-                    break;
-                case "delete":
-                    deleteStore(request, response);
-                    break;
-                default:
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
+
+                case "register": createStore(request, response); break;
+                case "edit": updateStore(request, response); break;
+                case "delete": deleteStore(request, response); break;
+                default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
+
             }
         } catch (NumberFormatException e) {
             if ("register".equals(action) || "edit".equals(action)) {
@@ -68,9 +61,8 @@ public class StoreServlet extends HttpServlet {
         }
     }
 
-    // Handles create, Store
     private void createStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        // Applying the method logic, using the provided values
+
         String email = request.getParameter("storeEmail");
         String password = request.getParameter("storePassword");
         String regionTypeId = request.getParameter("regionTypeId");
@@ -96,7 +88,7 @@ public class StoreServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/stores");
     }
 
-    // Keep the current password when the field is left blank.
+    //keep the current password when the field is left blank
     private void updateStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         int id = parseId(request.getParameter("storeId"));
         String email = request.getParameter("storeEmail");
@@ -137,9 +129,7 @@ public class StoreServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/stores");
     }
 
-    // Handles delete, Store
     private void deleteStore(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-        // Applying the method logic, using the provided values
         int id = parseId(request.getParameter("storeId"));
         if (storeDAO.deleteStore(id) == 0) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Loja não encontrada");
@@ -148,7 +138,7 @@ public class StoreServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/stores");
     }
 
-    // Reject IDs that are missing, invalid, or nonpositive.
+    //reject IDs that are missing, invalid, or nonpositive
     private int parseId(String value) {
         int id = Integer.parseInt(value);
         if (id <= 0) {
@@ -157,9 +147,8 @@ public class StoreServlet extends HttpServlet {
         return id;
     }
 
-    // Handles valid, Email
+    //regex method, allows nearly any digit, requires an @ and a dot at the end, limits to 320 characters
     private boolean validEmail(String email) {
-        // Applying the method logic, using the provided values
         if (email == null) {
             return false;
         }
@@ -169,9 +158,8 @@ public class StoreServlet extends HttpServlet {
         return email.trim().length() <= 320 && email.trim().matches(regex);
     }
 
-    // Handles valid, Password
+    //accepts 80 characters, allows letters and numbers, dots and underlines
     private boolean validPassword(String pass){
-        // Applying the method logic, using the provided values
         if (pass == null){
             return false;
         }
@@ -181,10 +169,9 @@ public class StoreServlet extends HttpServlet {
         return pass.trim().matches(regex);
     }
 
-    // Handles show, Validation, Error
+    //handles show, Validation, Error
     private void showValidationError(HttpServletRequest request, HttpServletResponse response, String code)
             throws ServletException, IOException {
-        // Applying the method logic, using the provided values
         request.setAttribute("erro", code);
         doGet(request, response);
     }

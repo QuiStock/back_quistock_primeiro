@@ -2,7 +2,10 @@ package Controller;
 
 import DAO.ProductDAO;
 import DAO.StoreDAO;
+import Model.LoggedUser;
 import Model.Product;
+import Model.Store;
+import Service.AccessService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,19 +24,20 @@ public class ProductServlet extends HttpServlet {
     private final StoreDAO storeDAO = new StoreDAO();
 
     @Override
-    // Handles do, Get
     protected void doGet(HttpServletRequest req,  HttpServletResponse resp)
             throws ServletException, IOException {
-        // Applying the method logic, using the provided values
         req.setCharacterEncoding("UTF-8");
 
         String action = req.getParameter("action");
+        LoggedUser user = AccessService.currentUser(req);
 
         try {
 
             if ("new".equals(action)){
-                // Load stores for the product form.
-                req.setAttribute("stores", storeDAO.readStores());
+                //Load stores for the product form
+                req.setAttribute("stores", storeDAO.readStores().stream()
+                        .filter(s -> AccessService.canAccessRegion(user, s.getRegionTypeId()))
+                        .toList());
                 req.getRequestDispatcher("/crud-product.jsp").forward(req, resp);
             }
 
@@ -41,7 +45,7 @@ public class ProductServlet extends HttpServlet {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Product product = dao.searchById(id);
 
-                if (product == null) {
+                if (product == null || !AccessService.canAccessRegion(user, product.getRegionTypeId())) {
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Produto não encontrado");
                     return;
                 }
@@ -51,7 +55,7 @@ public class ProductServlet extends HttpServlet {
             }
 
             else {
-                req.setAttribute("products", dao.select());
+                req.setAttribute("products", dao.select(AccessService.scope(user)));
                 req.getRequestDispatcher("/WEB-INF/views/products.jsp").forward(req, resp);
             }
         } catch (SQLException e){
@@ -62,13 +66,12 @@ public class ProductServlet extends HttpServlet {
     }
 
     @Override
-    // Handles do, Post
     protected void doPost(HttpServletRequest req,  HttpServletResponse resp)
             throws ServletException, IOException {
-        // Applying the method logic, using the provided values
         req.setCharacterEncoding("UTF-8");
 
         String action = req.getParameter("action");
+        LoggedUser user = AccessService.currentUser(req);
         if (action == null) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
             return;
@@ -77,9 +80,9 @@ public class ProductServlet extends HttpServlet {
 
             switch (action) {
 
-                case "new": add(req, resp); break;
-                case "edit": update(req, resp); break;
-                case "delete": delete(req, resp); break;
+                case "new": add(req, resp, user); break;
+                case "edit": update(req, resp, user); break;
+                case "delete": delete(req, resp, user); break;
                 default: resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
 
             }
@@ -91,7 +94,7 @@ public class ProductServlet extends HttpServlet {
                     : e instanceof NumberFormatException
                     ? "Informe preço, quantidade e loja válidos." : e.getMessage());
             try {
-                req.setAttribute("products", dao.select());
+                req.setAttribute("products", dao.select(AccessService.scope(user)));
                 req.getRequestDispatcher("/WEB-INF/views/products.jsp").forward(req, resp);
             } catch (SQLException ex) {
                 throw new ServletException("Erro ao buscar produtos", ex);
@@ -99,10 +102,8 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
-    // Handles add
-    private void add(HttpServletRequest req, HttpServletResponse resp)
+    private void add(HttpServletRequest req, HttpServletResponse resp, LoggedUser user)
             throws SQLException, IOException {
-        // Applying the method logic, using the provided values
         Product  product = new Product();
 
         product.setName(req.getParameter("name"));
@@ -115,7 +116,8 @@ public class ProductServlet extends HttpServlet {
         product.setBrand(req.getParameter("brand"));
 
         validate(product);
-        if (storeDAO.foundStore(product.getStore_id()) == null) {
+        Store store = storeDAO.foundStore(product.getStore_id());
+        if (store == null || !AccessService.canAccessRegion(user, store.getRegionTypeId())) {
             throw new IllegalArgumentException("Loja inválida");
         }
 
@@ -124,14 +126,13 @@ public class ProductServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/products");
     }
 
-    // Handles delete
-    private void delete(HttpServletRequest req, HttpServletResponse resp)
+    private void delete(HttpServletRequest req, HttpServletResponse resp, LoggedUser user)
             throws SQLException, IOException {
-        // Applying the method logic, using the provided values
         Product product = new Product();
         int id = Integer.parseInt(req.getParameter("id"));
 
-        if (dao.searchById(id) == null) {
+        Product existing = dao.searchById(id);
+        if (existing == null || !AccessService.canAccessRegion(user, existing.getRegionTypeId())) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Produto não encontrado");
             return;
         }
@@ -143,14 +144,13 @@ public class ProductServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/products");
     }
 
-    // Handles update
-    private void update (HttpServletRequest req, HttpServletResponse resp)
+    private void update (HttpServletRequest req, HttpServletResponse resp, LoggedUser user)
             throws SQLException, IOException{
-        // Applying the method logic, using the provided values
         Product product = new Product();
 
         int id = Integer.parseInt(req.getParameter("id"));
-        if (dao.searchById(id) == null) {
+        Product existing = dao.searchById(id);
+        if (existing == null || !AccessService.canAccessRegion(user, existing.getRegionTypeId())) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Produto não encontrado");
             return;
         }
@@ -173,7 +173,7 @@ public class ProductServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/products");
     }
 
-    // Check required fields before saving the product.
+    //check required fields before saving the product
     private void validate(Product product) {
         validateAlphaText(product.getName(), "Nome");
         validateText(product.getBrand(), "Marca");
@@ -189,23 +189,19 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
-    // Handles validate, Text
     private void validateText(String value, String field) {
-        // Applying the method logic, using the provided values
         validateAlphaText(value, field);
     }
 
-    // Handles validate, Alpha, Text
+    //regex method, accepts digits [0-9], and limits to 50 characters
     private void validateAlphaText(String value, String field) {
-        // Applying the method logic, using the provided values
         if (value == null || !value.trim().matches("^[\\p{L}]+(?: +[\\p{L}]+)*$")) {
             throw new IllegalArgumentException("Campo " + field + " inválido: use somente letras e espaços.");
         }
     }
 
-    // Handles required, Parameter
+    //method to require all fields to be filled
     private String requiredParameter(HttpServletRequest req, String name) {
-        // Applying the method logic, using the provided values
         String value = req.getParameter(name);
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("Preencha todos os campos antes de salvar.");

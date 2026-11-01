@@ -2,7 +2,9 @@ package Controller;
 
 import DAO.OrderDAO;
 import DAO.ProductDAO;
+import Model.LoggedUser;
 import Model.Order;
+import Service.AccessService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,17 +20,17 @@ public class OrderServlet extends HttpServlet {
     private final ProductDAO productDAO = new ProductDAO();
 
     @Override
-    // Load orders and products for the page
+    //load orders and products for the page
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException{
-        // Read submitted text as UTF 8
+            throws ServletException, IOException{
         req.setCharacterEncoding("UTF-8");
 
-        // Fetch both lists before rendering the page
+        //fetch both lists before rendering the page
         try {
 
-            req.setAttribute("itens", dao.select());
-            req.setAttribute("produtos", productDAO.select());
+            Integer scope = AccessService.scope(AccessService.currentUser(req));
+            req.setAttribute("itens", dao.select(scope));
+            req.setAttribute("produtos", productDAO.select(scope));
             req.getRequestDispatcher("/WEB-INF/views/pedido.jsp").forward(req, resp);
 
         } catch (SQLException e) {
@@ -37,25 +39,23 @@ public class OrderServlet extends HttpServlet {
     }
 
     @Override
-    // Route order changes to the requested action
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // Read submitted text as UTF 8
         req.setCharacterEncoding("UTF-8");
 
         String action = req.getParameter("action");
+        LoggedUser user = AccessService.currentUser(req);
 
         // Reject requests without an action
         if (action == null) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação não informada");
             return;
         }
-        // Run the selected action and handle validation or database errors
         try {
             switch (action) {
-                case "add" -> add(req, resp);
-                case "delete" -> delete(req, resp);
-                case "edit" -> update(req, resp);
+                case "add" -> add(req, resp, user);
+                case "delete" -> delete(req, resp, user);
+                case "edit" -> update(req, resp, user);
                 default -> resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
             }
         } catch (IllegalArgumentException e) {
@@ -63,7 +63,7 @@ public class OrderServlet extends HttpServlet {
                     ? "Informe valores numéricos válidos para produto e preço total." : e.getMessage());
             doGet(req, resp);
         } catch (SQLException e) {
-            // Report missing or linked records to the user
+            //report missing or linked records to the user
             if ("23503".equals(e.getSQLState())) {
                 req.setAttribute("erro", "Produto inexistente ou pedido com registros vinculados.");
                 doGet(req, resp);
@@ -74,70 +74,74 @@ public class OrderServlet extends HttpServlet {
 
     }
 
-    // Create an order from the submitted values
-    private void add(HttpServletRequest req, HttpServletResponse resp)
-        throws SQLException, IOException {
-        // Create the order and assign its product and total
+    private void add(HttpServletRequest req, HttpServletResponse resp, LoggedUser user)
+            throws SQLException, IOException {
         Order order = new Order();
 
         order.setProductId(readProductId(req));
         order.setTotalOrderPrice(readTotal(req));
 
 
-        // Check the values before saving
-        validate(order);
+        //check the values before saving
+        validate(order, user);
         dao.insert(order);
 
         resp.sendRedirect(req.getContextPath() + "/orders");
     }
 
-    // Delete the selected order
-    private void delete(HttpServletRequest req, HttpServletResponse resp)
-        throws SQLException, IOException {
-        // Create an order with the submitted identifier
-        Order order = new Order();
+    private void delete(HttpServletRequest req, HttpServletResponse resp, LoggedUser user)
+            throws SQLException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
 
-        order.setId(Integer.parseInt(req.getParameter("id")));
+        //only delete orders that exist and belong to the user's region
+        Order existing = dao.searchById(id);
+        if (existing == null || !AccessService.canAccessProduct(user, existing.getProductId())) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Pedido não encontrado");
+            return;
+        }
+
+        Order order = new Order();
+        order.setId(id);
 
         dao.delete(order);
 
         resp.sendRedirect(req.getContextPath() + "/orders");
     }
 
-    // Validate the order before writing it to the database
-    private void validate(Order order) throws SQLException {
-        // Require an existing product
-        if (order.getProductId() <= 0 || productDAO.searchById(order.getProductId()) == null) {
+    //validate the order before writing it to the database
+    private void validate(Order order, LoggedUser user) throws SQLException {
+        //require an existing product
+        if (order.getProductId() <= 0 || !AccessService.canAccessProduct(user, order.getProductId())) {
             throw new IllegalArgumentException("Selecione um produto válido.");
         }
-        // Require a valid nonnegative total
+        //require a valid nonnegative total
         if (!Double.isFinite(order.getTotalOrderPrice()) || order.getTotalOrderPrice() < 0) {
             throw new IllegalArgumentException("Informe um preço total válido, maior ou igual a zero.");
         }
     }
 
-    // Update the product and total of an existing order
-    private void update(HttpServletRequest req, HttpServletResponse resp)
+    //update the product and total of an existing order
+    private void update(HttpServletRequest req, HttpServletResponse resp, LoggedUser user)
             throws SQLException, IOException {
-        // Find the order before applying changes
+
+        //find the order before applying changes
         int id = Integer.parseInt(req.getParameter("id"));
         Order order = dao.searchById(id);
-        // Return an error when the order does not exist
-        if (order == null) {
+
+        //return an error when the order does not exist
+        if (order == null || !AccessService.canAccessProduct(user, order.getProductId())) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Pedido não encontrado");
             return;
         }
-        // Assign and validate the submitted values
+
         order.setProductId(readProductId(req));
         order.setTotalOrderPrice(readTotal(req));
-        validate(order);
+        validate(order, user);
         dao.update(order);
         resp.sendRedirect(req.getContextPath() + "/orders");
     }
 
-    // Read the product identifier from the request
     private int readProductId(HttpServletRequest req) {
-        // Convert the identifier and report invalid input
         try {
             return Integer.parseInt(req.getParameter("product-id"));
         } catch (NumberFormatException e) {
@@ -145,9 +149,8 @@ public class OrderServlet extends HttpServlet {
         }
     }
 
-    // Read the order total from the request
     private double readTotal(HttpServletRequest req) {
-        // Convert the total and report invalid input
+        //convert the total and report invalid input
         try {
             return Double.parseDouble(req.getParameter("total-order-price"));
         } catch (NullPointerException | NumberFormatException e) {
