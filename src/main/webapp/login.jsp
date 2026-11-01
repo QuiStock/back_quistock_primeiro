@@ -6,7 +6,7 @@
     <link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/landing-assets/asa-roxa.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/login.css?v=2">
     <link rel="stylesheet" href="css/loading.css">
     <title>Login | QuiStock</title>
 </head>
@@ -53,7 +53,7 @@
         <img src="landing-assets/login-assets/fefo-alegre.png" alt="fefo" class="fefox">
     </div>
 
-    <script src="script/login.js" defer></script>
+    <script src="script/login.js?v=2" defer></script>
     <script src="assets/js/loading.js"></script>
     <script src="script/public-loading.js"></script>
 </body>

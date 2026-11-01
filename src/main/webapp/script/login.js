@@ -5,6 +5,16 @@ const opcao2 = document.getElementById("escolha2");
 const fala = document.getElementById("box2");
 const fefo = document.querySelector('.fefo');
 const fefoImagem = document.querySelector(".fefox");
+const fefoNormal = new Image();
+fefoNormal.src = "landing-assets/login-assets/fefo-normal.png";
+
+function despedirFefo() {
+    interacao.classList.add("fadeout");
+    if (fefoNormal.complete && fefoNormal.naturalWidth) {
+        fefoImagem.src = fefoNormal.src;
+    }
+    fefoImagem.classList.add("fefoSaindo");
+}
 
 setTimeout(function(){
     interacao.classList.add("fadein");
@@ -40,17 +50,11 @@ opcao2.addEventListener("click", function(){
 
     if(fala.textContent == "Já tem cadastro?"){
 
-        interacao.classList.add("fadeout");
-
-        fefoImagem.src = "landing-assets/login-assets/fefo-normal.png";
-        fefoImagem.classList.add("fefoSaindo");
+        despedirFefo();
 
     } else if(fala.textContent == "Gostaria de fazer um?"){
 
-        interacao.classList.add("fadeout");
-
-        fefoImagem.src = "landing-assets/login-assets/fefo-normal.png";
-        fefoImagem.classList.add("fefoSaindo");
+        despedirFefo();
 
     } else if(fala.textContent == "Entre em contato conosco!"){
 

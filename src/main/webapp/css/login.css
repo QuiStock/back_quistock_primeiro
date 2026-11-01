@@ -571,7 +571,7 @@ input:-webkit-autofill:active {
 }
 
 .fefox.fefoSaindo {
-    animation: fefoDespedir 500ms ease-in both !important;
+    animation: fefoDespedir 700ms cubic-bezier(.4, 0, .2, 1) both !important;
 }
 
 #interacao.fadein {
@@ -589,8 +589,9 @@ input:-webkit-autofill:active {
 }
 
 @keyframes fefoDespedir {
-    from { opacity: 1; transform: translate(0, 0) rotate(0); }
-    to { opacity: 0; transform: translate(70%, 18%) rotate(8deg); }
+    0% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+    55% { opacity: 1; transform: translate(-12%, -8%) rotate(-8deg) scale(1.04); }
+    100% { opacity: 0; transform: translate(115%, -3%) rotate(16deg) scale(.88); }
 }
 
 @keyframes conversaAparecer {
@@ -604,7 +605,15 @@ input:-webkit-autofill:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .fefox, .fefox.fefoSaindo, #interacao.fadein, #interacao.fadeout {
+    .fefox.fefoSaindo {
+        animation: fefoSaidaReduzida 350ms ease-out both !important;
+    }
+    .fefox, #interacao.fadein, #interacao.fadeout {
         animation-duration: 1ms !important;
     }
+}
+
+@keyframes fefoSaidaReduzida {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 1; }
 }
