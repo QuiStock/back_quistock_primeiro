@@ -10,45 +10,53 @@ public class ProductDAO {
 
     private final ConnectionFactory factory = new ConnectionFactory();
 
-    // Keep a missing expiration date as null in the model.
+    //select base
+    private static final String BASE_SELECT =
+            "SELECT p.id, p.name, p.batch, p.price, p.stock_quantity AS quantity, " +
+                    "p.brand, p.store_id, s.email AS store_name, s.region_type_id, p.expiration_date, p.line " +
+                    "FROM product p LEFT JOIN store s ON s.id = p.store_id ";
+
+    //keep a missing expiration date as null in the model.
     private Product rsLine(ResultSet rs) throws SQLException {
         Product product = new Product(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getString("batch"),
-            rs.getDouble("price"),
-            rs.getInt("quantity"),
-            rs.getString("brand"),
-            rs.getInt("store_id"),
-            rs.getString("store_name"),
-            rs.getDate("expiration_date") == null ? null : rs.getDate("expiration_date").toLocalDate(),
-            rs.getString("line")
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("batch"),
+                rs.getDouble("price"),
+                rs.getInt("quantity"),
+                rs.getString("brand"),
+                rs.getInt("store_id"),
+                rs.getString("store_name"),
+                rs.getDate("expiration_date") == null ? null : rs.getDate("expiration_date").toLocalDate(),
+                rs.getString("line"),
+                rs.getObject("region_type_id", Integer.class)
         );
         return product;
     }
 
-    // Handles select
-    public List<Product> select() throws SQLException {
-        // Applying the method logic, using the provided values
-        String query = "SELECT p.id, p.name, p.batch, p.price, p.stock_quantity AS quantity, " +
-                "p.brand, p.store_id, s.email AS store_name, p.expiration_date, p.line " +
-                "FROM product p LEFT JOIN store s ON s.id = p.store_id ORDER BY p.id;";
+    //regionTypeId == null: all regions(admin). otherwise, only from that region
+    public List<Product> select(Integer regionTypeId) throws SQLException {
+        String query = BASE_SELECT
+                + (regionTypeId == null ? "" : "WHERE s.region_type_id = ? ")
+                + "ORDER BY p.id;";
         List<Product> products = new ArrayList<>();
 
         try (Connection conn = factory.getConnection();
-             PreparedStatement smt = conn.prepareStatement(query);
-             ResultSet rs = smt.executeQuery()) {
-            while (rs.next()) {
-                products.add(rsLine(rs));
+             PreparedStatement smt = conn.prepareStatement(query)) {
+            if (regionTypeId != null) {
+                smt.setInt(1, regionTypeId);
+            }
+            try (ResultSet rs = smt.executeQuery()) {
+                while (rs.next()) {
+                    products.add(rsLine(rs));
+                }
             }
         }
 
         return products;
     }
 
-    // Handles insert
     public void insert(Product product) throws SQLException {
-        // Applying the method logic, using the provided values
         String query = "INSERT INTO product(batch, name, price, expiration_date, brand, line, stock_quantity, store_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (
@@ -68,9 +76,7 @@ public class ProductDAO {
         }
     }
 
-    // Handles delete
     public void delete (Product product) throws SQLException {
-        // Applying the method logic, using the provided values
         String query = "DELETE FROM product WHERE id = ?;";
 
         try (
@@ -83,9 +89,7 @@ public class ProductDAO {
         }
     }
 
-    // Handles update
     public void update (Product product) throws SQLException {
-        // Applying the method logic, using the provided values
         String query = "UPDATE product SET name = ?, batch = ?, brand = ?, line = ?, expiration_date = ?, stock_quantity = ?, price = ? WHERE id = ?;";
 
         try (
@@ -105,12 +109,8 @@ public class ProductDAO {
         }
     }
 
-    // Handles search, By, Id
     public Product searchById(int id) throws SQLException {
-        // Applying the method logic, using the provided values
-        String query = "SELECT p.id, p.name, p.batch, p.price, p.stock_quantity AS quantity, " +
-                "p.brand, p.store_id, s.email AS store_name, p.expiration_date, p.line " +
-                "FROM product p LEFT JOIN store s ON s.id = p.store_id WHERE p.id = ?";
+        String query = BASE_SELECT + "WHERE p.id = ?";
 
         try (Connection conn = factory.getConnection();
              PreparedStatement smt = conn.prepareStatement(query)) {
