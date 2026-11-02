@@ -15,6 +15,7 @@
 
         <div id="left-wrapper">
             <form action="${pageContext.request.contextPath}/login" method="POST" id="left">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <h1>Login</h1>
                 <input type="email" id="emailAdmin" placeholder="E-mail" name="email" required>
                 <input type="password" id="senhaAdmin" placeholder="Senha" name="password" required>

@@ -8,6 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.MappingMatch;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Base64;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +51,11 @@ public class UrlFilter implements Filter {
             Map.entry("/pedido.jsp",            new Rule(ALL,   ALL)),
             Map.entry("/promocao.jsp",          new Rule(ALL,   ALL))
     );
+
+    //tokens generated for each session
+    private static final String CSRF_ATTR  = "csrfToken";
+    private static final String CSRF_PARAM = "_csrf";
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     @Override
     //filtering method
@@ -93,6 +103,29 @@ public class UrlFilter implements Filter {
         if (rule == null || !(leitura ? rule.read() : rule.write()).contains(user.getType())) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Página não permitida");
             return;
+        }
+
+        //creates the session token on first use and exposes it to the jsp
+        String token = (String) session.getAttribute(CSRF_ATTR);
+        if (token == null) {
+            byte[] bytes = new byte[32];
+            RANDOM.nextBytes(bytes);
+            token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+            session.setAttribute(CSRF_ATTR, token);
+        }
+        req.setAttribute(CSRF_ATTR, token);
+
+        //every write request needs to carry a crsf token
+        if (!leitura) {
+            req.setCharacterEncoding("UTF-8"); //must run before the first getParameter
+            String enviado = req.getParameter(CSRF_PARAM);
+            boolean ok = enviado != null && MessageDigest.isEqual(
+                    token.getBytes(StandardCharsets.UTF_8),
+                    enviado.getBytes(StandardCharsets.UTF_8));
+            if (!ok) {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Requisição inválida");
+                return;
+            }
         }
 
         filter.doFilter(request, response);

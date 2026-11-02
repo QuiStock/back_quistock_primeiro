@@ -146,7 +146,7 @@ public class RegionTypeServlet extends HttpServlet{
 
         name = name.trim();
 
-        //allow letters with internal spaces, apostrophes, or hyphens.
+        //a llow letters with internal spaces, apostrophes, or hyphens.
         String regex = "^[\\p{L}]+(?:[ '\\u2019-][\\p{L}]+)*$";
 
         return name.trim().length() <=100 && name.matches(regex);

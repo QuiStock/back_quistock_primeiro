@@ -4,6 +4,7 @@
     <h2 id="titulo-produto">${empty product ? 'Adicionar produto' : 'Editar produto'}</h2>
     <input type="hidden" name="action" value="${empty product ? 'new' : 'edit'}">
     <c:if test="${not empty product}"><input type="hidden" name="id" value="${product.id}"></c:if>
+    <input type="hidden" name="_csrf" value="${csrfToken}">
 
     <div class="campo">
         <label for="produto-nome">Nome</label>
