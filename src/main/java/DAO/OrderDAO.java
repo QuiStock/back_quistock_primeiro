@@ -22,15 +22,17 @@ public class OrderDAO {
                 orderDate == null ? null : orderDate.toLocalDate(),
                 rs.getDouble("total_order_price"),
                 rs.getString("product_name"),
-                rs.getInt("product_id")
+                rs.getInt("product_id"),
+                rs.getString("store_name")
         );
     }
 
-    // regionTypeId == null: all regions(admin), otherwise, just orders from that region
+    //regionTypeId == null: all regions(admin), otherwise, just orders from that region
     public List<Order> select(Integer regionTypeId) throws SQLException {
         String query = """
                 select s.id, s.suggestion_type, s.suggestion_date, s.order_date,
-                       s.total_order_price, p.name as product_name, s.product_id
+                       s.total_order_price, p.name as product_name, s.product_id,
+                       st.email as store_name
                 from suggestion s
                 join product p on p.id = s.product_id
                 left join store st on st.id = p.store_id
@@ -92,9 +94,11 @@ public class OrderDAO {
     public Order searchById(int id) throws SQLException{
         String query = """
                 select s.id, s.suggestion_type, s.suggestion_date, s.order_date,
-                       s.total_order_price, p.name as product_name, s.product_id
+                       s.total_order_price, p.name as product_name, s.product_id,
+                       st.email as store_name
                 from suggestion s
                 join product p on p.id = s.product_id
+                left join store st on st.id = p.store_id
                 where s.id = ? and s.suggestion_type = 'order';
                 """;
 
