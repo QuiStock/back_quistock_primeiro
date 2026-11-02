@@ -63,6 +63,7 @@
     </main>
     <div id="popup-adicionar" class="popup" popover>
         <form method="post" action="${ctx}/orders" novalidate>
+            <input type="hidden" name="_csrf" value="${csrfToken}">
             <h2>Adicionar pedido</h2>
             <input type="hidden" name="action" value="add">
             <div class="campo">
@@ -88,6 +89,7 @@
     <c:forEach var="item" items="${itens}">
         <div id="editar-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/orders" novalidate>
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <h2>Editar pedido</h2>
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" value="${item.id}">
@@ -113,6 +115,7 @@
         </div>
         <div id="remover-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/orders">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <h2>Remover pedido</h2>
                 <p>Deseja realmente remover o pedido de <strong><c:out value="${item.productName}"/></strong>?</p>
                 <input type="hidden" name="action" value="delete">

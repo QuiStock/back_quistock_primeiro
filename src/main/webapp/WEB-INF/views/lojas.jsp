@@ -76,6 +76,7 @@
 
     <div id="popup-adicionar" class="popup" popover>
         <form method="post" action="${ctx}/stores" autocomplete="off" novalidate>
+            <input type="hidden" name="_csrf" value="${csrfToken}">
             <h2>Adicionar loja</h2>
             <input type="hidden" name="action" value="register">
 
@@ -107,6 +108,7 @@
     <c:forEach var="item" items="${storesList}">
         <div id="editar-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/stores" autocomplete="off" novalidate>
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <h2>Editar loja</h2>
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="storeId" value="${item.id}">
@@ -138,6 +140,7 @@
 
         <div id="remover-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/stores">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <h2>Remover loja</h2>
                 <p>Deseja realmente remover <strong><c:out value="${item.email}"/></strong>?</p>
                 <input type="hidden" name="action" value="delete">

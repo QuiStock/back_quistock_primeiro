@@ -64,6 +64,7 @@
     <c:forEach var="product" items="${products}">
         <div id="remover-${product.id}" class="popup" popover>
             <form action="${ctx}/products" method="post">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <h2>Remover produto</h2>
                 <p>Deseja remover <strong><c:out value="${product.name}"/></strong>?</p>
                 <input type="hidden" name="action" value="delete">

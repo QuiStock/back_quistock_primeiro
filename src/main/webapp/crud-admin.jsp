@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <form class="form-admin" action="${pageContext.request.contextPath}/admins" method="post" novalidate>
     <h2>${empty admin ? 'Adicionar admin' : 'Editar admin'}</h2>
+    <input type="hidden" name="_csrf" value="${csrfToken}">
 
     <input type="hidden" value="${admin.id}" name="id">
     <input type="hidden" value="${empty admin ? 'add' : 'update'}" name="action">

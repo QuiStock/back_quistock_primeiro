@@ -77,6 +77,7 @@
 
     <div id="popup-adicionar" class="popup" popover>
         <form method="post" action="${ctx}/gerentes" autocomplete="off">
+            <input type="hidden" name="_csrf" value="${csrfToken}">
             <h2>Adicionar gerente</h2>
             <input type="hidden" name="acao" value="salvar">
             <input type="hidden" name="id" value="">
@@ -101,6 +102,7 @@
     <c:forEach var="item" items="${itens}">
         <div id="editar-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/gerentes" autocomplete="off">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <h2>Editar gerente</h2>
                 <input type="hidden" name="acao" value="salvar">
                 <input type="hidden" name="id" value="${item.id}">
@@ -122,6 +124,7 @@
         </div>
         <div id="remover-${item.id}" class="popup" popover>
             <form method="post" action="${ctx}/gerentes">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
                 <h2>Remover</h2>
                 <p>Deseja realmente remover <strong><c:out value="${item.nome}"/></strong>? Esta ação não pode ser desfeita.</p>
                 <input type="hidden" name="acao" value="remover">

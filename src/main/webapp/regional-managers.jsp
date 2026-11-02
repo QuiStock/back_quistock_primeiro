@@ -53,6 +53,7 @@
                                 <div class="acoes-linha">
                                     <a class="botao pequeno" data-modal href="${pageContext.request.contextPath}/regionalManagers?action=edit&id=${manager.id}"><img src="${pageContext.request.contextPath}/assets/icons/editar.svg" alt="">Editar</a>
                                     <form action="${pageContext.request.contextPath}/regionalManagers" method="post">
+                                        <input type="hidden" name="_csrf" value="${csrfToken}">
                                         <input type="hidden" name="id" value="${manager.id}">
                                         <button class="botao pequeno perigo" type="submit" name="action" value="delete"><img src="${pageContext.request.contextPath}/assets/icons/remover.svg" alt="">Deletar</button>
                                     </form>
