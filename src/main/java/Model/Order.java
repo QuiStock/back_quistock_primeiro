@@ -4,7 +4,6 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-// Product details travel with the order for display.
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,4 +16,5 @@ public class Order {
     private double totalOrderPrice;
     private String productName;
     private int productId;
+    private String storeName;
 }
