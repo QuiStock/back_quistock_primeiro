@@ -8,6 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.MappingMatch;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Base64;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +51,11 @@ public class UrlFilter implements Filter {
             Map.entry("/pedido.jsp",            new Rule(ALL,   ALL)),
             Map.entry("/promocao.jsp",          new Rule(ALL,   ALL))
     );
+
+    //tokens generated for each session
+    private static final String CSRF_ATTR  = "csrfToken";
+    private static final String CSRF_PARAM = "_csrf";
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     @Override
     //filtering method
