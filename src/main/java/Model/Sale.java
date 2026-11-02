@@ -17,6 +17,7 @@ public class Sale {
     private LocalDate promotionValidUntil;
     private String productName;
     private int ProductId;
+    private String storeName;
 
     public Sale(
             String sugestionType,
@@ -24,7 +25,7 @@ public class Sale {
             double discountPercentage,
             LocalDate promotionValidUntil,
             String productName
-            ){
+    ){
         this.sugestionType = sugestionType;
         this.sugestionDate = sugestionDate;
         this.discountPercentage = discountPercentage;

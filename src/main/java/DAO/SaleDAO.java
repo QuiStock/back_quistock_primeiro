@@ -26,6 +26,7 @@ public class SaleDAO {
         sale.setDiscountPercentage(rs.getDouble("discount_percentage"));
         sale.setProductName(rs.getString("product_name"));
         sale.setProductId(rs.getInt("product_id"));
+        sale.setStoreName(rs.getString("store_name"));
         return sale;
 
     }
@@ -38,10 +39,13 @@ public class SaleDAO {
 
     // regionTypeId == null: all regions(admin). otherwise, just from that region
     public List<Sale> select(Integer regionTypeId) throws SQLException {
-        String query = "SELECT id, suggestion_type, suggestion_date, discount_percentage, promotion_valid_until, "
-                + "product_name, product_id FROM suggestions_vw WHERE suggestion_type = 'promotion'"
-                + (regionTypeId == null ? "" :
-                " AND product_id IN (SELECT p.id FROM product p JOIN store s ON s.id = p.store_id WHERE s.region_type_id = ?)")
+        String query = "SELECT v.id, v.suggestion_type, v.suggestion_date, v.discount_percentage, v.promotion_valid_until, "
+                + "v.product_name, v.product_id, st.email AS store_name "
+                + "FROM suggestions_vw v "
+                + "JOIN product p ON p.id = v.product_id "
+                + "LEFT JOIN store st ON st.id = p.store_id "
+                + "WHERE v.suggestion_type = 'promotion'"
+                + (regionTypeId == null ? "" : " AND st.region_type_id = ?")
                 + ";";
         List<Sale> list = new ArrayList<>();
 
@@ -114,7 +118,12 @@ public class SaleDAO {
     }
 
     public Sale searchById(int id) throws SQLException {
-        String query = "select * from suggestions_vw where id = ? and suggestion_type = 'promotion';";
+        String query = "SELECT v.id, v.suggestion_type, v.suggestion_date, v.discount_percentage, v.promotion_valid_until, "
+                + "v.product_name, v.product_id, st.email AS store_name "
+                + "FROM suggestions_vw v "
+                + "JOIN product p ON p.id = v.product_id "
+                + "LEFT JOIN store st ON st.id = p.store_id "
+                + "WHERE v.id = ? AND v.suggestion_type = 'promotion';";
 
         try (
                 Connection conn = factory.getConnection();
