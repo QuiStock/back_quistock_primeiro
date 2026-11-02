@@ -105,6 +105,29 @@ public class UrlFilter implements Filter {
             return;
         }
 
+        //creates the session token on first use and exposes it to the jsp
+        String token = (String) session.getAttribute(CSRF_ATTR);
+        if (token == null) {
+            byte[] bytes = new byte[32];
+            RANDOM.nextBytes(bytes);
+            token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+            session.setAttribute(CSRF_ATTR, token);
+        }
+        req.setAttribute(CSRF_ATTR, token);
+
+        //every write request needs to carry a crsf token
+        if (!leitura) {
+            req.setCharacterEncoding("UTF-8"); //must run before the first getParameter
+            String enviado = req.getParameter(CSRF_PARAM);
+            boolean ok = enviado != null && MessageDigest.isEqual(
+                    token.getBytes(StandardCharsets.UTF_8),
+                    enviado.getBytes(StandardCharsets.UTF_8));
+            if (!ok) {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Requisição inválida");
+                return;
+            }
+        }
+
         filter.doFilter(request, response);
     }
 }
