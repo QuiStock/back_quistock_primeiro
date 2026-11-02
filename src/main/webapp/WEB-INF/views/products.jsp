@@ -14,6 +14,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${ctx}/css/quistock.css?v=produtos-3">
     <link rel="stylesheet" href="${ctx}/css/loading.css?v=2">
+    <style>
+        .tabela-produtos #cabecalho,
+        .tabela-produtos .linha {
+            grid-template-columns: repeat(6, minmax(0, 1fr)) 200px;
+            min-width: 900px;
+        }
+    </style>
     <title>QuiStock - Produtos</title>
 </head>
 <body>
@@ -31,6 +38,26 @@
                     <h2>Área vazia</h2>
                     <a class="botao verde" data-modal href="${ctx}/products?action=new">Adicionar produto</a>
                 </div>
+<<<<<<< HEAD
+                <div id="tabela" class="tabela-produtos">
+                    <div id="cabecalho">
+                        <h3>Lote</h3><h3>Nome</h3><h3>Preço</h3>
+                        <h3>Validade</h3><h3>Quantidade</h3><h3>Loja</h3><h3>Ações</h3>
+                    </div>
+                    <c:forEach var="product" items="${products}">
+                        <div class="linha">
+                            <span><c:out value="${product.batch}"/></span>
+                            <span><c:out value="${product.name}"/></span>
+
+                            <span><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="R$"/></span>
+                            <span><c:if test="${not empty product.expirationDate}">${product.expirationDate.dayOfMonth}/${product.expirationDate.monthValue}/${product.expirationDate.year}</c:if></span>
+                            <span>${product.quantity}</span>
+                            <span><c:out value="${product.store_Name}"/></span>
+                            <div class="acoes-linha">
+                                <a class="botao pequeno" data-modal href="${ctx}/products?action=edit&id=${product.id}"><img src="${ctx}/assets/icons/editar.svg" alt="">Editar</a>
+                                <button class="botao pequeno perigo" type="button" popovertarget="remover-${product.id}"><img src="${ctx}/assets/icons/remover.svg" alt="">Remover</button>
+                            </div>
+=======
             </c:when>
             <c:otherwise>
                 <div id="lista">
@@ -41,6 +68,7 @@
                         <div id="cabecalho">
                             <h3>Lote</h3><h3>Nome</h3><h3>Preço</h3>
                             <h3>Validade</h3><h3>Quantidade</h3><h3>Ações</h3>
+>>>>>>> parent of 34d5866 (feat: adds store to products.jsp)
                         </div>
                         <c:forEach var="product" items="${products}">
                             <div class="linha">

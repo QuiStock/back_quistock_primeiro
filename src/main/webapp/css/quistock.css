@@ -250,8 +250,8 @@ main h1 {
 
 .tabela-produtos #cabecalho,
 .tabela-produtos .linha {
-    grid-template-columns: repeat(5, minmax(0, 1fr)) 200px;
-    min-width: 900px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1.8fr) repeat(3, minmax(0, 1fr)) 200px;
+    min-width: 1100px;
     flex-shrink: 0;
     padding: 12px 24px;
 }
