@@ -6,6 +6,14 @@ public class PasswordService {
 
     private static final int cost = 12;
 
+    //used to spend the same time when the email does not exist
+    private static final String DUMMY_HASH =
+            BCrypt.withDefaults().hashToString(cost, "dummy-password".toCharArray());
+
+    public static void burn(String pass) {
+        BCrypt.verifyer().verify((pass == null ? "" : pass).toCharArray(), DUMMY_HASH);
+    }
+
     // Hash passwords before storing them.
     public static String genHash(String pass) {
         return BCrypt.withDefaults().hashToString(cost, pass.toCharArray());

@@ -73,6 +73,11 @@ public class LoginService {
             );
         }
 
+        //uses dummy hash, to consume time
+        if (manager == null && admin == null) {
+            PasswordService.burn(password);
+        }
+
         return new LoginResult(false, null);
     }
 }
